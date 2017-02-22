@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fronius",
-  "version": "0.0.4",
+  "version": "0.0.1",
   "description": "ioBroker Fronius Adapter",
   "author": {
     "name": "ldittmar",
@@ -15,7 +15,9 @@
 	"Wechselrichter",
 	"PV Anlage",
     "Smart Home",
-    "home automation"
+    "home automation",
+    "Symo",
+    "hybrid"
   ],
   "repository": {
     "type": "git",

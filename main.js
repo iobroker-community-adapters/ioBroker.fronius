@@ -54,12 +54,15 @@ adapter.on('stateChange', function (id, state) {
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
 adapter.on('message', function (obj) {
     if (typeof obj == 'object' && obj.message) {
-        if (obj.command == 'send') {
-            // e.g. send email or pushover or whatever
-            console.log('send command');
-
-            // Send response in callback if required
-            if (obj.callback) adapter.sendTo(obj.from, obj.command, 'Message received', obj.callback);
+        switch (obj.command) {
+            case 'checkIP':
+                checkIP(obj.message, function (res) {
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                });
+                break;
+            default:
+                adapter.log.warn("Unknown command: " + obj.command);
+                break;
         }
     }
 });
@@ -69,6 +72,17 @@ adapter.on('message', function (obj) {
 adapter.on('ready', function () {
     main();
 });
+
+function checkIP(ipToCheck, callback) {
+    request.get('http://' + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            callback({error: 0, message: body});
+        }else{
+            callback({error: 1, message: {}});
+        }
+    });
+
+}
 
 function main() {
 

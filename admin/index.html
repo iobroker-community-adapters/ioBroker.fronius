@@ -86,6 +86,11 @@
         });
         callback(obj);
     }
+
+    function setError(){
+        $('label[for=ip]').css("color", "red");
+        $('#ip').css("border-color", "red");
+    }
 	
 	$(document).ready(function () {
 		if(!$('#baseurl').val()){
@@ -93,51 +98,59 @@
 			$('#hybrid').prop('disabled', true).prop('checked', false);
 			$('#poll').prop('disabled', true).val("10");
 		}
+
+		var $ip = $('#ip');
 		
 		$('#checkIp').on("click", function(){
-			var ip = $('#ip').val();
+            if (!active) {
+                showMessage(_('Enable adapter first'), 'Warning', 'info');
+                return;
+            }
+			var ip = $ip.val();
 			if(ip){
-				try{
-					$.getJSON("http://" + ip + "/solar_api/GetAPIVersion.cgi")
-					.done(function(data){
-						$('#baseurl').val(data.BaseURL);
-						$('#apiversion').val(data.APIVersion);
-						$('#deviceId').prop('disabled', false);
-						$('#poll').prop('disabled', false);
-						if(data.BaseURL === 1){
-							$('#hybrid').prop('disabled', false);
-						}						
-					})
-					.fail(funtion(){
-						$('label[for=ip]').css("color", "red");
-						$('#ip').css("border-color", "red");
-					});
-				}catch(){
-					$('label[for=ip]').css("color", "red");
-					$('#ip').css("border-color", "red");
-				}
-			}
+                sendTo('fronius.' + instance, 'checkIP', ip, function (res) {
+                    try{
+                        var data = JSON.parse(res);
+                        if(data.error === 0) {
+                            var result = data.message;
+                            $('#baseurl').val(result.BaseURL);
+                            $('#apiversion').val(result.APIVersion);
+                            $('#deviceId').prop('disabled', false);
+                            $('#poll').prop('disabled', false);
+                            if (result.BaseURL === 1) {
+                                $('#hybrid').prop('disabled', false);
+                            }
+                        }else{
+                            setError();
+                        }
+                    }catch(err){
+                        setError();
+                    }
+			    });
+            }else{
+                setError();
+            }
 		});
-		
-		$('#ip').on("change", function(){
+
+        $ip.on("change", function(){
 			$('label[for=ip]').css("color", "");
-			$('#ip').css("border-color", "");
+            $ip.css("border-color", "");
 			$('#baseurl').val("");
 			$('#apiversion').val("");
-			$('#deviceId').prop('disabled', true).val("");;
+			$('#deviceId').prop('disabled', true).val("");
 			$('#hybrid').prop('disabled', true).prop('checked', false);
-			$('#poll').prop('disabled', true).val("10");;
+			$('#poll').prop('disabled', true).val("10");
 		});
 	});
 
 </script>
 
 <!-- you have to put your config page in a div with id adapter-container -->
-<div id="adapter-container" style="padding-left: 6px; padding-right: 0px; width: 97%;">
+<div id="adapter-container" style="padding-left: 6px; padding-right: 0; width: 97%;">
 
     <table>
         <tr>
-            <td><img src="landroid.png"/></td>
+            <td><img src="fronius.png"/></td>
             <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">Fronius inverters adapter settings</h3></td>
         </tr>
     </table>

@@ -9,7 +9,7 @@
         "ru": "Первоначальный адаптер"
       }
     },
-    "title": "WORX Fronius inverters adapter",
+    "title": "Fronius inverters adapter",
     "desc": {
       "en": "ioBroker Fronius inverters Adapter",
       "de": "ioBroker Fronius Wechselrichter Adapter",
@@ -22,9 +22,11 @@
     "enabled": false,
     "extIcon": "https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png",
     "keywords": [
-      "fronius",
-      "worx",
-      "mower"
+      "Fronius",
+      "inverter",
+      "Wechselrichter",
+      "hybrid",
+      "Symo"
     ],
     "readme": "https://github.com/ldittmar81/ioBroker.fronius/blob/master/README.md",
     "loglevel": "info",
