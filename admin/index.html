@@ -1,0 +1,199 @@
+<html>
+
+<!-- these 4 files always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
+<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
+
+<!-- these two file always have to be included -->
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+<script type="text/javascript" src="../../js/translate.js"></script>
+<script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+<!-- you have to define 2 functions in the global scope: -->
+<script type="text/javascript">
+
+    // Dictionary (systemDictionary is global variable from adapter-settings.js)
+    systemDictionary = {
+        "Fronius inverters adapter settings": {
+            "de": "Fronius Wechselrichter Einstellungen",
+            "ru": "Fronius инвертор Настройки"
+        },
+        "IP": {
+            "de": "IP Adresse des Fronius Wechselrichters",
+            "en": "IP address of the Fronius inverter",
+            "ru": "IP-адрес преобразователя Fronius"
+        },
+		"Check IP": {
+            "de": "IP überprüfen",
+            "ru": "Проверка IP"
+        },
+        "deviceId": {
+            "de": "Geräte ID 0..99",
+            "en": "Device ID 0..99",
+            "ru": "Идентификатор устройства 0..99"
+        },
+        "Intervall": {
+            "de": "Abfrageintervall in Sekunden",
+            "en": "Query interval in seconds",
+            "ru": "Интервал запроса в секундах"
+        },
+        "Settings": {
+            "de": "Einstellungen",
+            "ru": "настройки"
+        },
+        "Info": {
+            "de": "Hinweis",
+            "ru": "намек"
+        },
+        "on save adapter restarts with new config immediately": {
+            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
+            "ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
+        }
+    };
+
+    // the function loadSettings has to exist ...
+    function load(settings, onChange) {
+        // example: select elements with id=key and class=value and insert value
+        for (var key in settings) {
+            // example: select elements with id=key and class=value and insert value
+            var $element = $("#" + key + ".value");
+            if ($element.attr("type") === "checkbox") {
+                $element.prop("checked", settings[key]).change(function () {
+                    onChange();
+                });
+            } else {
+                $element.val(settings[key]).change(function () {
+                    onChange();
+                }).keyup(function () {
+                    $(this).trigger("change");
+                });
+            }
+        }
+        // Signal to admin, that no changes yet
+        onChange(false);
+    }
+
+    // ... and the function save has to exist.
+    // you have to make sure the callback is called with the settings object as first param!
+    function save(callback) {
+        // example: select elements with class=value and build settings object
+        var obj = {};
+        $(".value").each(function () {
+            var $this = $(this);
+            obj[$this.attr("id")] = $this.val();
+        });
+        callback(obj);
+    }
+	
+	$(document).ready(function () {
+		if(!$('#baseurl').val()){
+			$('#deviceId').prop('disabled', true).val("");
+			$('#hybrid').prop('disabled', true).prop('checked', false);
+			$('#poll').prop('disabled', true).val("10");
+		}
+		
+		$('#checkIp').on("click", function(){
+			var ip = $('#ip').val();
+			if(ip){
+				try{
+					$.getJSON("http://" + ip + "/solar_api/GetAPIVersion.cgi")
+					.done(function(data){
+						$('#baseurl').val(data.BaseURL);
+						$('#apiversion').val(data.APIVersion);
+						$('#deviceId').prop('disabled', false);
+						$('#poll').prop('disabled', false);
+						if(data.BaseURL === 1){
+							$('#hybrid').prop('disabled', false);
+						}						
+					})
+					.fail(funtion(){
+						$('label[for=ip]').css("color", "red");
+						$('#ip').css("border-color", "red");
+					});
+				}catch(){
+					$('label[for=ip]').css("color", "red");
+					$('#ip').css("border-color", "red");
+				}
+			}
+		});
+		
+		$('#ip').on("change", function(){
+			$('label[for=ip]').css("color", "");
+			$('#ip').css("border-color", "");
+			$('#baseurl').val("");
+			$('#apiversion').val("");
+			$('#deviceId').prop('disabled', true).val("");;
+			$('#hybrid').prop('disabled', true).prop('checked', false);
+			$('#poll').prop('disabled', true).val("10");;
+		});
+	});
+
+</script>
+
+<!-- you have to put your config page in a div with id adapter-container -->
+<div id="adapter-container" style="padding-left: 6px; padding-right: 0px; width: 97%;">
+
+    <table>
+        <tr>
+            <td><img src="landroid.png"/></td>
+            <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">Fronius inverters adapter settings</h3></td>
+        </tr>
+    </table>
+
+    <h1 class="translate">Settings</h1>
+	
+	<input class="value" id="baseurl" type="hidden" />
+	<input class="value" id="apiversion" type="hidden" />
+
+    <table>
+        <tr>
+            <td><label class="translate" for="ip">IP</label></td>
+            <td>
+				<input class="value" id="ip" placeholder="192.168.x.x" type="text" size="15" maxlength="15"/>
+			</td>
+			<td><button id="checkIp"><span class="translate">Check IP</span></button></td>
+        </tr>
+	</table>
+	
+	<hr/>
+	
+	<table>
+        <tr>
+            <td class="translate"><label class="translate" for="deviceId">deviceId</label></td>
+            <td colspan="2">
+				<input class="value" id="deviceId" type="text" size="6" maxlength="2"/>
+            </td>
+        </tr>
+	</table>
+	
+	<table>
+		<tr>
+            <td class="translate"><label for="hybrid">Fronius Hybrid</label></td>
+            <td colspan="2">
+				<input class="value" id="hybrid" type="checkbox" />
+            </td>
+        </tr>
+	</table>
+	
+	<table>
+        <tr>
+            <td class="translate"><label class="translate" for="poll">Intervall</label></td>
+            <td colspan="2">
+                <input class="value" id="poll" type="text" size="6" maxlength="4"/>
+            </td>
+        </tr>
+    </table>
+
+    <div style="padding: 10px"></div>
+    <h1 class="translate">Info</h1>
+
+    <table>
+        <tr>
+            <td class="translate">on save adapter restarts with new config immediately</td>
+        </tr>
+    </table>
+</div>
+
+</html>

@@ -1,0 +1,43 @@
+{
+  "common": {
+    "name": "fronius",
+    "version": "0.0.1",
+    "news": {      
+      "0.0.1": {
+        "en": "initial adapter",
+        "de": "Initiale Version",
+        "ru": "Первоначальный адаптер"
+      }
+    },
+    "title": "WORX Fronius inverters adapter",
+    "desc": {
+      "en": "ioBroker Fronius inverters Adapter",
+      "de": "ioBroker Fronius Wechselrichter Adapter",
+      "ru": "ioBroker Fronius инвертор драйвер"
+    },
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "icon": "fronius.png",
+    "enabled": false,
+    "extIcon": "https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png",
+    "keywords": [
+      "fronius",
+      "worx",
+      "mower"
+    ],
+    "readme": "https://github.com/ldittmar81/ioBroker.fronius/blob/master/README.md",
+    "loglevel": "info",
+    "type": "hardware"
+  },
+  "native": {
+    "ip": "",
+	"apiversion": "",
+	"baseurl": "",
+    "deviceId": "0",
+    "poll": "30",
+	"hybrid": false
+  },
+  "objects": [],
+  "instanceObjects": []
+}
