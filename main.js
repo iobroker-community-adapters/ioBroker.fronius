@@ -22,7 +22,8 @@ var ping = require("ping");
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 var adapter = utils.adapter('fronius');
 
-var ip;
+var ip, baseurl, deviceid, apiver;
+var hybrid = false;
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
 adapter.on('unload', function (callback) {
@@ -94,7 +95,58 @@ function checkIP(ipToCheck, callback) {
             callback({error: 1, message: {}});
         }
     });
+}
 
+function getInverterRealtimeDataCommonInverterData(){
+    request.get('http://' + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + deviceid + '&DataCollection=CommonInverterData', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if("Body" in data) {
+                    var resp = data.Body.Data;
+                    adapter.setState("ird.CommonInverterData.DAY_ENERGY", {val: resp.DAY_ENERGY.Value, ack: true});
+                    adapter.setState("ird.CommonInverterData.TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
+                    adapter.setState("ird.CommonInverterData.YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
+
+                    if("PAC" in data) {
+                        adapter.setState("ird.CommonInverterData.FAC", {val: resp.FAC.Value, ack: true});
+                        adapter.setState("ird.CommonInverterData.IAC", {val: resp.IAC.Value, ack: true});
+                        adapter.setState("ird.CommonInverterData.IDC", {val: resp.IDC.Value, ack: true});
+                        adapter.setState("ird.CommonInverterData.PAC", {val: resp.PAC.Value, ack: true});
+                        adapter.setState("ird.CommonInverterData.UAC", {val: resp.UAC.Value, ack: true});
+                        adapter.setState("ird.CommonInverterData.UDC", {val: resp.UDC.Value, ack: true});
+                    }else{
+                        adapter.setState("ird.CommonInverterData.FAC", {val: 0, ack: true});
+                        adapter.setState("ird.CommonInverterData.IAC", {val: 0, ack: true});
+                        adapter.setState("ird.CommonInverterData.IDC", {val: 0, ack: true});
+                        adapter.setState("ird.CommonInverterData.PAC", {val: 0, ack: true});
+                        adapter.setState("ird.CommonInverterData.UAC", {val: 0, ack: true});
+                        adapter.setState("ird.CommonInverterData.UDC", {val: 0, ack: true});
+                    }
+
+                }else{
+                    adapter.log.error(data.Head.Status.Reason);
+                    return true;
+                }
+            }catch(e){
+                adapter.log.error(e);
+            }
+            return false;
+        }
+        return true;
+    });
+}
+
+function checkStatus() {
+    ping.sys.probe(ip, function (isAlive) {
+        adapter.setState("connected", {val: isAlive, ack: true});
+        if (isAlive) {
+            var error = getInverterRealtimeDataCommonInverterData();
+            if(!error) {
+                adapter.setState("lastsync", {val: new Date().toISOString(), ack: true});
+            }
+        }
+    });
 }
 
 function main() {
@@ -103,13 +155,22 @@ function main() {
     // adapter.config:
 
     ip = adapter.config.ip;
+    baseurl = adapter.config.baseurl;
+    deviceid = adapter.config.deviceId;
+    hybrid = adapter.config.hybrid;
+    apiver = adapter.config.apiversion;
 	
-	 if (ip) {
+	 if (ip && baseurl && deviceid) {
 
-       
+         var secs = adapter.config.poll;
+         if (isNaN(secs) || secs < 1) {
+             secs = 10;
+         }
+
+         setInterval(checkStatus, secs * 1000);
 
     } else {
-        adapter.log.error("Please configure the Fronius Adapter");
+        adapter.log.error("Please configure the Fronius adapter");
     }
 
 

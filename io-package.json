@@ -1,8 +1,13 @@
 {
   "common": {
     "name": "fronius",
-    "version": "0.0.1",
-    "news": {      
+    "version": "0.0.2",
+    "news": {
+      "0.0.2": {
+        "en": "First data is read",
+        "de": "Ersten Daten werden gelesen",
+        "ru": "Во-первых данные считываются"
+      },
       "0.0.1": {
         "en": "initial adapter",
         "de": "Initiale Version",
@@ -42,5 +47,177 @@
 	"hybrid": false
   },
   "objects": [],
-  "instanceObjects": []
+  "instanceObjects": [
+    {
+      "_id": "lastsync",
+      "type": "state",
+      "common": {
+        "name": "Last successful sync",
+        "type": "string",
+        "role": "value.datetime",
+        "read": true,
+        "write": false,
+        "desc": "Last successful synchronization"
+      },
+      "native": {}
+    },
+    {
+      "_id": "connected",
+      "type": "state",
+      "common": {
+        "name": "Fronius connected",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false,
+        "desc": "Is Fronius inverter connected?"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird",
+      "type": "channel",
+      "common": {
+        "name": "inverter realtime data",
+        "role": "info"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData",
+      "type": "channel",
+      "common": {
+        "name": "common inverter data",
+        "role": "info"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.DAY_ENERGY",
+      "type": "state",
+      "common": {
+        "name": "day energy",
+        "type": "number",
+        "role": "value",
+        "unit": "Wh",
+        "read": true,
+        "write": false,
+        "desc": "Energy generated on current day"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.FAC",
+      "type": "state",
+      "common": {
+        "name": "FAC",
+        "type": "number",
+        "role": "value",
+        "unit": "Hz",
+        "read": true,
+        "write": false,
+        "desc": "AC frequency"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.IAC",
+      "type": "state",
+      "common": {
+        "name": "IAC",
+        "type": "number",
+        "role": "value",
+        "unit": "A",
+        "read": true,
+        "write": false,
+        "desc": "AC current"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.IDC",
+      "type": "state",
+      "common": {
+        "name": "IDC",
+        "type": "number",
+        "role": "value",
+        "unit": "A",
+        "read": true,
+        "write": false,
+        "desc": "DC current"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.PAC",
+      "type": "state",
+      "common": {
+        "name": "PAC",
+        "type": "number",
+        "role": "value",
+        "unit": "W",
+        "read": true,
+        "write": false,
+        "desc": "AC power"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.TOTAL_ENERGY",
+      "type": "state",
+      "common": {
+        "name": "total energy",
+        "type": "number",
+        "role": "value",
+        "unit": "Wh",
+        "read": true,
+        "write": false,
+        "desc": "Energy generated overall"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.UAC",
+      "type": "state",
+      "common": {
+        "name": "UAC",
+        "type": "number",
+        "role": "value",
+        "unit": "V",
+        "read": true,
+        "write": false,
+        "desc": "AC voltage"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.UDC",
+      "type": "state",
+      "common": {
+        "name": "UDC",
+        "type": "number",
+        "role": "value",
+        "unit": "V",
+        "read": true,
+        "write": false,
+        "desc": "DC voltage"
+      },
+      "native": {}
+    },
+    {
+      "_id": "ird.CommonInverterData.YEAR_ENERGY",
+      "type": "state",
+      "common": {
+        "name": "year energy",
+        "type": "number",
+        "role": "value",
+        "unit": "Wh",
+        "read": true,
+        "write": false,
+        "desc": "Energy generated in current year"
+      },
+      "native": {}
+    }
+  ]
 }
