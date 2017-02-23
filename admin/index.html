@@ -53,6 +53,8 @@
         }
     };
 
+    var active = false;
+
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
         // example: select elements with id=key and class=value and insert value
@@ -71,6 +73,17 @@
                 });
             }
         }
+
+        if(!$('#baseurl').val()){
+            $('#deviceId').prop('disabled', true).val("");
+            $('#hybrid').prop('disabled', true).prop('checked', false);
+            $('#poll').prop('disabled', true).val("10");
+        }
+
+        socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
+            active = common.enabled || (state && state.val);
+        });
+
         // Signal to admin, that no changes yet
         onChange(false);
     }
@@ -93,15 +106,10 @@
     }
 	
 	$(document).ready(function () {
-		if(!$('#baseurl').val()){
-			$('#deviceId').prop('disabled', true).val("");
-			$('#hybrid').prop('disabled', true).prop('checked', false);
-			$('#poll').prop('disabled', true).val("10");
-		}
 
 		var $ip = $('#ip');
 		
-		$('#checkIp').on("click", function(){
+		$('#checkIp').button().click(function(){
             if (!active) {
                 showMessage(_('Enable adapter first'), 'Warning', 'info');
                 return;
@@ -174,7 +182,7 @@
 	
 	<table>
         <tr>
-            <td class="translate"><label class="translate" for="deviceId">deviceId</label></td>
+            <td><label class="translate" for="deviceId">deviceId</label></td>
             <td colspan="2">
 				<input class="value" id="deviceId" type="text" size="6" maxlength="2"/>
             </td>
@@ -183,7 +191,7 @@
 	
 	<table>
 		<tr>
-            <td class="translate"><label for="hybrid">Fronius Hybrid</label></td>
+            <td><label class="translate" for="hybrid">Fronius Hybrid</label></td>
             <td colspan="2">
 				<input class="value" id="hybrid" type="checkbox" />
             </td>
@@ -192,7 +200,7 @@
 	
 	<table>
         <tr>
-            <td class="translate"><label class="translate" for="poll">Intervall</label></td>
+            <td><label class="translate" for="poll">Intervall</label></td>
             <td colspan="2">
                 <input class="value" id="poll" type="text" size="6" maxlength="4"/>
             </td>

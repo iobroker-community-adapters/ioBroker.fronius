@@ -53,18 +53,24 @@ adapter.on('stateChange', function (id, state) {
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
 adapter.on('message', function (obj) {
-    if (typeof obj == 'object' && obj.message) {
+    var wait = false;
+    if (obj) {
         switch (obj.command) {
             case 'checkIP':
                 checkIP(obj.message, function (res) {
                     if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                 });
+                wait = true;
                 break;
             default:
                 adapter.log.warn("Unknown command: " + obj.command);
                 break;
         }
     }
+    if (!wait && obj.callback) {
+        adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
+    }
+    return true;
 });
 
 // is called when databases are connected and adapter received configuration.
@@ -75,9 +81,16 @@ adapter.on('ready', function () {
 
 function checkIP(ipToCheck, callback) {
     request.get('http://' + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            callback({error: 0, message: body});
-        }else{
+        try {
+            var testData = JSON.parse(body);
+            if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
+                callback({error: 0, message: testData});
+            }else{
+                adapter.log.error("IP invalid");
+                callback({error: 1, message: {}});
+            }
+        } catch (e) {
+            adapter.log.error("IP is not a Fronis inverter");
             callback({error: 1, message: {}});
         }
     });

@@ -19,7 +19,8 @@
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "icon": "fronius.png",
-    "enabled": false,
+    "enabled": true,
+    "messagebox": true,
     "extIcon": "https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png",
     "keywords": [
       "Fronius",
