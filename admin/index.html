@@ -1,5 +1,5 @@
 <html>
-
+<head>
 <!-- these 4 files always have to be included -->
 <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
 <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
@@ -18,12 +18,12 @@
     systemDictionary = {
         "Fronius inverters adapter settings": {
             "de": "Fronius Wechselrichter Einstellungen",
-            "ru": "Fronius инвертор Настройки"
+            "ru": "Настройки для Fronius инвертора"
         },
         "IP": {
             "de": "IP Adresse des Fronius Wechselrichters",
             "en": "IP address of the Fronius inverter",
-            "ru": "IP-адрес преобразователя Fronius"
+            "ru": "IP-адрес инвертора Fronius"
         },
 		"Check IP": {
             "de": "IP überprüfen",
@@ -32,20 +32,21 @@
         "Intervall": {
             "de": "Abfrageintervall in Sekunden",
             "en": "Query interval in seconds",
-            "ru": "Интервал запроса в секундах"
+            "ru": "Интервал опроса в секундах"
         },
         "Settings": {
             "de": "Einstellungen",
-            "ru": "настройки"
+            "ru": "Настройки"
         },
         "Info": {
             "de": "Hinweis",
-            "ru": "намек"
+            "ru": "Примечания"
         },
-        "on save adapter restarts with new config immediately": {
-            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
-            "ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
-        }
+		"tooltip_poll": {
+            "de": "Wie oft wird das Gerät abgefragt. In Sekunden.",
+            "en": "Polling interval in seconds.",
+            "ru": "Интервал опроса устройства в секундах"
+        },
     };
 
     var active = false;
@@ -217,14 +218,15 @@
 	});
 
 </script>
-
+</head>
+<body>
 <!-- you have to put your config page in a div with id adapter-container -->
 <div id="adapter-container" style="padding-left: 6px; padding-right: 0; width: 97%;">
 
     <table>
         <tr>
             <td><img src="fronius.png"/></td>
-            <td style="padding-top: 20px;padding-left: 10px"><h3 class="translate">Fronius inverters adapter settings</h3></td>
+            <td style="padding-top: 20px; padding-left: 10px"><h3 class="translate">Fronius inverters adapter settings</h3></td>
         </tr>
     </table>
 
@@ -241,6 +243,7 @@
     <table>
         <tr>
             <td><label class="translate" for="ip">IP</label></td>
+			<td class="admin-icon"></td>
             <td>
 				<input class="value" id="ip" placeholder="192.168.x.x" type="text" size="15" maxlength="15"/>
 			</td>
@@ -252,20 +255,12 @@
 	<table>
         <tr>
             <td><label class="translate" for="poll">Intervall</label></td>
+			<td class="admin-icon"></td>
             <td colspan="2">
                 <input class="value" id="poll" type="text" size="6" maxlength="4"/>
             </td>
         </tr>
     </table>
-
-    <div style="padding: 10px"></div>
-    <h1 class="translate">Info</h1>
-
-    <table>
-        <tr>
-            <td class="translate">on save adapter restarts with new config immediately</td>
-        </tr>
-    </table>
 </div>
-
+	</body>
 </html>
