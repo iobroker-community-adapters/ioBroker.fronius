@@ -13,7 +13,7 @@
 "use strict";
 
 // you have to require the utils module and call adapter function
-var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
+var utils = require(__dirname + '/lib/utils'); // Get common adapter utils
 var request = require('request');
 var ping = require("ping");
 
@@ -22,7 +22,7 @@ var ping = require("ping");
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 var adapter = utils.adapter('fronius');
 
-var ip, baseurl, deviceid, apiver;
+var ip, baseurl, apiver;
 var hybrid = false;
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
@@ -63,6 +63,30 @@ adapter.on('message', function (obj) {
                 });
                 wait = true;
                 break;
+            case 'getDeviceInfo':
+                getActiveDeviceInfo("System", obj.message, function (res) {
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                });
+                wait = true;
+                break;
+            case 'getDeviceInfoInverter':
+                getActiveDeviceInfo("Inverter", obj.message, function (res) {
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                });
+                wait = true;
+                break;
+            case 'getDeviceInfoSensor':
+                getActiveDeviceInfo("SensorCard", obj.message, function (res) {
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                });
+                wait = true;
+                break;
+            case 'getDeviceInfoString':
+                getActiveDeviceInfo("StringControl", obj.message, function (res) {
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                });
+                wait = true;
+                break;
             default:
                 adapter.log.warn("Unknown command: " + obj.command);
                 break;
@@ -80,6 +104,7 @@ adapter.on('ready', function () {
     main();
 });
 
+//Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
     request.get('http://' + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
         try {
@@ -97,55 +122,265 @@ function checkIP(ipToCheck, callback) {
     });
 }
 
-function getInverterRealtimeDataCommonInverterData(){
-    request.get('http://' + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + deviceid + '&DataCollection=CommonInverterData', function (error, response, body) {
+//Check Fronius devices v1
+function getActiveDeviceInfo(type, url, callback) {
+    adapter.log.info("scheissssseeeeee " + type + url);
+    request.get('http://' + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function (error, response, body) {
+        adapter.log.info(body);
+        try {
+            var deviceData = JSON.parse(body);
+            if (!error && response.statusCode == 200 && 'Body' in deviceData) {
+                callback({error: 0, message: deviceData.Body.Data});
+            }else{
+                adapter.log.error(data.Head.Status.Reason);
+                callback({error: 1, message: {}});
+            }
+        } catch (e) {
+            callback({error: 1, message: {}});
+        }
+    });
+}
+
+function createInverterObjects(id){
+    adapter.setObjectNotExists('inverter.' + id, {
+        type: 'channel',
+        common: {
+            name: "inverter with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.DAY_ENERGY', {
+        type: 'state',
+        common: {
+            name: "day energy",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "Energy generated on current day"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.FAC', {
+        type: 'state',
+        common: {
+            name: "FAC",
+            type: "number",
+            role: "value",
+            unit: "Hz",
+            read: true,
+            write: false,
+            desc: "AC frequency"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.IAC', {
+        type: "state",
+        common: {
+            name: "IAC",
+            type: "number",
+            role: "value",
+            unit: "A",
+            read: true,
+            write: false,
+            desc: "AC current"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.IDC', {
+        type: "state",
+        common: {
+            name: "IDC",
+            type: "number",
+            role: "value",
+            unit: "A",
+            read: true,
+            write: false,
+            desc: "DC current"
+    },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.PAC', {
+        type: "state",
+        common: {
+            name: "PAC",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "AC power"
+    },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.TOTAL_ENERGY', {
+        type: "state",
+        common: {
+            name: "total energy",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "Energy generated overall"
+    },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.UAC', {
+        type: "state",
+        common: {
+            name: "UAC",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: "AC voltage"
+    },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.UDC', {
+        type: "state",
+        common: {
+            name: "UDC",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: "DC voltage"
+    },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.YEAR_ENERGY', {
+        type: "state",
+        common: {
+            name: "year energy",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "Energy generated in current year"
+    },
+        native: {}
+    });
+}
+
+//Get Infos from Inverter
+function getInverterRealtimeData(id){
+    request.get('http://' + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
                 if("Body" in data) {
+
+                    createInverterObjects(id);
+
                     var resp = data.Body.Data;
-                    adapter.setState("ird.CommonInverterData.DAY_ENERGY", {val: resp.DAY_ENERGY.Value, ack: true});
-                    adapter.setState("ird.CommonInverterData.TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
-                    adapter.setState("ird.CommonInverterData.YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
+                    adapter.setState("inverter." + id + ".DAY_ENERGY", {val: resp.DAY_ENERGY.Value, ack: true});
+                    adapter.setState("inverter." + id + ".TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
+                    adapter.setState("inverter." + id + ".YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
 
                     if("PAC" in data) {
-                        adapter.setState("ird.CommonInverterData.FAC", {val: resp.FAC.Value, ack: true});
-                        adapter.setState("ird.CommonInverterData.IAC", {val: resp.IAC.Value, ack: true});
-                        adapter.setState("ird.CommonInverterData.IDC", {val: resp.IDC.Value, ack: true});
-                        adapter.setState("ird.CommonInverterData.PAC", {val: resp.PAC.Value, ack: true});
-                        adapter.setState("ird.CommonInverterData.UAC", {val: resp.UAC.Value, ack: true});
-                        adapter.setState("ird.CommonInverterData.UDC", {val: resp.UDC.Value, ack: true});
+                        adapter.setState("inverter." + id + ".FAC", {val: resp.FAC.Value, ack: true});
+                        adapter.setState("inverter." + id + ".IAC", {val: resp.IAC.Value, ack: true});
+                        adapter.setState("inverter." + id + ".IDC", {val: resp.IDC.Value, ack: true});
+                        adapter.setState("inverter." + id + ".PAC", {val: resp.PAC.Value, ack: true});
+                        adapter.setState("inverter." + id + ".UAC", {val: resp.UAC.Value, ack: true});
+                        adapter.setState("inverter." + id + ".UDC", {val: resp.UDC.Value, ack: true});
                     }else{
-                        adapter.setState("ird.CommonInverterData.FAC", {val: 0, ack: true});
-                        adapter.setState("ird.CommonInverterData.IAC", {val: 0, ack: true});
-                        adapter.setState("ird.CommonInverterData.IDC", {val: 0, ack: true});
-                        adapter.setState("ird.CommonInverterData.PAC", {val: 0, ack: true});
-                        adapter.setState("ird.CommonInverterData.UAC", {val: 0, ack: true});
-                        adapter.setState("ird.CommonInverterData.UDC", {val: 0, ack: true});
+                        adapter.setState("inverter." + id + ".FAC", {val: 0, ack: true});
+                        adapter.setState("inverter." + id + ".IAC", {val: 0, ack: true});
+                        adapter.setState("inverter." + id + ".IDC", {val: 0, ack: true});
+                        adapter.setState("inverter." + id + ".PAC", {val: 0, ack: true});
+                        adapter.setState("inverter." + id + ".UAC", {val: 0, ack: true});
+                        adapter.setState("inverter." + id + ".UDC", {val: 0, ack: true});
                     }
 
                 }else{
-                    adapter.log.error(data.Head.Status.Reason);
-                    return true;
+                    adapter.log.error(data.Head.Status.Reason + " inverter: " + id);
                 }
             }catch(e){
                 adapter.log.error(e);
             }
-            return false;
         }
-        return true;
     });
+}
+
+function getStorageRealtimeData(id){
+
+}
+
+function getMeterRealtimeData(id){
+
+}
+
+function getSensorRealtimeData(id){
+
+}
+
+function getStringRealtimeData(id){
+
+}
+
+function getPowerFlowRealtimeData(){
+
 }
 
 function checkStatus() {
     ping.sys.probe(ip, function (isAlive) {
         adapter.setState("connected", {val: isAlive, ack: true});
         if (isAlive) {
-            var error = getInverterRealtimeDataCommonInverterData();
-            if(!error) {
-                adapter.setState("lastsync", {val: new Date().toISOString(), ack: true});
+            var inverterIds = adapter.config.inverter;
+            adapter.log.info(inverterIds);
+            adapter.log.info(inverterIds instanceof Array);
+            adapter.log.info(inverterIds.split(',') instanceof Array);
+            inverterIds.split(',').forEach(function(entry){
+                getInverterRealtimeData(entry);
+            });
+            adapter.config.sensorCard.split(',').forEach(function(entry){
+                getSensorRealtimeData(entry);
+            });
+            adapter.config.stringControl.split(',').forEach(function(entry){
+                getStringRealtimeData(entry);
+            });
+
+            if(apiver === 1) {
+                adapter.config.meter.split(',').forEach(function(entry){
+                    getMeterRealtimeData(entry);
+                });
+                adapter.config.storage.split(',').forEach(function (entry) {
+                    getStorageRealtimeData(entry);
+                });
+                getPowerFlowRealtimeData();
+            }
+
+            adapter.setState("lastsync", {val: new Date().toISOString(), ack: true});
+        }
+    });
+}
+
+//Hardware and Software Version
+function getLoggerInfo(){
+    request.get('http://' + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if("Body" in data) {
+                    var resp = data.Body.LoggerInfo;
+                    adapter.setState("HWVersion", {val: resp.HWVersion, ack: true});
+                    adapter.setState("SWVersion", {val: resp.SWVersion, ack: true});
+                }else{
+                    adapter.log.error(data.Head.Status.Reason);
+                }
+            }catch(e){
+                adapter.log.error(e);
             }
         }
+        adapter.log.error(error);
     });
 }
 
@@ -156,11 +391,11 @@ function main() {
 
     ip = adapter.config.ip;
     baseurl = adapter.config.baseurl;
-    deviceid = adapter.config.deviceId;
-    hybrid = adapter.config.hybrid;
-    apiver = adapter.config.apiversion;
+    apiver = parseInt(adapter.config.apiversion);
 	
-	 if (ip && baseurl && deviceid) {
+	 if (ip && baseurl) {
+
+         getLoggerInfo();
 
          var secs = adapter.config.poll;
          if (isNaN(secs) || secs < 1) {

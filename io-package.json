@@ -76,146 +76,39 @@
       "native": {}
     },
     {
-      "_id": "ird",
+      "_id": "HWVersion",
+      "type": "state",
+      "common": {
+        "name": "Hardware Version",
+        "type": "string",
+        "role": "meta",
+        "read": true,
+        "write": false,
+        "def": "",
+        "desc": "Hardware Version"
+      },
+      "native": {}
+    },
+    {
+      "_id": "SWVersion",
+      "type": "state",
+      "common": {
+        "name": "Software Version",
+        "type": "string",
+        "role": "meta",
+        "read": true,
+        "write": false,
+        "def": "",
+        "desc": "Software Version"
+      },
+      "native": {}
+    },
+    {
+      "_id": "inverter",
       "type": "channel",
       "common": {
         "name": "inverter realtime data",
         "role": "info"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData",
-      "type": "channel",
-      "common": {
-        "name": "common inverter data",
-        "role": "info"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.DAY_ENERGY",
-      "type": "state",
-      "common": {
-        "name": "day energy",
-        "type": "number",
-        "role": "value",
-        "unit": "Wh",
-        "read": true,
-        "write": false,
-        "desc": "Energy generated on current day"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.FAC",
-      "type": "state",
-      "common": {
-        "name": "FAC",
-        "type": "number",
-        "role": "value",
-        "unit": "Hz",
-        "read": true,
-        "write": false,
-        "desc": "AC frequency"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.IAC",
-      "type": "state",
-      "common": {
-        "name": "IAC",
-        "type": "number",
-        "role": "value",
-        "unit": "A",
-        "read": true,
-        "write": false,
-        "desc": "AC current"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.IDC",
-      "type": "state",
-      "common": {
-        "name": "IDC",
-        "type": "number",
-        "role": "value",
-        "unit": "A",
-        "read": true,
-        "write": false,
-        "desc": "DC current"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.PAC",
-      "type": "state",
-      "common": {
-        "name": "PAC",
-        "type": "number",
-        "role": "value",
-        "unit": "W",
-        "read": true,
-        "write": false,
-        "desc": "AC power"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.TOTAL_ENERGY",
-      "type": "state",
-      "common": {
-        "name": "total energy",
-        "type": "number",
-        "role": "value",
-        "unit": "Wh",
-        "read": true,
-        "write": false,
-        "desc": "Energy generated overall"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.UAC",
-      "type": "state",
-      "common": {
-        "name": "UAC",
-        "type": "number",
-        "role": "value",
-        "unit": "V",
-        "read": true,
-        "write": false,
-        "desc": "AC voltage"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.UDC",
-      "type": "state",
-      "common": {
-        "name": "UDC",
-        "type": "number",
-        "role": "value",
-        "unit": "V",
-        "read": true,
-        "write": false,
-        "desc": "DC voltage"
-      },
-      "native": {}
-    },
-    {
-      "_id": "ird.CommonInverterData.YEAR_ENERGY",
-      "type": "state",
-      "common": {
-        "name": "year energy",
-        "type": "number",
-        "role": "value",
-        "unit": "Wh",
-        "read": true,
-        "write": false,
-        "desc": "Energy generated in current year"
       },
       "native": {}
     }

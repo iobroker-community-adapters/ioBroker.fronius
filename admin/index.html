@@ -29,11 +29,6 @@
             "de": "IP überprüfen",
             "ru": "Проверка IP"
         },
-        "deviceId": {
-            "de": "Geräte ID 0..99",
-            "en": "Device ID 0..99",
-            "ru": "Идентификатор устройства 0..99"
-        },
         "Intervall": {
             "de": "Abfrageintervall in Sekunden",
             "en": "Query interval in seconds",
@@ -75,8 +70,6 @@
         }
 
         if(!$('#baseurl').val()){
-            $('#deviceId').prop('disabled', true).val("");
-            $('#hybrid').prop('disabled', true).prop('checked', false);
             $('#poll').prop('disabled', true).val("10");
         }
 
@@ -104,16 +97,17 @@
         $('label[for=ip]').css("color", "red");
         $('#ip').css("border-color", "red");
     }
-	
+
 	$(document).ready(function () {
 
 		var $ip = $('#ip');
-		
+
 		$('#checkIp').button().click(function(){
             if (!active) {
                 showMessage(_('Enable adapter first'), 'Warning', 'info');
                 return;
             }
+
 			var ip = $ip.val();
 			if(ip){
                 sendTo('fronius.' + instance, 'checkIP', ip, function (res) {
@@ -121,13 +115,8 @@
                         var data = JSON.parse(res);
                         if(data.error === 0) {
                             var result = data.message;
-                            $('#baseurl').val(result.BaseURL);
                             $('#apiversion').val(result.APIVersion);
-                            $('#deviceId').prop('disabled', false);
-                            $('#poll').prop('disabled', false);
-                            if (result.BaseURL === 1) {
-                                $('#hybrid').prop('disabled', false);
-                            }
+                            $('#baseurl').val(result.BaseURL).trigger("change");
                         }else{
                             setError();
                         }
@@ -140,14 +129,85 @@
             }
 		});
 
+		$('#baseurl').on("change", function(){
+		    var ip = $ip.val();
+		    var apiversion = parseInt($('#apiversion').val());
+            var baseurl = $(this).val();
+
+            if(ip && baseurl && apiversion === 1){
+                sendTo('fronius.' + instance, 'getDeviceInfo', ip + baseurl, function (res) {
+                    try{
+                        var data = JSON.parse(res);
+                        if(data.error === 0) {
+                            var result = data.message;
+                            $('#inverter').val(Object.keys(result.Inverter));
+                            $('#sensorCard').val(Object.keys(result.SensorCard));
+                            $('#stringControl').val(Object.keys(result.StringControl));
+                            $('#meter').val(Object.keys(result.Meter));
+                            $('#storage').val(Object.keys(result.Storage));
+                            $('#poll').prop('disabled', false);
+                        }else{
+                            setError();
+                        }
+                    }catch(err){
+                        setError();
+                    }
+                });
+            }else if(ip && baseurl && apiversion === 0){
+                sendTo('fronius.' + instance, 'getDeviceInfoInverter', ip + baseurl, function (res) {
+                    try{
+                        var data = JSON.parse(res);
+                        if(data.error === 0) {
+                            var result = data.message;
+                            $('#inverter').val(Object.keys(result));
+                        }else{
+                            setError();
+                        }
+                    }catch(err){
+                        setError();
+                    }
+                });
+                sendTo('fronius.' + instance, 'getDeviceInfoSensor', ip + baseurl, function (res) {
+                    try{
+                        var data = JSON.parse(res);
+                        if(data.error === 0) {
+                            var result = data.message;
+                            $('#sensorCard').val(Object.keys(result));
+                        }else{
+                            setError();
+                        }
+                    }catch(err){
+                        setError();
+                    }
+                });
+                sendTo('fronius.' + instance, 'getDeviceInfoString', ip + baseurl, function (res) {
+                    try{
+                        var data = JSON.parse(res);
+                        if(data.error === 0) {
+                            var result = data.message;
+                            $('#stringControl').val(Object.keys(result));
+                            $('#poll').prop('disabled', false);
+                        }else{
+                            setError();
+                        }
+                    }catch(err){
+                        setError();
+                    }
+                });
+            }
+        });
+
         $ip.on("change", function(){
 			$('label[for=ip]').css("color", "");
             $ip.css("border-color", "");
 			$('#baseurl').val("");
 			$('#apiversion').val("");
-			$('#deviceId').prop('disabled', true).val("");
-			$('#hybrid').prop('disabled', true).prop('checked', false);
-			$('#poll').prop('disabled', true).val("10");
+			$('#inverter').val("");
+            $('#sensorCard').val("");
+            $('#stringControl').val("");
+            $('#meter').val("");
+            $('#storage').val("");
+       	    $('#poll').prop('disabled', true).val("10");
 		});
 	});
 
@@ -167,6 +227,11 @@
 	
 	<input class="value" id="baseurl" type="hidden" />
 	<input class="value" id="apiversion" type="hidden" />
+    <input class="value" id="inverter" type="hidden" />
+    <input class="value" id="sensorCard" type="hidden" />
+    <input class="value" id="stringControl" type="hidden" />
+    <input class="value" id="meter" type="hidden" />
+    <input class="value" id="storage" type="hidden" />
 
     <table>
         <tr>
@@ -177,27 +242,7 @@
 			<td><button id="checkIp"><span class="translate">Check IP</span></button></td>
         </tr>
 	</table>
-	
-	<hr/>
-	
-	<table>
-        <tr>
-            <td><label class="translate" for="deviceId">deviceId</label></td>
-            <td colspan="2">
-				<input class="value" id="deviceId" type="text" size="6" maxlength="2"/>
-            </td>
-        </tr>
-	</table>
-	
-	<table>
-		<tr>
-            <td><label class="translate" for="hybrid">Fronius Hybrid</label></td>
-            <td colspan="2">
-				<input class="value" id="hybrid" type="checkbox" />
-            </td>
-        </tr>
-	</table>
-	
+
 	<table>
         <tr>
             <td><label class="translate" for="poll">Intervall</label></td>
