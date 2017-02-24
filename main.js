@@ -124,9 +124,7 @@ function checkIP(ipToCheck, callback) {
 
 //Check Fronius devices v1
 function getActiveDeviceInfo(type, url, callback) {
-    adapter.log.info("scheissssseeeeee " + type + url);
     request.get('http://' + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function (error, response, body) {
-        adapter.log.info(body);
         try {
             var deviceData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
@@ -334,11 +332,7 @@ function checkStatus() {
     ping.sys.probe(ip, function (isAlive) {
         adapter.setState("connected", {val: isAlive, ack: true});
         if (isAlive) {
-            var inverterIds = adapter.config.inverter;
-            adapter.log.info(inverterIds);
-            adapter.log.info(inverterIds instanceof Array);
-            adapter.log.info(inverterIds.split(',') instanceof Array);
-            inverterIds.split(',').forEach(function(entry){
+            adapter.config.inverter.split(',').forEach(function(entry){
                 getInverterRealtimeData(entry);
             });
             adapter.config.sensorCard.split(',').forEach(function(entry){

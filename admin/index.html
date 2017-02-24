@@ -70,7 +70,7 @@
         }
 
         if(!$('#baseurl').val()){
-            $('#poll').prop('disabled', true).val("10");
+            $('#poll').prop('disabled', true).val("30");
         }
 
         socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
@@ -96,6 +96,7 @@
     function setError(){
         $('label[for=ip]').css("color", "red");
         $('#ip').css("border-color", "red");
+        $('#checkIcon').attr("src","img/cancel.png");
     }
 
 	$(document).ready(function () {
@@ -110,6 +111,7 @@
 
 			var ip = $ip.val();
 			if(ip){
+                $('#checkIcon').attr("src","img/loader.gif");
                 sendTo('fronius.' + instance, 'checkIP', ip, function (res) {
                     try{
                         var data = JSON.parse(res);
@@ -146,6 +148,7 @@
                             $('#meter').val(Object.keys(result.Meter));
                             $('#storage').val(Object.keys(result.Storage));
                             $('#poll').prop('disabled', false);
+                            $('#checkIcon').attr("src","img/ok.png");
                         }else{
                             setError();
                         }
@@ -187,6 +190,7 @@
                             var result = data.message;
                             $('#stringControl').val(Object.keys(result));
                             $('#poll').prop('disabled', false);
+                            $('#checkIcon').attr("src","img/ok.png");
                         }else{
                             setError();
                         }
@@ -207,7 +211,8 @@
             $('#stringControl').val("");
             $('#meter').val("");
             $('#storage').val("");
-       	    $('#poll').prop('disabled', true).val("10");
+       	    $('#poll').prop('disabled', true).val("30");
+            $('#checkIcon').attr("src","img/cancel.png");
 		});
 	});
 
@@ -240,6 +245,7 @@
 				<input class="value" id="ip" placeholder="192.168.x.x" type="text" size="15" maxlength="15"/>
 			</td>
 			<td><button id="checkIp"><span class="translate">Check IP</span></button></td>
+            <td style="text-align: center;"><img src="img/cancel.png" id="checkIcon"/></td>
         </tr>
 	</table>
 

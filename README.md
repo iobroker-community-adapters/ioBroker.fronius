@@ -20,6 +20,12 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
 
 ## Changelog
 
+#### 0.0.3
+* (ldittmar) Improved installation routine
+
+#### 0.0.2
+* (ldittmar) First data is read
+
 #### 0.0.1
 * (ldittmar) initial commit
 
