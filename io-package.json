@@ -6,24 +6,24 @@
       "0.0.3": {
         "en": "Improved installation routine",
         "de": "Verbesserte Installationsroutine",
-        "ru": "Улучшенная процедура установки"
+        "ru": "Улучшеный процесс установки"
       },
       "0.0.2": {
         "en": "First data is read",
         "de": "Ersten Daten werden gelesen",
-        "ru": "Во-первых данные считываются"
+        "ru": "Первые данные читаются"
       },
       "0.0.1": {
         "en": "initial adapter",
         "de": "Initiale Version",
-        "ru": "Первоначальный адаптер"
+        "ru": "Первая версия"
       }
     },
     "title": "Fronius inverters adapter",
     "desc": {
       "en": "ioBroker Fronius inverters Adapter",
       "de": "ioBroker Fronius Wechselrichter Adapter",
-      "ru": "ioBroker Fronius инвертор драйвер"
+      "ru": "Драйвер для инвертора Fronius"
     },
     "license": "MIT",
     "platform": "Javascript/Node.js",
