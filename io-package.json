@@ -1,8 +1,13 @@
 {
   "common": {
     "name": "fronius",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "news": {
+      "0.0.4": {
+        "en": "Read more data",
+        "de": "Weitere Daten ausgelesen",
+        "ru": "читать далее данные"
+      },
       "0.0.3": {
         "en": "Improved installation routine",
         "de": "Verbesserte Installationsroutine",

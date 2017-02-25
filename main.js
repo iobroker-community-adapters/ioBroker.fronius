@@ -308,24 +308,325 @@ function getInverterRealtimeData(id){
     });
 }
 
-function getStorageRealtimeData(id){
+function  createStorageObjects(id) {
 
+    adapter.setObjectNotExists('storage', {
+        type: 'channel',
+        common: {
+            name: "detailed information about Storage devices",
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id, {
+        type: 'channel',
+        common: {
+            name: "storage with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
+
+}
+
+function getStorageRealtimeData(id){
+    request.get('http://' + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if ("Body" in data) {
+
+                    createStorageObjects(id);
+
+                    var resp = data.Body.Data;
+
+                } else {
+                    adapter.log.error(data.Head.Status.Reason + " storage: " + id);
+                }
+            } catch (e) {
+                adapter.log.error(e);
+            }
+        }
+    });
+}
+
+function  createMeterObjects(id){
+
+    adapter.setObjectNotExists('meter', {
+        type: 'channel',
+        common: {
+            name: "detailed information about Meter devices",
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id, {
+        type: 'channel',
+        common: {
+            name: "meter with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Model', {
+        type: "state",
+        common: {
+            name: "ManufacturerModel",
+            type: "string",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Manufacturer & Model"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Sum', {
+        type: "state",
+        common: {
+            name: "current power",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "current total power"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Minus_Relative', {
+        type: "state",
+        common: {
+            name: "EnergyReal_WAC_Minus_Relative",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
 }
 
 function getMeterRealtimeData(id){
+    request.get('http://' + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if ("Body" in data) {
+
+                    createMeterObjects(id);
+
+                    var resp = data.Body.Data;
+
+                    adapter.setState("meter." + id + ".Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
+                    adapter.setState("meter." + id + ".PowerReal_P_Sum", {val: resp.PowerReal_P_Sum, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReal_WAC_Minus_Relative", {
+                        val: resp.EnergyReal_WAC_Minus_Relative,
+                        ack: true
+                    });
+
+                } else {
+                    adapter.log.error(data.Head.Status.Reason + " meter: " + id);
+                }
+            } catch (e) {
+                adapter.log.error(e);
+            }
+        }
+    });
+}
+
+function createSensorNowObjects(id){
+
+    adapter.setObjectNotExists('sensor', {
+        type: 'channel',
+        common: {
+            name: "detailed information about Sensor devices",
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('sensor.' + id, {
+        type: 'channel',
+        common: {
+            name: "sensor with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
 
 }
 
-function getSensorRealtimeData(id){
+function getSensorRealtimeDataNowSensorData(id){
+    request.get('http://' + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if ("Body" in data) {
 
+                    createSensorNowObjects(id);
+
+                    var resp = data.Body.Data;
+
+                } else {
+                    adapter.log.error(data.Head.Status.Reason + " sensor: " + id);
+                }
+            } catch (e) {
+                adapter.log.error(e);
+            }
+        }
+    });
+}
+
+function createSensorMinMaxObjects(id){
+
+    adapter.setObjectNotExists('sensor', {
+        type: 'channel',
+        common: {
+            name: "detailed information about Sensor devices",
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('sensor.' + id, {
+        type: 'channel',
+        common: {
+            name: "sensor with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
+
+}
+
+function getSensorRealtimeDataMinMaxSensorData(id){
+    request.get('http://' + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if ("Body" in data) {
+
+                    createSensorMinMaxObjects(id);
+
+                    var resp = data.Body.Data;
+
+                } else {
+                    adapter.log.error(data.Head.Status.Reason + " sensor: " + id);
+                }
+            } catch (e) {
+                adapter.log.error(e);
+            }
+        }
+    });
 }
 
 function getStringRealtimeData(id){
 
 }
 
-function getPowerFlowRealtimeData(){
+function createPowerFlowObjects(){
 
+    adapter.setObjectNotExists('powerflow', {
+        type: 'channel',
+        common: {
+            name: "detailed information about the power flow",
+            role: "info"
+        },
+        native: {}
+    });
+
+    adapter.setObjectNotExists('powerflow.Mode', {
+        type: "state",
+        common: {
+            name: "Mode",
+            type: "string",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Power Flow Mode"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.P_Grid', {
+        type: "state",
+        common: {
+            name: "grid power",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "grid power"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.P_Load', {
+        type: "state",
+        common: {
+            name: "load power",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "load power"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.P_Akku', {
+        type: "state",
+        common: {
+            name: "akku power",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "akku power"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.P_PV', {
+        type: "state",
+        common: {
+            name: "pv power",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "pv power"
+        },
+        native: {}
+    });
+
+}
+
+function getPowerFlowRealtimeData(){
+    request.get('http://' + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                var data = JSON.parse(body);
+                if ("Body" in data) {
+
+                    createPowerFlowObjects();
+
+                    var resp = data.Body.Data.Site;
+
+                    adapter.setState("powerflow.Mode", {val: resp.Mode, ack: true});
+                    adapter.setState("powerflow.P_Grid", {val: resp.P_Grid == null?0:resp.P_Grid, ack: true});
+                    adapter.setState("powerflow.P_Load", {val: resp.P_Load == null?0:resp.P_Load, ack: true});
+                    adapter.setState("powerflow.P_Akku", {val: resp.P_Akku == null?0:resp.P_Akku, ack: true});
+                    adapter.setState("powerflow.P_PV", {val: resp.P_PV == null?0:resp.P_PV, ack: true});
+
+                } else {
+                    adapter.log.error(data.Head.Status.Reason + " sensor: " + id);
+                }
+            } catch (e) {
+                adapter.log.error(e);
+            }
+        }
+    });
 }
 
 function checkStatus() {
@@ -335,20 +636,29 @@ function checkStatus() {
             adapter.config.inverter.split(',').forEach(function(entry){
                 getInverterRealtimeData(entry);
             });
-            adapter.config.sensorCard.split(',').forEach(function(entry){
-                getSensorRealtimeData(entry);
-            });
-            adapter.config.stringControl.split(',').forEach(function(entry){
-                getStringRealtimeData(entry);
-            });
+            if(adapter.config.sensorCard) {
+                adapter.config.sensorCard.split(',').forEach(function (entry) {
+                    getSensorRealtimeDataNowSensorData(entry);
+                    getSensorRealtimeDataMinMaxSensorData(entry);
+                });
+            }
+            if(adapter.config.stringControl) {
+                adapter.config.stringControl.split(',').forEach(function (entry) {
+                    getStringRealtimeData(entry);
+                });
+            }
 
             if(apiver === 1) {
-                adapter.config.meter.split(',').forEach(function(entry){
-                    getMeterRealtimeData(entry);
-                });
-                adapter.config.storage.split(',').forEach(function (entry) {
-                    getStorageRealtimeData(entry);
-                });
+                if(adapter.config.meter) {
+                    adapter.config.meter.split(',').forEach(function (entry) {
+                        getMeterRealtimeData(entry);
+                    });
+                }
+                if(adapter.config.storage) {
+                    adapter.config.storage.split(',').forEach(function (entry) {
+                        getStorageRealtimeData(entry);
+                    });
+                }
                 getPowerFlowRealtimeData();
             }
 

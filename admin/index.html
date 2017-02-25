@@ -143,11 +143,11 @@
                         var data = JSON.parse(res);
                         if(data.error === 0) {
                             var result = data.message;
-                            $('#inverter').val(Object.keys(result.Inverter));
-                            $('#sensorCard').val(Object.keys(result.SensorCard));
-                            $('#stringControl').val(Object.keys(result.StringControl));
-                            $('#meter').val(Object.keys(result.Meter));
-                            $('#storage').val(Object.keys(result.Storage));
+                            $('#inverter').val(result.hasOwnProperty('Inverter')?Object.keys(result.Inverter):'');
+                            $('#sensorCard').val(result.hasOwnProperty('SensorCard')?Object.keys(result.SensorCard):'');
+                            $('#stringControl').val(result.hasOwnProperty('StringControl')?Object.keys(result.StringControl):'');
+                            $('#meter').val(result.hasOwnProperty('Meter')?Object.keys(result.Meter):'');
+                            $('#storage').val(result.hasOwnProperty('Storage')?Object.keys(result.Storage):'');
                             $('#poll').prop('disabled', false);
                             $('#checkIcon').attr("src","img/ok.png");
                         }else{
