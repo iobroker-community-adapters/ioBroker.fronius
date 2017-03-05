@@ -265,6 +265,373 @@ function createInverterObjects(id){
     },
         native: {}
     });
+    adapter.setObjectNotExists('inverter.' + id + '.StatusCode', {
+        type: "state",
+        common: {
+            name: "status code",
+            type: "number",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Status code for the inverter"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.StatusCodeString', {
+        type: "state",
+        common: {
+            name: "status code",
+            type: "string",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Meaning of numerical status codes for the inverter"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.ErrorCode', {
+        type: "state",
+        common: {
+            name: "error code",
+            type: "number",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Error code for the inverter"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverter.' + id + '.ErrorCodeString', {
+        type: "state",
+        common: {
+            name: "error code",
+            type: "string",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Meaning of numerical error codes for the inverter"
+        },
+        native: {}
+    });
+}
+
+function getStringErrorCode100(errorcode){
+    switch(errorcode){
+        case 102:
+            return "AC voltage too high";
+        case 103:
+            return "AC voltage too low";
+        case 105:
+            return "AC frequency too high";
+        case 106:
+            return "AC frequency too low";
+        case 107:
+            return "AC grid outside the permissible limits";
+        case 108:
+            return "Stand alone operation detected";
+        default:
+            return "";
+    }
+}
+
+function getStringErrorCode300(errorcode){
+    switch(errorcode){
+        case 301:
+            return "Overcurrent (AC)";
+        case 302:
+            return "Overcurrent (DC)";
+        case 303:
+            return "DC module over temperature";
+        case 304:
+            return "AC module over temperature";
+        case 305:
+            return "No power being fed in, despite closed relay";
+        case 306:
+            return "PV output too low for feeding energy into the grid";
+        case 307:
+            return "LOW PV VOLTAGE! DC input voltage too low for feeding energy into the grid";
+        case 308:
+            return "Intermediate circuit voltage too high";
+        case 309:
+            return "DC input voltage MPPT 1 too high";
+        case 311:
+            return "Polarity of DC strings reversed";
+        case 313:
+            return "DC input voltage MPPT 2 too high";
+        case 314:
+            return "Current sensor calibration timeout";
+        case 315:
+            return "AC current sensor error";
+        case 316:
+            return "Interrupt Check fail";
+        case 325:
+            return "Overtemperature in the connection area";
+        case 326:
+            return "Fan 1 error";
+        case 327:
+            return "Fan 2 error";
+        default:
+            return "";
+    }
+}
+
+function getStringErrorCode400(errorcode){
+    switch(errorcode){
+        case 401:
+            return "No communication possible with the power stage set";
+        case 406:
+            return "AC module temperature sensor faulty (L1)";
+        case 407:
+            return "AC module temperature sensor faulty (L2)";
+        case 408:
+            return "DC component measured in the grid too high";
+        case 412:
+            return "Fixed voltage mode has been selected instead of MPP voltage mode and the fixed voltage has been set to too low or too high a value";
+        case 415:
+            return "Safety cut out via option card or RECERBO has triggered";
+        case 416:
+            return "No communication possible between power stage set and control system";
+        case 417:
+            return "Hardware ID problem";
+        case 419:
+            return "Unique ID conflict";
+        case 420:
+            return "No communication possible with the Hybrid manager";
+        case 421:
+            return "HID range error";
+        case 425:
+            return "No communication with the power stage set possible";
+        case 426:
+        case 427:
+        case 428:
+            return "Possible hardware fault";
+        case 431:
+            return "Software problem";
+        case 436:
+            return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced.";
+        case 437:
+            return "Power stage set problem";
+        case 438:
+            return "Functional incompatibility (one or more PC boards in the inverter in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
+        case 443:
+            return "Intermediate circuit voltage too low or asymmetric";
+        case 445:
+            return "– Compatability error (e.g. due to replacement of a PC board) – invalid power stage set configuration";
+        case 447:
+            return "Insulation fault";
+        case 448:
+            return "Neutral conductor not connected";
+        case 450:
+            return "Guard cannot be found";
+        case 451:
+            return "Memory error detected";
+        case 452:
+            return "Communication error between the processors";
+        case 453:
+            return "Grid voltage and power stage set are incompatible";
+        case 454:
+            return "Grid frequency and power stage set are incompatible";
+        case 456:
+            return "Anti-islanding function is no longer implemented correctly";
+        case 457:
+            return "Grid relay sticking or the neutral conductor ground voltage is too high";
+        case 458:
+            return "Error when recording the measuring signal";
+        case 459:
+            return "Error when recording the measuring signal for the insulation test";
+        case 460:
+            return "Reference voltage source for the digital signal processor (DSP) is working out of tolerance";
+        case 461:
+            return "Fault in the DSP data memory";
+        case 462:
+            return "Error with DC feed monitoring routine";
+        case 463:
+            return "Reversed AC polarity, AC connector inserted incorrectly";
+        case 474:
+            return "RCMU sensor faulty";
+        case 475:
+            return "Solar panel ground fault, insulation fault (connection between solar panel and ground)";
+        case 476:
+            return "Driver supply voltage too low";
+        case 480:
+        case 481:
+            return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
+        case 482:
+            return "Setup after the initial start-up was interrupted";
+        case 483:
+            return "Voltage UDC fixed on MPP2 string out of limits";
+        case 485:
+            return "CAN transmit buffer is full";
+        default:
+            return "";
+    }
+}
+
+function getStringErrorCode500(errorcode){
+    switch(errorcode){
+        case 502:
+            return "Insulation error on the solar panels";
+        case 509:
+            return "No energy fed into the grid in the past 24 hours";
+        case 515:
+            return "No communication with filter possible";
+        case 516:
+            return "No communication possible with the storage unit";
+        case 517:
+            return "Power derating caused by too high a temperature";
+        case 518:
+            return "Internal DSP malfunction";
+        case 519:
+            return "No communication possible with the storage unit";
+        case 520:
+            return "No energy fed into the grid by MPPT1 in the past 24 hours";
+        case 522:
+            return "DC low string 1";
+        case 523:
+            return "DC low string 2";
+        case 558:
+        case 559:
+            return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
+        case 560:
+            return "Derating caused by over-frequency";
+        default:
+        case 564:
+            return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
+        case 566:
+            return "Arc detector switched off (e.g. during external arc monitoring)";
+        case 567:
+            return "Grid Voltage Dependent Power Reduction is active";
+            return "";
+    }
+}
+
+function getStringErrorCode600(errorcode){
+    switch(errorcode){
+        case 601:
+            return "CAN bus is full";
+        case 603:
+            return "AC module temperature sensor faulty (L3)";
+        case 604:
+            return "DC module temperature sensor faulty";
+        case 607:
+            return "RCMU error";
+        case 608:
+            return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
+        default:
+            return "";
+    }
+}
+
+function getStringErrorCode700(errorcode){
+    switch(errorcode){
+        case 701:
+        case 702:
+        case 703:
+        case 704:
+        case 705:
+        case 706:
+        case 707:
+        case 708:
+        case 709:
+        case 710:
+        case 711:
+        case 712:
+        case 713:
+        case 714:
+        case 715:
+        case 716:
+            return "Provides information about the internal processor status";
+        case 721:
+            return "EEPROM has been reinitialised";
+        case 722:
+        case 723:
+        case 724:
+        case 725:
+        case 726:
+        case 727:
+        case 728:
+        case 729:
+        case 730:
+            return "Provides information about the internal processor status";
+        case 731:
+            return "Initialisation error – USB flash drive is not supported";
+        case 732:
+            return "Initialisation erro – Over current on USB stick";
+        case 733:
+            return "No USB flash drive connected";
+        case 734:
+            return "Update file not recognised or not present";
+        case 735:
+            return "Update file does not match the device, update file too old";
+        case 736:
+            return "Write or read error occurred";
+        case 737:
+            return "File could not be opened";
+        case 738:
+            return "Log file cannot be saved (e.g. USB flash drive is write protected or full)";
+        case 740:
+            return "Initialisation error-error in file system on USB flash drive";
+        case 741:
+            return "Error during recording of logging data";
+        case 743:
+            return "Error occurred during update process";
+        case 745:
+            return "Update file corrupt";
+        case 746:
+            return "Error occurred during update process";
+        case 751:
+            return "Time lost";
+        case 752:
+            return "Real Time Clock module communication error";
+        case 753:
+            return "Internal error: Real Time Clock module is in emergency mode";
+        case 754:
+        case 755:
+            return "Provides information about the processor status";
+        case 757:
+            return "Hardware error in the Real Time Clock module";
+        case 758:
+            return "Internal error: Real Time Clock module is in emergency mode";
+        case 760:
+            return "Internal hardware error";
+        case 761:
+        case 762:
+        case 763:
+        case 764:
+        case 765:
+            return "Provides information about the internal processor status";
+        case 766:
+            return "Emergency power de-rating has been activated";
+        case 767:
+            return "Provides information about the internal processor status";
+        case 768:
+            return "Different power limitation in the hardware modules";
+        case 772:
+            return "Storage unit not available";
+        case 773:
+            return "Software update group 0 (invalid country setup)";
+        case 775:
+            return "PMC power stage set not available";
+        case 776:
+            return "Invalid device type";
+        case 781:
+        case 782:
+        case 783:
+        case 784:
+        case 785:
+        case 786:
+        case 787:
+        case 788:
+        case 789:
+        case 790:
+        case 791:
+        case 792:
+        case 793:
+        case 794:
+            return "Provides information about the internal processor status";
+        default:
+            return "";
+    }
 }
 
 //Get Infos from Inverter
@@ -298,6 +665,40 @@ function getInverterRealtimeData(id){
                         adapter.setState("inverter." + id + ".UDC", {val: 0, ack: true});
                     }
 
+                    var status = resp.DeviceStatus;
+                    var statusCode = parseInt(status.StatusCode);
+                    adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
+
+                    var statusCodeString = "Startup";
+                    if(statusCode === 7){
+                        statusCodeString = "Running";
+                    }else if(statusCode === 8){
+                        statusCodeString = "Standby";
+                    }else if(statusCode === 9){
+                        statusCodeString = "Bootloading";
+                    }else if(statusCode === 10){
+                        statusCodeString = "Error";
+                    }
+                    adapter.setState("inverter." + id + ".StatusCodeString", {val: statusCodeString, ack: true});
+
+                    statusCode = parseInt(status.ErrorCode);
+                    adapter.setState("inverter." + id + ".ErrorCode", {val: statusCode, ack: true});
+
+                    if(statusCode >= 700){
+                        statusCodeString = getStringErrorCode700(statusCode);
+                    }else if(statusCode >= 600){
+                        statusCodeString = getStringErrorCode600(statusCode);
+                    }else if(statusCode >= 500){
+                        statusCodeString = getStringErrorCode500(statusCode);
+                    }else if(statusCode >= 400){
+                        statusCodeString = getStringErrorCode400(statusCode);
+                    }else if(statusCode >= 300){
+                        statusCodeString = getStringErrorCode300(statusCode);
+                    }else{
+                        statusCodeString = getStringErrorCode100(statusCode);
+                    }
+                    adapter.setState("inverter." + id + ".ErrorCodeString", {val: statusCodeString, ack: true});
+
                 }else{
                     adapter.log.error(data.Head.Status.Reason + " inverter: " + id);
                 }
@@ -326,6 +727,129 @@ function  createStorageObjects(id) {
         },
         native: {}
     });
+    adapter.setObjectNotExists('storage.' + id + '.controller', {
+        type: 'channel',
+        common: {
+            name: "controller",
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Model', {
+        type: "state",
+        common: {
+            name: "ManufacturerModel Controller",
+            type: "string",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Manufacturer & Model from controller"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Enable', {
+        type: "state",
+        common: {
+            name: "enable",
+            type: "boolean",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "controller enabled"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.StateOfCharge_Relative', {
+        type: "state",
+        common: {
+            name: "State of charge",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: "Realative state of charge"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Voltage_DC', {
+        type: "state",
+        common: {
+            name: "Voltage DC",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: "Voltage DC"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Current_DC', {
+        type: "state",
+        common: {
+            name: "Current DC",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: "Current DC"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Temperature_Cell', {
+        type: "state",
+        common: {
+            name: "Cell temperature",
+            type: "number",
+            role: "value",
+            unit: "°C",
+            read: true,
+            write: false,
+            desc: "Cell temperature"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Voltage_DC_Maximum_Cell', {
+        type: "state",
+        common: {
+            name: "Voltage DC Maximum Cell",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: "Voltage DC Maximum Cell"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.Voltage_DC_Minimum_Cell', {
+        type: "state",
+        common: {
+            name: "Voltage DC Minimum Cell",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: "Voltage DC Minimum Cell"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('storage.' + id + '.controller.DesignedCapacity', {
+        type: "state",
+        common: {
+            name: "Designed capacity",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: "Designed capacity"
+        },
+        native: {}
+    });
 
 }
 
@@ -338,7 +862,18 @@ function getStorageRealtimeData(id){
 
                     createStorageObjects(id);
 
-                    var resp = data.Body.Data;
+                    var resp = data.Body.Data.Controller;
+
+                    adapter.setState("storage." + id + ".controller.Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
+                    adapter.setState("storage." + id + ".controller.Enable", {val: resp.Enable === '1', ack: true});
+                    adapter.setState("storage." + id + ".controller.StateOfCharge_Relative", {val: resp.StateOfCharge_Relative, ack: true});
+                    adapter.setState("storage." + id + ".controller.Voltage_DC", {val: resp.Voltage_DC, ack: true});
+                    adapter.setState("storage." + id + ".controller.Current_DC", {val: resp.Current_DC, ack: true});
+                    adapter.setState("storage." + id + ".controller.Temperature_Cell", {val: resp.Temperature_Cell, ack: true});
+                    adapter.setState("storage." + id + ".controller.Voltage_DC_Maximum_Cell", {val: resp.Voltage_DC_Maximum_Cell, ack: true});
+                    adapter.setState("storage." + id + ".controller.Voltage_DC_Minimum_Cell", {val: resp.Voltage_DC_Minimum_Cell, ack: true});
+                    adapter.setState("storage." + id + ".controller.DesignedCapacity", {val: resp.DesignedCapacity, ack: true});
+
 
                 } else {
                     adapter.log.error(data.Head.Status.Reason + " storage: " + id);
@@ -700,6 +1235,7 @@ function main() {
 	 if (ip && baseurl) {
 
          getLoggerInfo();
+         checkStatus();
 
          var secs = adapter.config.poll;
          if (isNaN(secs) || secs < 1) {

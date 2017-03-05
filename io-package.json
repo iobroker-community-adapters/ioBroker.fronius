@@ -1,8 +1,13 @@
 {
   "common": {
     "name": "fronius",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "news": {
+      "0.0.5": {
+        "en": "Read storage data and error/status codes",
+        "de": "Akku Daten und Status-/Fehlercodes auslesen",
+        "ru": "Считывание данных для хранения и коды ошибок / состояния"
+      },
       "0.0.4": {
         "en": "Read more data",
         "de": "Weitere Daten ausgelesen",
