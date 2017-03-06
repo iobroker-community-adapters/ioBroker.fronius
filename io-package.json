@@ -54,12 +54,15 @@
     "type": "hardware"
   },
   "native": {
-    "ip": "",
+	"ip": "",
 	"apiversion": "",
 	"baseurl": "",
-    "deviceId": "0",
-    "poll": "30",
-	"hybrid": false
+	"inverter": "",
+	"sensorCard": "",
+	"stringControl": "",
+	"meter": "",
+	"storage": "",
+    	"poll": "30"
   },
   "objects": [],
   "instanceObjects": [
