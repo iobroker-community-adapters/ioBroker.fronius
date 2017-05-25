@@ -51,7 +51,7 @@
     ],
     "readme": "https://github.com/ldittmar81/ioBroker.fronius/blob/master/README.md",
     "loglevel": "info",
-    "type": "hardware"
+    "type": "energy"
   },
   "native": {
 	"ip": "",
