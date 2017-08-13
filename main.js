@@ -130,7 +130,7 @@ function getActiveDeviceInfo(type, url, callback) {
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
                 callback({error: 0, message: deviceData.Body.Data});
             }else{
-                adapter.log.error(data.Head.Status.Reason);
+                adapter.log.warn(data.Head.Status.Reason);
                 callback({error: 1, message: {}});
             }
         } catch (e) {
@@ -700,10 +700,10 @@ function getInverterRealtimeData(id){
                     adapter.setState("inverter." + id + ".ErrorCodeString", {val: statusCodeString, ack: true});
 
                 }else{
-                    adapter.log.error(data.Head.Status.Reason + " inverter: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
                 }
             }catch(e){
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
     });
@@ -876,10 +876,10 @@ function getStorageRealtimeData(id){
 
 
                 } else {
-                    adapter.log.error(data.Head.Status.Reason + " storage: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " storage: " + id);
                 }
             } catch (e) {
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
     });
@@ -962,10 +962,10 @@ function getMeterRealtimeData(id){
                     });
 
                 } else {
-                    adapter.log.error(data.Head.Status.Reason + " meter: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
             } catch (e) {
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
     });
@@ -1004,10 +1004,10 @@ function getSensorRealtimeDataNowSensorData(id){
                     var resp = data.Body.Data;
 
                 } else {
-                    adapter.log.error(data.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
             } catch (e) {
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
     });
@@ -1046,10 +1046,10 @@ function getSensorRealtimeDataMinMaxSensorData(id){
                     var resp = data.Body.Data;
 
                 } else {
-                    adapter.log.error(data.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
             } catch (e) {
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
     });
@@ -1155,10 +1155,10 @@ function getPowerFlowRealtimeData(){
                     adapter.setState("powerflow.P_PV", {val: resp.P_PV == null?0:resp.P_PV, ack: true});
 
                 } else {
-                    adapter.log.error(data.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
             } catch (e) {
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
     });
@@ -1213,13 +1213,13 @@ function getLoggerInfo(){
                     adapter.setState("HWVersion", {val: resp.HWVersion, ack: true});
                     adapter.setState("SWVersion", {val: resp.SWVersion, ack: true});
                 }else{
-                    adapter.log.error(data.Head.Status.Reason);
+                    adapter.log.warn(data.Head.Status.Reason);
                 }
             }catch(e){
-                adapter.log.error(e);
+                adapter.log.warn(e);
             }
         }
-        adapter.log.error(error);
+        adapter.log.warn(error);
     });
 }
 
