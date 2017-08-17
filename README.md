@@ -20,6 +20,11 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
 
 ## Changelog
 
+#### 1.0.1
+* (tobintax) Added more values from Smartmeter
+* (tobintax) Added more Powerflow Values
+* (tobintax) Removed Value "EnergyReal_WAC_Minus_Relative" . This Value had no result and is undocumented in the fronius api documentation.
+
 #### 1.0.0
 * (ldittmar) Fixed little errors
 

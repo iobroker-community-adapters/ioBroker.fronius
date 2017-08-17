@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fronius",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ioBroker Fronius Adapter",
   "author": {
     "name": "ldittmar",
@@ -12,8 +12,8 @@
     "ioBroker",
     "Fronius",
     "inverter",
-	"Wechselrichter",
-	"PV Anlage",
+    "Wechselrichter",
+    "PV Anlage",
     "Smart Home",
     "home automation",
     "Symo",

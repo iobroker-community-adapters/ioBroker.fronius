@@ -1,8 +1,13 @@
 {
   "common": {
     "name": "fronius",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "(Tobintax) Added Values from Smartmeter. Added more Powerflow Values.",
+        "de": "(Tobintax) Werte von Smartmeter hinzugefügt. Mehr Powerflow-Werte hinzugefügt.",
+        "ru": "(Tobintax) Добавлены значения из Smart Meter. Добавлены значения расхода мощности."
+      },
       "1.0.0": {
         "en": "Little changes",
         "de": "Kleine Änderungen",
