@@ -928,10 +928,49 @@ function  createMeterObjects(id){
         },
         native: {}
     });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Minus_Relative', {
+    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_1', {
         type: "state",
         common: {
-            name: "EnergyReal_WAC_Minus_Relative",
+            name: "PowerReal_P_Phase_1",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_2', {
+        type: "state",
+        common: {
+            name: "PowerReal_P_Phase_2",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_3', {
+        type: "state",
+        common: {
+            name: "PowerReal_P_Phase_3",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Sum', {
+        type: "state",
+        common: {
+            name: "PowerReactive_Q_Sum",
             type: "number",
             role: "value",
             unit: "?",
@@ -941,6 +980,319 @@ function  createMeterObjects(id){
         },
         native: {}
     });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_1', {
+        type: "state",
+        common: {
+            name: "PowerReactive_Q_Phase_1",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_2', {
+        type: "state",
+        common: {
+            name: "PowerReactive_Q_Phase_2",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_3', {
+        type: "state",
+        common: {
+            name: "PowerReactive_Q_Phase_3",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_1', {
+        type: "state",
+        common: {
+            name: "Current_AC_Phase_1",
+            type: "number",
+            role: "value",
+            unit: "A",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_2', {
+        type: "state",
+        common: {
+            name: "Current_AC_Phase_2",
+            type: "number",
+            role: "value",
+            unit: "A",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_3', {
+        type: "state",
+        common: {
+            name: "Current_AC_Phase_3",
+            type: "number",
+            role: "value",
+            unit: "A",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_1', {
+        type: "state",
+        common: {
+            name: "Voltage_AC_Phase_1",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_2', {
+        type: "state",
+        common: {
+            name: "Voltage_AC_Phase_2",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_3', {
+        type: "state",
+        common: {
+            name: "Voltage_AC_Phase_3",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_12', {
+        type: "state",
+        common: {
+            name: "Voltage_AC_PhaseToPhase_12",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_23', {
+        type: "state",
+        common: {
+            name: "Voltage_AC_PhaseToPhase_23",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_31', {
+        type: "state",
+        common: {
+            name: "Voltage_AC_PhaseToPhase_31",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Frequency_Phase_Average', {
+        type: "state",
+        common: {
+            name: "Frequency_Phase_Average",
+            type: "number",
+            role: "value",
+            unit: "HZ",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerApparent_S_Sum', {
+        type: "state",
+        common: {
+            name: "PowerApparent_S_Sum",
+            type: "number",
+            role: "value",
+            unit: "W",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Sum', {
+        type: "state",
+        common: {
+            name: "PowerFactor_Sum",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_1', {
+        type: "state",
+        common: {
+            name: "PowerFactor_Phase_1",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_2', {
+        type: "state",
+        common: {
+            name: "PowerFactor_Phase_2",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_3', {
+        type: "state",
+        common: {
+            name: "PowerFactor_Phase_3",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Sum_Produced', {
+        type: "state",
+        common: {
+            name: "EnergyReal_WAC_Sum_Produced",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Sum_Consumed', {
+        type: "state",
+        common: {
+            name: "EnergyReal_WAC_Sum_Consumed",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReactive_VArAC_Sum_Produced', {
+        type: "state",
+        common: {
+            name: "EnergyReactive_VArAC_Sum_Produced",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReactive_VArAC_Sum_Consumed', {
+        type: "state",
+        common: {
+            name: "EnergyReactive_VArAC_Sum_Consumed",
+            type: "number",
+            role: "value",
+            unit: "?",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Plus_Absolute', {
+        type: "state",
+        common: {
+            name: "EnergyReal_WAC_Plus_Absolute",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Minus_Absolute', {
+        type: "state",
+        common: {
+            name: "EnergyReal_WAC_Minus_Absolute",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: ""
+        },
+        native: {}
+    });
+                                            
 }
 
 function getMeterRealtimeData(id){
@@ -956,11 +1308,35 @@ function getMeterRealtimeData(id){
 
                     adapter.setState("meter." + id + ".Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
                     adapter.setState("meter." + id + ".PowerReal_P_Sum", {val: resp.PowerReal_P_Sum, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReal_WAC_Minus_Relative", {
-                        val: resp.EnergyReal_WAC_Minus_Relative,
-                        ack: true
-                    });
-
+					adapter.setState("meter." + id + ".PowerReal_P_Phase_1", {val: resp.PowerReal_P_Phase_1, ack: true});
+					adapter.setState("meter." + id + ".PowerReal_P_Phase_2", {val: resp.PowerReal_P_Phase_2, ack: true});
+					adapter.setState("meter." + id + ".PowerReal_P_Phase_3", {val: resp.PowerReal_P_Phase_3, ack: true});
+					adapter.setState("meter." + id + ".PowerReactive_Q_Sum", {val: resp.PowerReactive_Q_Sum, ack: true});
+					adapter.setState("meter." + id + ".PowerReactive_Q_Phase_1", {val: resp.PowerReactive_Q_Phase_1, ack: true});
+					adapter.setState("meter." + id + ".PowerReactive_Q_Phase_2", {val: resp.PowerReactive_Q_Phase_2, ack: true});
+					adapter.setState("meter." + id + ".PowerReactive_Q_Phase_3", {val: resp.PowerReactive_Q_Phase_3, ack: true});
+					adapter.setState("meter." + id + ".Current_AC_Phase_1", {val: resp.Current_AC_Phase_1, ack: true});
+					adapter.setState("meter." + id + ".Current_AC_Phase_2", {val: resp.Current_AC_Phase_2, ack: true});
+					adapter.setState("meter." + id + ".Current_AC_Phase_3", {val: resp.Current_AC_Phase_3, ack: true});
+					adapter.setState("meter." + id + ".Voltage_AC_Phase_1", {val: resp.Voltage_AC_Phase_1, ack: true});
+					adapter.setState("meter." + id + ".Voltage_AC_Phase_2", {val: resp.Voltage_AC_Phase_2, ack: true});
+					adapter.setState("meter." + id + ".Voltage_AC_Phase_3", {val: resp.Voltage_AC_Phase_3, ack: true});
+					adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_12", {val: resp.Voltage_AC_PhaseToPhase_12, ack: true});
+					adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_23", {val: resp.Voltage_AC_PhaseToPhase_23, ack: true});
+					adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_31", {val: resp.Voltage_AC_PhaseToPhase_31, ack: true});
+					adapter.setState("meter." + id + ".Frequency_Phase_Average", {val: resp.Frequency_Phase_Average, ack: true});
+					adapter.setState("meter." + id + ".PowerApparent_S_Sum", {val: resp.PowerApparent_S_Sum, ack: true});
+					adapter.setState("meter." + id + ".PowerFactor_Sum", {val: resp.PowerFactor_Sum, ack: true});
+					adapter.setState("meter." + id + ".PowerFactor_Phase_1", {val: resp.PowerFactor_Phase_1, ack: true});
+ 					adapter.setState("meter." + id + ".PowerFactor_Phase_2", {val: resp.PowerFactor_Phase_2, ack: true});
+ 					adapter.setState("meter." + id + ".PowerFactor_Phase_3", {val: resp.PowerFactor_Phase_3, ack: true});
+ 					adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Produced", {val: resp.EnergyReal_WAC_Sum_Produced, ack: true});
+ 					adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Consumed", {val: resp.EnergyReal_WAC_Sum_Consumed, ack: true});
+ 					adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Produced", {val: resp.EnergyReactive_VArAC_Sum_Produced, ack: true});
+ 					adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Consumed", {val: resp.EnergyReactive_VArAC_Sum_Consumed, ack: true});
+ 					adapter.setState("meter." + id + ".EnergyReal_WAC_Plus_Absolute", {val: resp.EnergyReal_WAC_Plus_Absolute, ack: true});
+ 					adapter.setState("meter." + id + ".EnergyReal_WAC_Minus_Absolute", {val: resp.EnergyReal_WAC_Minus_Absolute, ack: true});
+ 										
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
@@ -1134,7 +1510,71 @@ function createPowerFlowObjects(){
         },
         native: {}
     });
-
+    adapter.setObjectNotExists('powerflow.E_Day', {
+        type: "state",
+        common: {
+            name: "pv power day",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "pv power day"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.E_Year', {
+        type: "state",
+        common: {
+            name: "pv power year",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "pv power year"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.E_Total', {
+        type: "state",
+        common: {
+            name: "pv power total",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "pv power total"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.P_Autonomy', {
+        type: "state",
+        common: {
+            name: "pv Autonomy",
+            type: "number",
+            role: "value",
+            unit: "%",
+            read: true,
+            write: false,
+            desc: "pv autonomy"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('powerflow.P_SelfConsumption', {
+        type: "state",
+        common: {
+            name: "pv SelfConsumption",
+            type: "number",
+            role: "value",
+            unit: "%",
+            read: true,
+            write: false,
+            desc: "pv self consumption"
+        },
+        native: {}
+    });
 }
 
 function getPowerFlowRealtimeData(){
@@ -1153,7 +1593,12 @@ function getPowerFlowRealtimeData(){
                     adapter.setState("powerflow.P_Load", {val: resp.P_Load == null?0:resp.P_Load, ack: true});
                     adapter.setState("powerflow.P_Akku", {val: resp.P_Akku == null?0:resp.P_Akku, ack: true});
                     adapter.setState("powerflow.P_PV", {val: resp.P_PV == null?0:resp.P_PV, ack: true});
-
+					adapter.setState("powerflow.E_Day", {val: resp.P_PV == null?0:resp.E_Day, ack: true});
+					adapter.setState("powerflow.E_Year", {val: resp.P_PV == null?0:resp.E_Year, ack: true});
+					adapter.setState("powerflow.E_Total", {val: resp.P_PV == null?0:resp.E_Total, ack: true});
+					adapter.setState("powerflow.P_Autonomy", {val: resp.P_PV == null?0:resp.rel_Autonomy, ack: true});
+					adapter.setState("powerflow.P_SelfConsumption", {val: resp.P_PV == null?0:resp.rel_SelfConsumption, ack: true});
+										
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
