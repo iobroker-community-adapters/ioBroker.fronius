@@ -649,7 +649,7 @@ function getInverterRealtimeData(id){
                     adapter.setState("inverter." + id + ".TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
                     adapter.setState("inverter." + id + ".YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
 
-                    if("PAC" in data) {
+                    if("PAC" in resp) {
                         adapter.setState("inverter." + id + ".FAC", {val: resp.FAC.Value, ack: true});
                         adapter.setState("inverter." + id + ".IAC", {val: resp.IAC.Value, ack: true});
                         adapter.setState("inverter." + id + ".IDC", {val: resp.IDC.Value, ack: true});
