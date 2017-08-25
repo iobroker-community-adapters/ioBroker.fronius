@@ -1,8 +1,13 @@
 {
   "common": {
     "name": "fronius",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "news": {
+       "1.0.2": {
+        "en": "(Tobintax) Bugfix - Inverter Query regarding PAC adjusted.",
+        "de": "(Tobintax) Bugfix - Inverter-Daten PAC werden angezeigt",
+        "ru": "(Tobintax) Отображаются данные PAC с исправлением ошибок"
+      },
       "1.0.1": {
         "en": "(Tobintax) Added Values from Smartmeter. Added more Powerflow Values.",
         "de": "(Tobintax) Werte von Smartmeter hinzugefügt. Mehr Powerflow-Werte hinzugefügt.",
