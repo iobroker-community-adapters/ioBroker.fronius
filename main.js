@@ -1615,10 +1615,10 @@ function getPowerFlowRealtimeData() {
 
 function createInfoObjects() {
 
-    delObject('connection');
-    delObject('lastsync');
-    delObject('HWVersion');
-    delObject('SWVersion');
+    adapter.delObject('connection');
+    adapter.delObject('lastsync');
+    adapter.delObject('HWVersion');
+    adapter.delObject('SWVersion');
 
     adapter.setObjectNotExists('info', {
         type: 'channel',
