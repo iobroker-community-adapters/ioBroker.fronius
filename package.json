@@ -6,6 +6,12 @@
     "name": "ldittmar",
     "email": "iobroker@lmdsoft.de"
   },
+  "contributors": [
+    {
+      "name": "tobintax",
+      "email": ""
+    }
+  ],
   "homepage": "https://github.com/ldittmar81/ioBroker.fronius",
   "license": "MIT",
   "keywords": [

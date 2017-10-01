@@ -1613,6 +1613,73 @@ function getPowerFlowRealtimeData() {
     });
 }
 
+function createInfoObjects() {
+
+    delObject('connection');
+    delObject('lastsync');
+    delObject('HWVersion');
+    delObject('SWVersion');
+
+    adapter.setObjectNotExists('info', {
+        type: 'channel',
+        common: {
+            name: "Information",
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.connection', {
+        type: 'state',
+        common: {
+            name: "Fronius connected",
+            type: "boolean",
+            role: "indicator.connected",
+            read: true,
+            write: false,
+            def: false,
+            desc: "Is Fronius inverter connected?"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.lastsync', {
+        type: 'state',
+        common: {
+            name: "Last successful sync",
+            type: "string",
+            role: "value.datetime",
+            read: true,
+            write: false,
+            desc: "Last successful synchronization"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.HWVersion', {
+        type: 'state',
+        common: {
+            name: "Hardware Version",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "Hardware Version"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.SWVersion', {
+        type: 'state',
+        common: {
+            name: "Software Version",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "Software Version"
+        },
+        native: {}
+    });
+}
+
 function setConnected(_isConnected) {
     if (isConnected !== _isConnected) {
         isConnected = _isConnected;
@@ -1680,7 +1747,9 @@ function getLoggerInfo() {
                 adapter.log.warn(e);
             }
         }
-        adapter.log.warn(error);
+        if (error != null) {
+            adapter.log.warn(error);
+        }
     });
 }
 
@@ -1695,6 +1764,7 @@ function main() {
 
     if (ip && baseurl) {
 
+        createInfoObjects();
         getLoggerInfo();
         checkStatus();
 
