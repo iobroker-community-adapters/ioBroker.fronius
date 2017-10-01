@@ -15,7 +15,7 @@
 // you have to require the utils module and call adapter function
 var utils = require(__dirname + '/lib/utils'); // Get common adapter utils
 var request = require('request');
-var ping = require("ping");
+var ping = require(__dirname + '/lib/ping');
 
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
@@ -24,6 +24,7 @@ var adapter = utils.adapter('fronius');
 
 var ip, baseurl, apiver;
 var hybrid = false;
+var isConnected = null;
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
 adapter.on('unload', function (callback) {
@@ -59,31 +60,36 @@ adapter.on('message', function (obj) {
         switch (obj.command) {
             case 'checkIP':
                 checkIP(obj.message, function (res) {
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    if (obj.callback)
+                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                 });
                 wait = true;
                 break;
             case 'getDeviceInfo':
                 getActiveDeviceInfo("System", obj.message, function (res) {
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    if (obj.callback)
+                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                 });
                 wait = true;
                 break;
             case 'getDeviceInfoInverter':
                 getActiveDeviceInfo("Inverter", obj.message, function (res) {
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    if (obj.callback)
+                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                 });
                 wait = true;
                 break;
             case 'getDeviceInfoSensor':
                 getActiveDeviceInfo("SensorCard", obj.message, function (res) {
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    if (obj.callback)
+                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                 });
                 wait = true;
                 break;
             case 'getDeviceInfoString':
                 getActiveDeviceInfo("StringControl", obj.message, function (res) {
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    if (obj.callback)
+                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                 });
                 wait = true;
                 break;
@@ -100,9 +106,7 @@ adapter.on('message', function (obj) {
 
 // is called when databases are connected and adapter received configuration.
 // start here!
-adapter.on('ready', function () {
-    main();
-});
+adapter.on('ready', main);
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
@@ -111,7 +115,7 @@ function checkIP(ipToCheck, callback) {
             var testData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
                 callback({error: 0, message: testData});
-            }else{
+            } else {
                 adapter.log.error("IP invalid");
                 callback({error: 1, message: {}});
             }
@@ -129,7 +133,7 @@ function getActiveDeviceInfo(type, url, callback) {
             var deviceData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
                 callback({error: 0, message: deviceData.Body.Data});
-            }else{
+            } else {
                 adapter.log.warn(data.Head.Status.Reason);
                 callback({error: 1, message: {}});
             }
@@ -139,7 +143,7 @@ function getActiveDeviceInfo(type, url, callback) {
     });
 }
 
-function createInverterObjects(id){
+function createInverterObjects(id) {
     adapter.setObjectNotExists('inverter.' + id, {
         type: 'channel',
         common: {
@@ -197,7 +201,7 @@ function createInverterObjects(id){
             read: true,
             write: false,
             desc: "DC current"
-    },
+        },
         native: {}
     });
     adapter.setObjectNotExists('inverter.' + id + '.PAC', {
@@ -210,7 +214,7 @@ function createInverterObjects(id){
             read: true,
             write: false,
             desc: "AC power"
-    },
+        },
         native: {}
     });
     adapter.setObjectNotExists('inverter.' + id + '.TOTAL_ENERGY', {
@@ -223,7 +227,7 @@ function createInverterObjects(id){
             read: true,
             write: false,
             desc: "Energy generated overall"
-    },
+        },
         native: {}
     });
     adapter.setObjectNotExists('inverter.' + id + '.UAC', {
@@ -236,7 +240,7 @@ function createInverterObjects(id){
             read: true,
             write: false,
             desc: "AC voltage"
-    },
+        },
         native: {}
     });
     adapter.setObjectNotExists('inverter.' + id + '.UDC', {
@@ -249,7 +253,7 @@ function createInverterObjects(id){
             read: true,
             write: false,
             desc: "DC voltage"
-    },
+        },
         native: {}
     });
     adapter.setObjectNotExists('inverter.' + id + '.YEAR_ENERGY', {
@@ -262,7 +266,7 @@ function createInverterObjects(id){
             read: true,
             write: false,
             desc: "Energy generated in current year"
-    },
+        },
         native: {}
     });
     adapter.setObjectNotExists('inverter.' + id + '.StatusCode', {
@@ -315,8 +319,8 @@ function createInverterObjects(id){
     });
 }
 
-function getStringErrorCode100(errorcode){
-    switch(errorcode){
+function getStringErrorCode100(errorcode) {
+    switch (errorcode) {
         case 102:
             return "AC voltage too high";
         case 103:
@@ -334,8 +338,8 @@ function getStringErrorCode100(errorcode){
     }
 }
 
-function getStringErrorCode300(errorcode){
-    switch(errorcode){
+function getStringErrorCode300(errorcode) {
+    switch (errorcode) {
         case 301:
             return "Overcurrent (AC)";
         case 302:
@@ -375,8 +379,8 @@ function getStringErrorCode300(errorcode){
     }
 }
 
-function getStringErrorCode400(errorcode){
-    switch(errorcode){
+function getStringErrorCode400(errorcode) {
+    switch (errorcode) {
         case 401:
             return "No communication possible with the power stage set";
         case 406:
@@ -467,8 +471,8 @@ function getStringErrorCode400(errorcode){
     }
 }
 
-function getStringErrorCode500(errorcode){
-    switch(errorcode){
+function getStringErrorCode500(errorcode) {
+    switch (errorcode) {
         case 502:
             return "Insulation error on the solar panels";
         case 509:
@@ -505,8 +509,8 @@ function getStringErrorCode500(errorcode){
     }
 }
 
-function getStringErrorCode600(errorcode){
-    switch(errorcode){
+function getStringErrorCode600(errorcode) {
+    switch (errorcode) {
         case 601:
             return "CAN bus is full";
         case 603:
@@ -522,8 +526,8 @@ function getStringErrorCode600(errorcode){
     }
 }
 
-function getStringErrorCode700(errorcode){
-    switch(errorcode){
+function getStringErrorCode700(errorcode) {
+    switch (errorcode) {
         case 701:
         case 702:
         case 703:
@@ -635,12 +639,12 @@ function getStringErrorCode700(errorcode){
 }
 
 //Get Infos from Inverter
-function getInverterRealtimeData(id){
+function getInverterRealtimeData(id) {
     request.get('http://' + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
-                if("Body" in data) {
+                if ("Body" in data) {
 
                     createInverterObjects(id);
 
@@ -649,14 +653,14 @@ function getInverterRealtimeData(id){
                     adapter.setState("inverter." + id + ".TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
                     adapter.setState("inverter." + id + ".YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
 
-                    if("PAC" in resp) {
+                    if ("PAC" in resp) {
                         adapter.setState("inverter." + id + ".FAC", {val: resp.FAC.Value, ack: true});
                         adapter.setState("inverter." + id + ".IAC", {val: resp.IAC.Value, ack: true});
                         adapter.setState("inverter." + id + ".IDC", {val: resp.IDC.Value, ack: true});
                         adapter.setState("inverter." + id + ".PAC", {val: resp.PAC.Value, ack: true});
                         adapter.setState("inverter." + id + ".UAC", {val: resp.UAC.Value, ack: true});
                         adapter.setState("inverter." + id + ".UDC", {val: resp.UDC.Value, ack: true});
-                    }else{
+                    } else {
                         adapter.setState("inverter." + id + ".FAC", {val: 0, ack: true});
                         adapter.setState("inverter." + id + ".IAC", {val: 0, ack: true});
                         adapter.setState("inverter." + id + ".IDC", {val: 0, ack: true});
@@ -670,13 +674,13 @@ function getInverterRealtimeData(id){
                     adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
 
                     var statusCodeString = "Startup";
-                    if(statusCode === 7){
+                    if (statusCode === 7) {
                         statusCodeString = "Running";
-                    }else if(statusCode === 8){
+                    } else if (statusCode === 8) {
                         statusCodeString = "Standby";
-                    }else if(statusCode === 9){
+                    } else if (statusCode === 9) {
                         statusCodeString = "Bootloading";
-                    }else if(statusCode === 10){
+                    } else if (statusCode === 10) {
                         statusCodeString = "Error";
                     }
                     adapter.setState("inverter." + id + ".StatusCodeString", {val: statusCodeString, ack: true});
@@ -684,32 +688,32 @@ function getInverterRealtimeData(id){
                     statusCode = parseInt(status.ErrorCode);
                     adapter.setState("inverter." + id + ".ErrorCode", {val: statusCode, ack: true});
 
-                    if(statusCode >= 700){
+                    if (statusCode >= 700) {
                         statusCodeString = getStringErrorCode700(statusCode);
-                    }else if(statusCode >= 600){
+                    } else if (statusCode >= 600) {
                         statusCodeString = getStringErrorCode600(statusCode);
-                    }else if(statusCode >= 500){
+                    } else if (statusCode >= 500) {
                         statusCodeString = getStringErrorCode500(statusCode);
-                    }else if(statusCode >= 400){
+                    } else if (statusCode >= 400) {
                         statusCodeString = getStringErrorCode400(statusCode);
-                    }else if(statusCode >= 300){
+                    } else if (statusCode >= 300) {
                         statusCodeString = getStringErrorCode300(statusCode);
-                    }else{
+                    } else {
                         statusCodeString = getStringErrorCode100(statusCode);
                     }
                     adapter.setState("inverter." + id + ".ErrorCodeString", {val: statusCodeString, ack: true});
 
-                }else{
+                } else {
                     adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
                 }
-            }catch(e){
+            } catch (e) {
                 adapter.log.warn(e);
             }
         }
     });
 }
 
-function  createStorageObjects(id) {
+function createStorageObjects(id) {
 
     adapter.setObjectNotExists('storage', {
         type: 'channel',
@@ -853,7 +857,7 @@ function  createStorageObjects(id) {
 
 }
 
-function getStorageRealtimeData(id){
+function getStorageRealtimeData(id) {
     request.get('http://' + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
@@ -885,7 +889,7 @@ function getStorageRealtimeData(id){
     });
 }
 
-function  createMeterObjects(id){
+function createMeterObjects(id) {
 
     adapter.setObjectNotExists('meter', {
         type: 'channel',
@@ -1292,10 +1296,10 @@ function  createMeterObjects(id){
         },
         native: {}
     });
-                                            
+
 }
 
-function getMeterRealtimeData(id){
+function getMeterRealtimeData(id) {
     request.get('http://' + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
@@ -1308,35 +1312,35 @@ function getMeterRealtimeData(id){
 
                     adapter.setState("meter." + id + ".Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
                     adapter.setState("meter." + id + ".PowerReal_P_Sum", {val: resp.PowerReal_P_Sum, ack: true});
-					adapter.setState("meter." + id + ".PowerReal_P_Phase_1", {val: resp.PowerReal_P_Phase_1, ack: true});
-					adapter.setState("meter." + id + ".PowerReal_P_Phase_2", {val: resp.PowerReal_P_Phase_2, ack: true});
-					adapter.setState("meter." + id + ".PowerReal_P_Phase_3", {val: resp.PowerReal_P_Phase_3, ack: true});
-					adapter.setState("meter." + id + ".PowerReactive_Q_Sum", {val: resp.PowerReactive_Q_Sum, ack: true});
-					adapter.setState("meter." + id + ".PowerReactive_Q_Phase_1", {val: resp.PowerReactive_Q_Phase_1, ack: true});
-					adapter.setState("meter." + id + ".PowerReactive_Q_Phase_2", {val: resp.PowerReactive_Q_Phase_2, ack: true});
-					adapter.setState("meter." + id + ".PowerReactive_Q_Phase_3", {val: resp.PowerReactive_Q_Phase_3, ack: true});
-					adapter.setState("meter." + id + ".Current_AC_Phase_1", {val: resp.Current_AC_Phase_1, ack: true});
-					adapter.setState("meter." + id + ".Current_AC_Phase_2", {val: resp.Current_AC_Phase_2, ack: true});
-					adapter.setState("meter." + id + ".Current_AC_Phase_3", {val: resp.Current_AC_Phase_3, ack: true});
-					adapter.setState("meter." + id + ".Voltage_AC_Phase_1", {val: resp.Voltage_AC_Phase_1, ack: true});
-					adapter.setState("meter." + id + ".Voltage_AC_Phase_2", {val: resp.Voltage_AC_Phase_2, ack: true});
-					adapter.setState("meter." + id + ".Voltage_AC_Phase_3", {val: resp.Voltage_AC_Phase_3, ack: true});
-					adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_12", {val: resp.Voltage_AC_PhaseToPhase_12, ack: true});
-					adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_23", {val: resp.Voltage_AC_PhaseToPhase_23, ack: true});
-					adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_31", {val: resp.Voltage_AC_PhaseToPhase_31, ack: true});
-					adapter.setState("meter." + id + ".Frequency_Phase_Average", {val: resp.Frequency_Phase_Average, ack: true});
-					adapter.setState("meter." + id + ".PowerApparent_S_Sum", {val: resp.PowerApparent_S_Sum, ack: true});
-					adapter.setState("meter." + id + ".PowerFactor_Sum", {val: resp.PowerFactor_Sum, ack: true});
-					adapter.setState("meter." + id + ".PowerFactor_Phase_1", {val: resp.PowerFactor_Phase_1, ack: true});
- 					adapter.setState("meter." + id + ".PowerFactor_Phase_2", {val: resp.PowerFactor_Phase_2, ack: true});
- 					adapter.setState("meter." + id + ".PowerFactor_Phase_3", {val: resp.PowerFactor_Phase_3, ack: true});
- 					adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Produced", {val: resp.EnergyReal_WAC_Sum_Produced, ack: true});
- 					adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Consumed", {val: resp.EnergyReal_WAC_Sum_Consumed, ack: true});
- 					adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Produced", {val: resp.EnergyReactive_VArAC_Sum_Produced, ack: true});
- 					adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Consumed", {val: resp.EnergyReactive_VArAC_Sum_Consumed, ack: true});
- 					adapter.setState("meter." + id + ".EnergyReal_WAC_Plus_Absolute", {val: resp.EnergyReal_WAC_Plus_Absolute, ack: true});
- 					adapter.setState("meter." + id + ".EnergyReal_WAC_Minus_Absolute", {val: resp.EnergyReal_WAC_Minus_Absolute, ack: true});
- 										
+                    adapter.setState("meter." + id + ".PowerReal_P_Phase_1", {val: resp.PowerReal_P_Phase_1, ack: true});
+                    adapter.setState("meter." + id + ".PowerReal_P_Phase_2", {val: resp.PowerReal_P_Phase_2, ack: true});
+                    adapter.setState("meter." + id + ".PowerReal_P_Phase_3", {val: resp.PowerReal_P_Phase_3, ack: true});
+                    adapter.setState("meter." + id + ".PowerReactive_Q_Sum", {val: resp.PowerReactive_Q_Sum, ack: true});
+                    adapter.setState("meter." + id + ".PowerReactive_Q_Phase_1", {val: resp.PowerReactive_Q_Phase_1, ack: true});
+                    adapter.setState("meter." + id + ".PowerReactive_Q_Phase_2", {val: resp.PowerReactive_Q_Phase_2, ack: true});
+                    adapter.setState("meter." + id + ".PowerReactive_Q_Phase_3", {val: resp.PowerReactive_Q_Phase_3, ack: true});
+                    adapter.setState("meter." + id + ".Current_AC_Phase_1", {val: resp.Current_AC_Phase_1, ack: true});
+                    adapter.setState("meter." + id + ".Current_AC_Phase_2", {val: resp.Current_AC_Phase_2, ack: true});
+                    adapter.setState("meter." + id + ".Current_AC_Phase_3", {val: resp.Current_AC_Phase_3, ack: true});
+                    adapter.setState("meter." + id + ".Voltage_AC_Phase_1", {val: resp.Voltage_AC_Phase_1, ack: true});
+                    adapter.setState("meter." + id + ".Voltage_AC_Phase_2", {val: resp.Voltage_AC_Phase_2, ack: true});
+                    adapter.setState("meter." + id + ".Voltage_AC_Phase_3", {val: resp.Voltage_AC_Phase_3, ack: true});
+                    adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_12", {val: resp.Voltage_AC_PhaseToPhase_12, ack: true});
+                    adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_23", {val: resp.Voltage_AC_PhaseToPhase_23, ack: true});
+                    adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_31", {val: resp.Voltage_AC_PhaseToPhase_31, ack: true});
+                    adapter.setState("meter." + id + ".Frequency_Phase_Average", {val: resp.Frequency_Phase_Average, ack: true});
+                    adapter.setState("meter." + id + ".PowerApparent_S_Sum", {val: resp.PowerApparent_S_Sum, ack: true});
+                    adapter.setState("meter." + id + ".PowerFactor_Sum", {val: resp.PowerFactor_Sum, ack: true});
+                    adapter.setState("meter." + id + ".PowerFactor_Phase_1", {val: resp.PowerFactor_Phase_1, ack: true});
+                    adapter.setState("meter." + id + ".PowerFactor_Phase_2", {val: resp.PowerFactor_Phase_2, ack: true});
+                    adapter.setState("meter." + id + ".PowerFactor_Phase_3", {val: resp.PowerFactor_Phase_3, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Produced", {val: resp.EnergyReal_WAC_Sum_Produced, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Consumed", {val: resp.EnergyReal_WAC_Sum_Consumed, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Produced", {val: resp.EnergyReactive_VArAC_Sum_Produced, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Consumed", {val: resp.EnergyReactive_VArAC_Sum_Consumed, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReal_WAC_Plus_Absolute", {val: resp.EnergyReal_WAC_Plus_Absolute, ack: true});
+                    adapter.setState("meter." + id + ".EnergyReal_WAC_Minus_Absolute", {val: resp.EnergyReal_WAC_Minus_Absolute, ack: true});
+
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
@@ -1347,7 +1351,7 @@ function getMeterRealtimeData(id){
     });
 }
 
-function createSensorNowObjects(id){
+function createSensorNowObjects(id) {
 
     adapter.setObjectNotExists('sensor', {
         type: 'channel',
@@ -1368,7 +1372,7 @@ function createSensorNowObjects(id){
 
 }
 
-function getSensorRealtimeDataNowSensorData(id){
+function getSensorRealtimeDataNowSensorData(id) {
     request.get('http://' + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
@@ -1389,7 +1393,7 @@ function getSensorRealtimeDataNowSensorData(id){
     });
 }
 
-function createSensorMinMaxObjects(id){
+function createSensorMinMaxObjects(id) {
 
     adapter.setObjectNotExists('sensor', {
         type: 'channel',
@@ -1410,7 +1414,7 @@ function createSensorMinMaxObjects(id){
 
 }
 
-function getSensorRealtimeDataMinMaxSensorData(id){
+function getSensorRealtimeDataMinMaxSensorData(id) {
     request.get('http://' + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
@@ -1431,11 +1435,11 @@ function getSensorRealtimeDataMinMaxSensorData(id){
     });
 }
 
-function getStringRealtimeData(id){
+function getStringRealtimeData(id) {
 
 }
 
-function createPowerFlowObjects(){
+function createPowerFlowObjects() {
 
     adapter.setObjectNotExists('powerflow', {
         type: 'channel',
@@ -1577,7 +1581,7 @@ function createPowerFlowObjects(){
     });
 }
 
-function getPowerFlowRealtimeData(){
+function getPowerFlowRealtimeData() {
     request.get('http://' + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
@@ -1589,16 +1593,16 @@ function getPowerFlowRealtimeData(){
                     var resp = data.Body.Data.Site;
 
                     adapter.setState("powerflow.Mode", {val: resp.Mode, ack: true});
-                    adapter.setState("powerflow.P_Grid", {val: resp.P_Grid == null?0:resp.P_Grid, ack: true});
-                    adapter.setState("powerflow.P_Load", {val: resp.P_Load == null?0:resp.P_Load, ack: true});
-                    adapter.setState("powerflow.P_Akku", {val: resp.P_Akku == null?0:resp.P_Akku, ack: true});
-                    adapter.setState("powerflow.P_PV", {val: resp.P_PV == null?0:resp.P_PV, ack: true});
-					adapter.setState("powerflow.E_Day", {val: resp.P_PV == null?0:resp.E_Day, ack: true});
-					adapter.setState("powerflow.E_Year", {val: resp.P_PV == null?0:resp.E_Year, ack: true});
-					adapter.setState("powerflow.E_Total", {val: resp.P_PV == null?0:resp.E_Total, ack: true});
-					adapter.setState("powerflow.P_Autonomy", {val: resp.P_PV == null?0:resp.rel_Autonomy, ack: true});
-					adapter.setState("powerflow.P_SelfConsumption", {val: resp.P_PV == null?0:resp.rel_SelfConsumption, ack: true});
-										
+                    adapter.setState("powerflow.P_Grid", {val: resp.P_Grid == null ? 0 : resp.P_Grid, ack: true});
+                    adapter.setState("powerflow.P_Load", {val: resp.P_Load == null ? 0 : resp.P_Load, ack: true});
+                    adapter.setState("powerflow.P_Akku", {val: resp.P_Akku == null ? 0 : resp.P_Akku, ack: true});
+                    adapter.setState("powerflow.P_PV", {val: resp.P_PV == null ? 0 : resp.P_PV, ack: true});
+                    adapter.setState("powerflow.E_Day", {val: resp.P_PV == null ? 0 : resp.E_Day, ack: true});
+                    adapter.setState("powerflow.E_Year", {val: resp.P_PV == null ? 0 : resp.E_Year, ack: true});
+                    adapter.setState("powerflow.E_Total", {val: resp.P_PV == null ? 0 : resp.E_Total, ack: true});
+                    adapter.setState("powerflow.P_Autonomy", {val: resp.P_PV == null ? 0 : resp.rel_Autonomy, ack: true});
+                    adapter.setState("powerflow.P_SelfConsumption", {val: resp.P_PV == null ? 0 : resp.rel_SelfConsumption, ack: true});
+
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
@@ -1609,58 +1613,70 @@ function getPowerFlowRealtimeData(){
     });
 }
 
+function setConnected(_isConnected) {
+    if (isConnected !== _isConnected) {
+        isConnected = _isConnected;
+        adapter.setState('info.connection', {val: isConnected, ack: true});
+    }
+}
+
 function checkStatus() {
-    ping.sys.probe(ip, function (isAlive) {
-        adapter.setState("connected", {val: isAlive, ack: true});
-        if (isAlive) {
-            adapter.config.inverter.split(',').forEach(function(entry){
-                getInverterRealtimeData(entry);
-            });
-            if(adapter.config.sensorCard) {
-                adapter.config.sensorCard.split(',').forEach(function (entry) {
-                    getSensorRealtimeDataNowSensorData(entry);
-                    getSensorRealtimeDataMinMaxSensorData(entry);
+    ping.probe(ip, {log: adapter.log.debug}, function (err, result) {
+        if (err) {
+            adapter.log.error(err);
+        }
+        if (result) {
+            setConnected(result.alive);
+            if (result.alive) {
+                adapter.config.inverter.split(',').forEach(function (entry) {
+                    getInverterRealtimeData(entry);
                 });
-            }
-            if(adapter.config.stringControl) {
-                adapter.config.stringControl.split(',').forEach(function (entry) {
-                    getStringRealtimeData(entry);
-                });
-            }
-
-            if(apiver === 1) {
-                if(adapter.config.meter) {
-                    adapter.config.meter.split(',').forEach(function (entry) {
-                        getMeterRealtimeData(entry);
+                if (adapter.config.sensorCard) {
+                    adapter.config.sensorCard.split(',').forEach(function (entry) {
+                        getSensorRealtimeDataNowSensorData(entry);
+                        getSensorRealtimeDataMinMaxSensorData(entry);
                     });
                 }
-                if(adapter.config.storage) {
-                    adapter.config.storage.split(',').forEach(function (entry) {
-                        getStorageRealtimeData(entry);
+                if (adapter.config.stringControl) {
+                    adapter.config.stringControl.split(',').forEach(function (entry) {
+                        getStringRealtimeData(entry);
                     });
                 }
-                getPowerFlowRealtimeData();
-            }
 
-            adapter.setState("lastsync", {val: new Date().toISOString(), ack: true});
+                if (apiver === 1) {
+                    if (adapter.config.meter) {
+                        adapter.config.meter.split(',').forEach(function (entry) {
+                            getMeterRealtimeData(entry);
+                        });
+                    }
+                    if (adapter.config.storage) {
+                        adapter.config.storage.split(',').forEach(function (entry) {
+                            getStorageRealtimeData(entry);
+                        });
+                    }
+                    getPowerFlowRealtimeData();
+                }
+
+                adapter.setState("info.lastsync", {val: new Date().toISOString(), ack: true});
+            }
         }
     });
 }
 
 //Hardware and Software Version
-function getLoggerInfo(){
+function getLoggerInfo() {
     request.get('http://' + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
-                if("Body" in data) {
+                if ("Body" in data) {
                     var resp = data.Body.LoggerInfo;
-                    adapter.setState("HWVersion", {val: resp.HWVersion, ack: true});
-                    adapter.setState("SWVersion", {val: resp.SWVersion, ack: true});
-                }else{
+                    adapter.setState("info.HWVersion", {val: resp.HWVersion, ack: true});
+                    adapter.setState("info.SWVersion", {val: resp.SWVersion, ack: true});
+                } else {
                     adapter.log.warn(data.Head.Status.Reason);
                 }
-            }catch(e){
+            } catch (e) {
                 adapter.log.warn(e);
             }
         }
@@ -1670,24 +1686,24 @@ function getLoggerInfo(){
 
 function main() {
 
-	// The adapters config (in the instance object everything under the attribute "native") is accessible via
+    // The adapters config (in the instance object everything under the attribute "native") is accessible via
     // adapter.config:
 
     ip = adapter.config.ip;
     baseurl = adapter.config.baseurl;
     apiver = parseInt(adapter.config.apiversion);
-	
-	 if (ip && baseurl) {
 
-         getLoggerInfo();
-         checkStatus();
+    if (ip && baseurl) {
 
-         var secs = adapter.config.poll;
-         if (isNaN(secs) || secs < 1) {
-             secs = 10;
-         }
+        getLoggerInfo();
+        checkStatus();
 
-         setInterval(checkStatus, secs * 1000);
+        var secs = adapter.config.poll;
+        if (isNaN(secs) || secs < 1) {
+            secs = 10;
+        }
+
+        setInterval(checkStatus, secs * 1000);
 
     } else {
         adapter.log.error("Please configure the Fronius adapter");
