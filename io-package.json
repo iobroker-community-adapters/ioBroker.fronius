@@ -46,11 +46,12 @@
     },
     "title": "Fronius inverters adapter",
     "desc": {
-      "en": "ioBroker Fronius inverters Adapter",
-      "de": "ioBroker Fronius Wechselrichter Adapter",
+      "en": "Fronius inverters Adapter",
+      "de": "Fronius Wechselrichter Adapter",
       "ru": "Драйвер для инвертора Fronius"
     },
     "license": "MIT",
+    "authors": ["ldittmar <iobroker@lmdsoft.de>"],
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "icon": "fronius.png",
