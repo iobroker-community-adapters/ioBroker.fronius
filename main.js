@@ -22,7 +22,7 @@ var ping = require(__dirname + '/lib/ping');
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 var adapter = utils.Adapter('fronius');
 
-var ip, baseurl, apiver;
+var ip, baseurl, apiver,requestType;
 var hybrid = false;
 var isConnected = null;
 
@@ -110,7 +110,7 @@ adapter.on('ready', main);
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    request.get('http://' + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+    request.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
         try {
             var testData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
@@ -128,7 +128,7 @@ function checkIP(ipToCheck, callback) {
 
 //Check Fronius devices v1
 function getActiveDeviceInfo(type, url, callback) {
-    request.get('http://' + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function (error, response, body) {
+    request.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function (error, response, body) {
         try {
             var deviceData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
@@ -640,7 +640,7 @@ function getStringErrorCode700(errorcode) {
 
 //Get Infos from Inverter
 function getInverterRealtimeData(id) {
-    request.get('http://' + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -858,7 +858,7 @@ function createStorageObjects(id) {
 }
 
 function getStorageRealtimeData(id) {
-    request.get('http://' + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -1300,7 +1300,7 @@ function createMeterObjects(id) {
 }
 
 function getMeterRealtimeData(id) {
-    request.get('http://' + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -1373,7 +1373,7 @@ function createSensorNowObjects(id) {
 }
 
 function getSensorRealtimeDataNowSensorData(id) {
-    request.get('http://' + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -1415,7 +1415,7 @@ function createSensorMinMaxObjects(id) {
 }
 
 function getSensorRealtimeDataMinMaxSensorData(id) {
-    request.get('http://' + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -1582,7 +1582,7 @@ function createPowerFlowObjects() {
 }
 
 function getPowerFlowRealtimeData() {
-    request.get('http://' + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -1732,7 +1732,7 @@ function checkStatus() {
 
 //Hardware and Software Version
 function getLoggerInfo() {
-    request.get('http://' + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 var data = JSON.parse(body);
@@ -1761,6 +1761,7 @@ function main() {
     ip = adapter.config.ip;
     baseurl = adapter.config.baseurl;
     apiver = parseInt(adapter.config.apiversion);
+    requestType = adapter.config.requestType;
 
     if (ip && baseurl) {
 
