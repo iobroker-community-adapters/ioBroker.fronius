@@ -6,7 +6,6 @@ ioBroker.fronius
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
 [![Dependency Status](https://img.shields.io/david/ldittmar81/iobroker.fronius.svg)](https://david-dm.org/ldittmar81/iobroker.fronius)
 [![Known Vulnerabilities](https://snyk.io/test/github/ldittmar81/ioBroker.fronius/badge.svg)](https://snyk.io/test/github/ldittmar81/ioBroker.fronius)
-[![bitHound Overall Score](https://www.bithound.io/github/ldittmar81/ioBroker.fronius/badges/score.svg)](https://www.bithound.io/github/ldittmar81/ioBroker.fronius)
 
 [![NPM](https://nodei.co/npm/iobroker.fronius.png?downloads=true)](https://nodei.co/npm/iobroker.fronius/)
 
@@ -17,6 +16,10 @@ Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/ldittma
 =================
 
 This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.
+
+## Feature Requests (please vote oder add new)
+
+[![Feature Requests](http://feathub.com/ldittmar81/ioBroker.fronius?format=svg)](http://feathub.com/ldittmar81/ioBroker.fronius)
 
 ## Changelog
 
