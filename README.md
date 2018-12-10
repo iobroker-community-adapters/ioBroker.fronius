@@ -17,10 +17,6 @@ Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/ldittma
 
 This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.
 
-## Feature Requests (please vote oder add new)
-
-[![Feature Requests](http://feathub.com/ldittmar81/ioBroker.fronius?format=svg)](http://feathub.com/ldittmar81/ioBroker.fronius)
-
 ## Changelog
 
 #### 1.0.2
