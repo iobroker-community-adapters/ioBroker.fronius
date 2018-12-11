@@ -1,62 +1,34 @@
 <html>
     <head>
         <!-- these 4 files always have to be included -->
-        <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
-        <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
-        <script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
-
-        <!-- these two file always have to be included -->
+        <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
         <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
-        <script type="text/javascript" src="../../js/translate.js"></script>
-        <script type="text/javascript" src="../../js/adapter-settings.js"></script>
 
+        <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+        <!-- these files always have to be included -->
+        <script type="text/javascript" src="../../js/translate.js"></script>
+        <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+        <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+        <script type="text/javascript" src="words.js"></script>
+        <style>
+            .m .col .select-wrapper+label {
+                top: -26px;  
+            }
+            .m span{
+                font-size: 0.9em;
+            }
+        </style>
         <!-- you have to define 2 functions in the global scope: -->
         <script type="text/javascript">
-
-            // Dictionary (systemDictionary is global variable from adapter-settings.js)
-            systemDictionary = {
-                "Fronius inverters adapter settings": {
-                    "de": "Fronius Wechselrichter Einstellungen",
-                    "ru": "Настройки для Fronius инвертора"
-                },
-                "IP": {
-                    "de": "IP Adresse des Fronius Wechselrichters",
-                    "en": "IP address of the Fronius inverter",
-                    "ru": "IP-адрес инвертора Fronius"
-                },
-                "Check IP": {
-                    "de": "IP überprüfen",
-                    "ru": "Проверка IP"
-                },
-                "Intervall": {
-                    "de": "Abfrageintervall in Sekunden",
-                    "en": "Query interval in seconds",
-                    "ru": "Интервал опроса в секундах"
-                },
-                "Settings": {
-                    "de": "Einstellungen",
-                    "ru": "Настройки"
-                },
-                "Info": {
-                    "de": "Hinweis",
-                    "ru": "Примечания"
-                },
-                "tooltip_poll": {
-                    "de": "Wie oft wird das Gerät abgefragt. In Sekunden.",
-                    "en": "Polling interval in seconds.",
-                    "ru": "Интервал опроса устройства в секундах"
-                },
-            };
-
-            var active = false;
-
+            let active = false;
             // the function loadSettings has to exist ...
             function load(settings, onChange) {
                 // example: select elements with id=key and class=value and insert value
-                for (var key in settings) {
+                for (let key in settings) {
                     // example: select elements with id=key and class=value and insert value
-                    var $element = $("#" + key + ".value");
+                    const $element = $("#" + key + ".value");
                     if ($element.attr("type") === "checkbox") {
                         $element.prop("checked", settings[key]).change(function () {
                             onChange();
@@ -80,16 +52,21 @@
 
                 // Signal to admin, that no changes yet
                 onChange(false);
+                M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
             }
 
             // ... and the function save has to exist.
             // you have to make sure the callback is called with the settings object as first param!
             function save(callback) {
                 // example: select elements with class=value and build settings object
-                var obj = {};
-                $(".value").each(function () {
-                    var $this = $(this);
-                    obj[$this.attr("id")] = $this.val();
+                const obj = {};
+                $('.value').each(function () {
+                    const $this = $(this);
+                    if ($this.attr('type') === 'checkbox') {
+                        obj[$this.attr('id')] = $this.prop('checked');
+                    } else {
+                        obj[$this.attr('id')] = $this.val();
+                    }
                 });
                 callback(obj);
             }
@@ -102,7 +79,7 @@
 
             $(document).ready(function () {
 
-                var $ip = $('#ip');
+                const $ip = $('#ip');
 
                 $('#checkIp').button().click(function () {
                     if (!active) {
@@ -110,14 +87,14 @@
                         return;
                     }
 
-                    var ip = $ip.val();
+                    const ip = $ip.val();
                     if (ip) {
                         $('#checkIcon').attr("src", "img/loader.gif");
                         sendTo('fronius.' + instance, 'checkIP', ip, function (res) {
                             try {
-                                var data = JSON.parse(res);
+                                const data = JSON.parse(res);
                                 if (data.error === 0) {
-                                    var result = data.message;
+                                    const result = data.message;
                                     $('#apiversion').val(result.APIVersion);
                                     $('#baseurl').val(result.BaseURL).trigger("change");
                                 } else {
@@ -133,16 +110,16 @@
                 });
 
                 $('#baseurl').on("change", function () {
-                    var ip = $ip.val();
-                    var apiversion = parseInt($('#apiversion').val());
-                    var baseurl = $(this).val();
+                    const ip = $ip.val();
+                    const apiversion = parseInt($('#apiversion').val());
+                    const baseurl = $(this).val();
 
                     if (ip && baseurl && apiversion === 1) {
                         sendTo('fronius.' + instance, 'getDeviceInfo', ip + baseurl, function (res) {
                             try {
-                                var data = JSON.parse(res);
+                                const data = JSON.parse(res);
                                 if (data.error === 0) {
-                                    var result = data.message;
+                                    const result = data.message;
                                     $('#inverter').val(result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter) : '');
                                     $('#sensorCard').val(result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard) : '');
                                     $('#stringControl').val(result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl) : '');
@@ -160,9 +137,9 @@
                     } else if (ip && baseurl && apiversion === 0) {
                         sendTo('fronius.' + instance, 'getDeviceInfoInverter', ip + baseurl, function (res) {
                             try {
-                                var data = JSON.parse(res);
+                                const data = JSON.parse(res);
                                 if (data.error === 0) {
-                                    var result = data.message;
+                                    const result = data.message;
                                     $('#inverter').val(Object.keys(result));
                                 } else {
                                     setError();
@@ -173,9 +150,9 @@
                         });
                         sendTo('fronius.' + instance, 'getDeviceInfoSensor', ip + baseurl, function (res) {
                             try {
-                                var data = JSON.parse(res);
+                                const data = JSON.parse(res);
                                 if (data.error === 0) {
-                                    var result = data.message;
+                                    const result = data.message;
                                     $('#sensorCard').val(Object.keys(result));
                                 } else {
                                     setError();
@@ -186,9 +163,9 @@
                         });
                         sendTo('fronius.' + instance, 'getDeviceInfoString', ip + baseurl, function (res) {
                             try {
-                                var data = JSON.parse(res);
+                                const data = JSON.parse(res);
                                 if (data.error === 0) {
-                                    var result = data.message;
+                                    const result = data.message;
                                     $('#stringControl').val(Object.keys(result));
                                     $('#poll').prop('disabled', false);
                                     $('#checkIcon').attr("src", "img/ok.png");
@@ -216,51 +193,49 @@
                     $('#checkIcon').attr("src", "img/cancel.png");
                 });
             });
-
         </script>
-    </head>adapter-container
+    </head>
     <body>
+
+        <input class="value" id="baseurl" type="hidden" />
+        <input class="value" id="apiversion" type="hidden" />
+        <input class="value" id="inverter" type="hidden" />
+        <input class="value" id="sensorCard" type="hidden" />
+        <input class="value" id="stringControl" type="hidden" />
+        <input class="value" id="meter" type="hidden" />
+        <input class="value" id="storage" type="hidden" />
+
         <!-- you have to put your config page in a div with id adapter-container -->
-        <div id="adapter-container" style="padding-left: 6px; padding-right: 0; width: 97%;">
-
-            <table>
-                <tr>
-                    <td><img src="fronius.png"/></td>
-                    <td style="padding-top: 20px; padding-left: 10px"><h3 class="translate">Fronius inverters adapter settings</h3></td>
-                </tr>
-            </table>
-
-            <h1 class="translate">Settings</h1>
-
-            <input class="value" id="baseurl" type="hidden" />
-            <input class="value" id="apiversion" type="hidden" />
-            <input class="value" id="inverter" type="hidden" />
-            <input class="value" id="sensorCard" type="hidden" />
-            <input class="value" id="stringControl" type="hidden" />
-            <input class="value" id="meter" type="hidden" />
-            <input class="value" id="storage" type="hidden" />
-
-            <table>
-                <tr>
-                    <td><label class="translate" for="ip">IP</label></td>
-                    <td class="admin-icon"></td>
-                    <td>
-                        <input class="value" id="ip" placeholder="IP(192.168.x.x) or URL(sub.domain.tld)" type="text" size="25" maxlength="150"/>
-                    </td>
-                    <td><button id="checkIp"><span class="translate">Check IP</span></button></td>
-                    <td style="text-align: center;"><img src="img/cancel.png" id="checkIcon"/></td>
-                </tr>
-            </table>
-
-            <table>
-                <tr>
-                    <td><label class="translate" for="poll">Intervall</label></td>
-                    <td class="admin-icon"></td>
-                    <td colspan="2">
-                        <input class="value" id="poll" type="text" size="6" maxlength="4"/>
-                    </td>
-                </tr>
-            </table>
+        <div class="m adapter-container">
+            <div class="row">
+                <!-- Forms are the standard way to receive user inputted data.
+             Learn more http://materializecss.com/forms.html-->
+                <div class="row">
+                    <div class="input-field col s6">
+                        <img src="fronius.png" class="logo">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 m6 l4">
+                        <input class="value" id="ip" type="text" size="25" maxlength="150">
+                        <label for="ip">IP address of the Fronius inverter</label>
+                        <span class="translate">IP(192.168.x.x) or URL(sub.domain.tld)</span>
+                        <button id="checkIp"><span class="translate">Check IP</span></button>
+                        <img src="img/cancel.png" id="checkIcon"/>
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <input type="number" class="value" id="poll" />
+                        <label for="poll" class="translate">Query interval</label>
+                        <span class="translate">Polling interval in seconds.</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <p class="translate">on save adapter restarts with new config immediately</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
+
 </html>

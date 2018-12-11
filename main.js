@@ -13,18 +13,19 @@
 "use strict";
 
 // you have to require the utils module and call adapter function
-var utils = require(__dirname + '/lib/utils'); // Get common adapter utils
-var request = require('request');
-var ping = require(__dirname + '/lib/ping');
+const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
+
+const request = require('request');
+const ping = require(__dirname + '/lib/ping');
 
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
-var adapter = utils.Adapter('fronius');
+const adapter = utils.Adapter('fronius');
 
-var ip, baseurl, apiver,requestType;
-var hybrid = false;
-var isConnected = null;
+let ip, baseurl, apiver,requestType;
+let hybrid = false;
+let isConnected = null;
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
 adapter.on('unload', function (callback) {
@@ -55,7 +56,7 @@ adapter.on('stateChange', function (id, state) {
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
 adapter.on('message', function (obj) {
-    var wait = false;
+    let wait = false;
     if (obj) {
         switch (obj.command) {
             case 'checkIP':
@@ -112,7 +113,7 @@ adapter.on('ready', main);
 function checkIP(ipToCheck, callback) {
     request.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
         try {
-            var testData = JSON.parse(body);
+            const testData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
                 callback({error: 0, message: testData});
             } else {
@@ -130,7 +131,7 @@ function checkIP(ipToCheck, callback) {
 function getActiveDeviceInfo(type, url, callback) {
     request.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function (error, response, body) {
         try {
-            var deviceData = JSON.parse(body);
+            const deviceData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
                 callback({error: 0, message: deviceData.Body.Data});
             } else {
@@ -498,13 +499,13 @@ function getStringErrorCode500(errorcode) {
             return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
         case 560:
             return "Derating caused by over-frequency";
-        default:
         case 564:
             return "Functional incompatibility (one or more PC boards in the inverter are not compatible with each other, e.g. after a PC board has been replaced)";
         case 566:
             return "Arc detector switched off (e.g. during external arc monitoring)";
         case 567:
             return "Grid Voltage Dependent Power Reduction is active";
+        default:
             return "";
     }
 }
@@ -643,12 +644,12 @@ function getInverterRealtimeData(id) {
     request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     createInverterObjects(id);
 
-                    var resp = data.Body.Data;
+                    const resp = data.Body.Data;
                     adapter.setState("inverter." + id + ".DAY_ENERGY", {val: resp.DAY_ENERGY.Value, ack: true});
                     adapter.setState("inverter." + id + ".TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
                     adapter.setState("inverter." + id + ".YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
@@ -669,11 +670,11 @@ function getInverterRealtimeData(id) {
                         adapter.setState("inverter." + id + ".UDC", {val: 0, ack: true});
                     }
 
-                    var status = resp.DeviceStatus;
-                    var statusCode = parseInt(status.StatusCode);
+                    const status = resp.DeviceStatus;
+                    const statusCode = parseInt(status.StatusCode);
                     adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
 
-                    var statusCodeString = "Startup";
+                    const statusCodeString = "Startup";
                     if (statusCode === 7) {
                         statusCodeString = "Running";
                     } else if (statusCode === 8) {
@@ -861,12 +862,12 @@ function getStorageRealtimeData(id) {
     request.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     createStorageObjects(id);
 
-                    var resp = data.Body.Data.Controller;
+                    const resp = data.Body.Data.Controller;
 
                     adapter.setState("storage." + id + ".controller.Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
                     adapter.setState("storage." + id + ".controller.Enable", {val: resp.Enable === '1', ack: true});
@@ -1303,12 +1304,12 @@ function getMeterRealtimeData(id) {
     request.get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     createMeterObjects(id);
 
-                    var resp = data.Body.Data;
+                    const resp = data.Body.Data;
 
                     adapter.setState("meter." + id + ".Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
                     adapter.setState("meter." + id + ".PowerReal_P_Sum", {val: resp.PowerReal_P_Sum, ack: true});
@@ -1376,12 +1377,12 @@ function getSensorRealtimeDataNowSensorData(id) {
     request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     createSensorNowObjects(id);
 
-                    var resp = data.Body.Data;
+                    const resp = data.Body.Data;
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
@@ -1418,12 +1419,12 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
     request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     createSensorMinMaxObjects(id);
 
-                    var resp = data.Body.Data;
+                    const resp = data.Body.Data;
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
@@ -1585,12 +1586,12 @@ function getPowerFlowRealtimeData() {
     request.get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     createPowerFlowObjects();
 
-                    var resp = data.Body.Data.Site;
+                    const resp = data.Body.Data.Site;
 
                     adapter.setState("powerflow.Mode", {val: resp.Mode, ack: true});
                     adapter.setState("powerflow.P_Grid", {val: resp.P_Grid == null ? 0 : resp.P_Grid, ack: true});
@@ -1735,9 +1736,9 @@ function getLoggerInfo() {
     request.get(requestType + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-                var data = JSON.parse(body);
+                const data = JSON.parse(body);
                 if ("Body" in data) {
-                    var resp = data.Body.LoggerInfo;
+                    const resp = data.Body.LoggerInfo;
                     adapter.setState("info.HWVersion", {val: resp.HWVersion, ack: true});
                     adapter.setState("info.SWVersion", {val: resp.SWVersion, ack: true});
                 } else {
@@ -1769,7 +1770,7 @@ function main() {
         getLoggerInfo();
         checkStatus();
 
-        var secs = adapter.config.poll;
+        let secs = adapter.config.poll;
         if (isNaN(secs) || secs < 1) {
             secs = 10;
         }

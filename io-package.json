@@ -1,159 +1,238 @@
 {
-  "common": {
-    "name": "fronius",
-    "version": "1.0.3",
-    "news": {
-       "1.0.2": {
-        "en": "(Tobintax) Bugfix - Inverter Query regarding PAC adjusted.",
-        "de": "(Tobintax) Bugfix - Inverter-Daten PAC werden angezeigt",
-        "ru": "(Tobintax) Отображаются данные PAC с исправлением ошибок"
-      },
-      "1.0.1": {
-        "en": "(Tobintax) Added Values from Smartmeter. Added more Powerflow Values.",
-        "de": "(Tobintax) Werte von Smartmeter hinzugefügt. Mehr Powerflow-Werte hinzugefügt.",
-        "ru": "(Tobintax) Добавлены значения из Smart Meter. Добавлены значения расхода мощности."
-      },
-      "1.0.0": {
-        "en": "Little changes",
-        "de": "Kleine Änderungen",
-        "ru": "небольшие изменения"
-      },
-      "0.0.5": {
-        "en": "Read storage data and error/status codes",
-        "de": "Akku Daten und Status-/Fehlercodes auslesen",
-        "ru": "Считывание данных для хранения и коды ошибок / состояния"
-      },
-      "0.0.4": {
-        "en": "Read more data",
-        "de": "Weitere Daten ausgelesen",
-        "ru": "читать далее данные"
-      },
-      "0.0.3": {
-        "en": "Improved installation routine",
-        "de": "Verbesserte Installationsroutine",
-        "ru": "Улучшеный процесс установки"
-      },
-      "0.0.2": {
-        "en": "First data is read",
-        "de": "Ersten Daten werden gelesen",
-        "ru": "Первые данные читаются"
-      },
-      "0.0.1": {
-        "en": "initial adapter",
-        "de": "Initiale Version",
-        "ru": "Первая версия"
-      }
-    },
-    "title": "Fronius inverters adapter",
-    "desc": {
-      "en": "Fronius inverters Adapter",
-      "de": "Fronius Wechselrichter Adapter",
-      "ru": "Драйвер для инвертора Fronius"
-    },
-    "license": "MIT",
-    "authors": ["ldittmar <iobroker@lmdsoft.de>"],
-    "platform": "Javascript/Node.js",
-    "mode": "daemon",
-    "icon": "fronius.png",
-    "enabled": true,
-    "messagebox": true,
-    "extIcon": "https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png",
-    "keywords": [
-      "Fronius",
-      "inverter",
-      "Wechselrichter",
-      "hybrid",
-      "Symo"
-    ],
-    "readme": "https://github.com/ldittmar81/ioBroker.fronius/blob/master/README.md",
-    "loglevel": "info",
-    "type": "energy"
-  },
-  "native": {
-	"ip": "",
-	"apiversion": "",
-	"baseurl": "",
-	"inverter": "",
-	"sensorCard": "",
-	"stringControl": "",
-	"meter": "",
-	"storage": "",
-	"poll": "30",
-	"requestType": "http://"
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-        "_id": "info",
-        "type": "channel",
-        "common": {
-            "name": "Information"
+    "common": {
+        "name": "fronius",
+        "version": "1.0.3",
+        "news": {
+            "1.0.3": {
+                "en": "Support of admin3",
+                "de": "Unterstützung von admin3",
+                "ru": "Поддержка admin3",
+                "pt": "Suporte de admin3",
+                "nl": "Ondersteuning van admin3",
+                "fr": "Support de admin3",
+                "it": "Supporto di admin3",
+                "es": "Soporte de admin3",
+                "pl": "Wsparcie dla administratora3"
+            },
+            "1.0.2": {
+                "en": "(Tobintax) Bugfix - Inverter Query regarding PAC adjusted.",
+                "de": "(Tobintax) Bugfix - Inverter-Daten PAC werden angezeigt",
+                "ru": "(Tobintax) Отображаются данные PAC с исправлением ошибок",
+                "pt": "(Tobintax) Bugfix - Consulta do Inversor em relação ao PAC ajustado.",
+                "nl": "(Tobintax) Bugfix - Omvormer Query met betrekking tot PAC aangepast.",
+                "fr": "(Tobintax) Correction de bug - Requête de l'inverseur concernant le PAC ajusté.",
+                "it": "(Tobintax) Bugfix - Inverter Query riguardante il PAC regolato.",
+                "es": "(Tobintax) Corrección de errores - Consulta del inversor con respecto al PAC ajustado.",
+                "pl": "(Tobintax) Bugfix - Zapytanie o inwerter dotyczące korygowanego PAC."
+            },
+            "1.0.1": {
+                "en": "(Tobintax) Added Values from Smartmeter. Added more Powerflow Values.",
+                "de": "(Tobintax) Werte von Smartmeter hinzugefügt. Mehr Powerflow-Werte hinzugefügt.",
+                "ru": "(Tobintax) Добавлены значения из Smart Meter. Добавлены значения расхода мощности.",
+                "pt": "(Tobintax) Valores adicionados do Smartmeter. Adicionado mais valores do Powerflow.",
+                "nl": "(Tobintax) Toegevoegde waarden van Smartmeter. Meer Powerflow-waarden toegevoegd.",
+                "fr": "(Tobintax) Valeurs ajoutées par Smartmeter. Ajout de plus de valeurs Powerflow.",
+                "it": "(Tobintax) Valori aggiunti da Smartmeter. Aggiunto più valori di flusso di corrente.",
+                "es": "(Tobintax) Valores agregados de Smartmeter. Agregado más valores de Powerflow.",
+                "pl": "(Tobintax) Dodano wartości z Smartmetera. Dodano więcej wartości Powerflow."
+            },
+            "1.0.0": {
+                "en": "Little changes",
+                "de": "Kleine Änderungen",
+                "ru": "небольшие изменения",
+                "pt": "Pequenas mudanças",
+                "nl": "Weinig veranderingen",
+                "fr": "Petits changements",
+                "it": "Piccoli cambiamenti",
+                "es": "Pequeños cambios",
+                "pl": "Małe zmiany"
+            },
+            "0.0.5": {
+                "en": "Read storage data and error/status codes",
+                "de": "Akku Daten und Status-/Fehlercodes auslesen",
+                "ru": "Считывание данных для хранения и коды ошибок / состояния",
+                "pt": "Ler dados de armazenamento e códigos de erro / status",
+                "nl": "Lees opslaggegevens en fout- / statuscodes",
+                "fr": "Lire les données de stockage et les codes d'erreur / d'état",
+                "it": "Leggi i dati di archiviazione e i codici di errore / stato",
+                "es": "Leer datos de almacenamiento y códigos de error / estado.",
+                "pl": "Odczytaj dane dotyczące pamięci i kody błędów / statusu"
+            },
+            "0.0.4": {
+                "en": "Read more data",
+                "de": "Weitere Daten ausgelesen",
+                "ru": "читать далее данные",
+                "pt": "Leia mais dados",
+                "nl": "Meer gegevens lezen",
+                "fr": "Lire plus de données",
+                "it": "Leggi più dati",
+                "es": "Leer más datos",
+                "pl": "Czytaj więcej danych"
+            },
+            "0.0.3": {
+                "en": "Improved installation routine",
+                "de": "Verbesserte Installationsroutine",
+                "ru": "Улучшеный процесс установки",
+                "pt": "Rotina de instalação aprimorada",
+                "nl": "Verbeterde installatieroutine",
+                "fr": "Amélioration de la routine d'installation",
+                "it": "Miglioramento della routine di installazione",
+                "es": "Rutina de instalación mejorada",
+                "pl": "Ulepszona procedura instalacji"
+            },
+            "0.0.2": {
+                "en": "First data is read",
+                "de": "Ersten Daten werden gelesen",
+                "ru": "Первые данные читаются",
+                "pt": "Primeiros dados são lidos",
+                "nl": "Eerste gegevens worden gelezen",
+                "fr": "Les premières données sont lues",
+                "it": "I primi dati vengono letti",
+                "es": "Se leen los primeros datos",
+                "pl": "Pierwsze dane są odczytywane"
+            },
+            "0.0.1": {
+                "en": "initial adapter",
+                "de": "Initiale Version",
+                "ru": "Первоначальный адаптер",
+                "pt": "Versão inicial",
+                "fr": "Version initiale",
+                "nl": "Eerste release",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Początkowa wersja"
+            }
         },
-        "native": {}
+        "title": "Fronius inverters adapter",
+        "titleLang": {
+            "en": "Fronius inverters Adapter",
+            "de": "Fronius Wechselrichter Adapter",
+            "ru": "Драйвер для инвертора Fronius",
+            "pt": "Adaptador de inversores Fronius",
+            "nl": "Fronius omvormers adapter",
+            "fr": "Adaptateur d'onduleurs Fronius",
+            "it": "Inverter Fronius Adattatore",
+            "es": "Inversor Fronius Adaptador",
+            "pl": "Adapter inwerterów Fronius"
+        },
+        "desc": {
+            "en": "For your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.",
+            "de": "Für Ihren Fronius PV-Wechselrichter mit Fronius Datalogger Web ab Version 2.0.4-1 oder Fronius Datamanager ab Version 3.0.3-1.",
+            "ru": "Для вашего PV преобразователя Fronius с Fronius Datalogger Web начиная с версии 2.0.4-1 или Fronius Datamanager начиная с версии 3.0.3-1 и далее.",
+            "pt": "Para o seu inversor Fronius PV com o Fronius Datalogger Web a partir da versão 2.0.4-1 ou Fronius Datamanager da versão 3.0.3-1 em diante.",
+            "nl": "Voor uw Fronius PV-omvormer met Fronius Datalogger Web vanaf versie 2.0.4-1 of Fronius Datamanager vanaf versie 3.0.3-1.",
+            "fr": "Pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1 ou Fronius Datamanager à partir de la version 3.0.3-1.",
+            "it": "Per il tuo inverter Fronius PV con Fronius Datalogger Web dalla versione 2.0.4-1 in poi o Fronius Datamanager dalla versione 3.0.3-1 in poi.",
+            "es": "Para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1 o Fronius Datamanager a partir de la versión 3.0.3-1.",
+            "pl": "Do falownika Fronius PV z oprogramowaniem Fronius Datalogger Web od wersji 2.0.4-1 lub urządzeniem Fronius Datamanager od wersji 3.0.3-1."
+        },
+        "license": "MIT",
+        "authors": [
+            "ldittmar <iobroker@lmdsoft.de>"
+        ],
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "fronius.png",
+        "materialize": true,
+        "enabled": true,
+        "messagebox": true,
+        "extIcon": "https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png",
+        "keywords": [
+            "Fronius",
+            "inverter",
+            "Wechselrichter",
+            "hybrid",
+            "Symo"
+        ],
+        "readme": "https://github.com/ldittmar81/ioBroker.fronius/blob/master/README.md",
+        "loglevel": "info",
+        "type": "energy"
     },
-    {
-      "_id": "info.lastsync",
-      "type": "state",
-      "common": {
-        "name": "Last successful sync",
-        "type": "string",
-        "role": "value.datetime",
-        "read": true,
-        "write": false,
-        "desc": "Last successful synchronization"
-      },
-      "native": {}
+    "native": {
+        "ip": "",
+        "apiversion": "",
+        "baseurl": "",
+        "inverter": "",
+        "sensorCard": "",
+        "stringControl": "",
+        "meter": "",
+        "storage": "",
+        "poll": "30",
+        "requestType": "http://"
     },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "name": "Fronius connected",
-        "type": "boolean",
-        "role": "indicator.connected",
-        "read": true,
-        "write": false,
-        "def": false,
-        "desc": "Is Fronius inverter connected?"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.HWVersion",
-      "type": "state",
-      "common": {
-        "name": "Hardware Version",
-        "type": "string",
-        "role": "meta",
-        "read": true,
-        "write": false,
-        "def": "",
-        "desc": "Hardware Version"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.SWVersion",
-      "type": "state",
-      "common": {
-        "name": "Software Version",
-        "type": "string",
-        "role": "meta",
-        "read": true,
-        "write": false,
-        "def": "",
-        "desc": "Software Version"
-      },
-      "native": {}
-    },
-    {
-      "_id": "inverter",
-      "type": "channel",
-      "common": {
-        "name": "inverter realtime data",
-        "role": "info"
-      },
-      "native": {}
-    }
-  ]
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastsync",
+            "type": "state",
+            "common": {
+                "name": "Last successful sync",
+                "type": "string",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "desc": "Last successful synchronization"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "name": "Fronius connected",
+                "type": "boolean",
+                "role": "indicator.connected",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Is Fronius inverter connected?"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.HWVersion",
+            "type": "state",
+            "common": {
+                "name": "Hardware Version",
+                "type": "string",
+                "role": "meta",
+                "read": true,
+                "write": false,
+                "def": "",
+                "desc": "Hardware Version"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.SWVersion",
+            "type": "state",
+            "common": {
+                "name": "Software Version",
+                "type": "string",
+                "role": "meta",
+                "read": true,
+                "write": false,
+                "def": "",
+                "desc": "Software Version"
+            },
+            "native": {}
+        },
+        {
+            "_id": "inverter",
+            "type": "channel",
+            "common": {
+                "name": "inverter realtime data",
+                "role": "info"
+            },
+            "native": {}
+        }
+    ]
 }

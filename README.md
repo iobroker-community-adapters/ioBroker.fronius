@@ -19,6 +19,9 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
 
 ## Changelog
 
+#### 1.0.3
+* (ldittmar) Ready for Admin 3
+
 #### 1.0.2
 * (tobintax) Bugfix - Inverter Query regarding PAC adjusted.
 
