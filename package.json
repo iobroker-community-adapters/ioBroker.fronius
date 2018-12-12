@@ -30,11 +30,11 @@
     "url": "https://github.com/ldittmar81/ioBroker.fronius"
   },
   "dependencies": {
-    "request": "^2.79.0"
+    "request": "^2.88.0"
   },
   "devDependencies": {
+    "gulp": "^4.0.0",
     "chai": "^4.1.2",
-    "gulp": "^3.9.1",
     "mocha": "^4.1.0"
   },
   "main": "main.js",
