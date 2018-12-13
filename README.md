@@ -1,6 +1,7 @@
-![Logo](admin/fronius.png)
-ioBroker.fronius
-=============
+<h1>
+  <img src="https://github.com/ldittmar81/ioBroker.fronius/blob/master/admin/fronius.png" width="64"/>
+  ioBroker.fronius
+</h1>
 
 [![NPM version](http://img.shields.io/npm/v/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
@@ -12,46 +13,45 @@ ioBroker.fronius
 **Tests:** Linux/Mac: [![Travis-CI](http://img.shields.io/travis/ldittmar81/ioBroker.fronius/master.svg)](https://travis-ci.org/ldittmar81/ioBroker.fronius)
 Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/ldittmar81/ioBroker.fronius?branch=master&svg=true)](https://ci.appveyor.com/project/ldittmar81/ioBroker-fronius/)
 
-### A Fronius inverter adapter for ioBroker
-=================
+## A Fronius inverter adapter for ioBroker
 
 This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.
 
 ## Changelog
 
-#### 1.0.3
+### 1.0.3
 * (ldittmar) Ready for Admin 3
 
-#### 1.0.2
+### 1.0.2
 * (tobintax) Bugfix - Inverter Query regarding PAC adjusted.
 
-#### 1.0.1
+### 1.0.1
 * (tobintax) Added more values from Smartmeter
 * (tobintax) Added more Powerflow Values
 * (tobintax) Removed Value "EnergyReal_WAC_Minus_Relative" . This Value had no result and is undocumented in the fronius api documentation.
 
-#### 1.0.0
+### 1.0.0
 * (ldittmar) Fixed little errors
 
-#### 0.0.5
+### 0.0.5
 * (ldittmar) Read storage data and error/status codes
 
-#### 0.0.4
+### 0.0.4
 * (ldittmar) Read more data
 
-#### 0.0.3
+### 0.0.3
 * (ldittmar) Improved installation routine
 
-#### 0.0.2
+### 0.0.2
 * (ldittmar) First data is read
 
-#### 0.0.1
+### 0.0.1
 * (ldittmar) initial commit
 
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2017 ldittmar <iobroker@lmdsoft.de>
+Copyright (c) 2018 ldittmar <iobroker@lmdsoft.de>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
