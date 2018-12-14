@@ -1,8 +1,8 @@
 {
-  "Check IP": "",
-  "IP address of the Fronius inverter": "",
-  "IP(192.168.x.x) or URL(sub.domain.tld)": "",
-  "Polling interval in seconds.": "",
-  "Query interval": "",
-  "on save adapter restarts with new config immediately": "on save-adapter wordt onmiddellijk opnieuw opgestart met nieuwe config"
+  "Check IP": "Controleer het IP-adres",
+  "IP address of the Fronius inverter": "IP-adres van de Fronius-omvormer",
+  "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) of URL (subdomain.tld)",
+  "Polling interval in seconds.": "Polling-interval in seconden.",
+  "Query interval": "navraaginterval",
+  "on save adapter restarts with new config immediately": "Wanneer u instellingen opslaat, worden de adapters onmiddellijk opnieuw gestart."
 }

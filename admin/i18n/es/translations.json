@@ -1,8 +1,8 @@
 {
-  "Check IP": "",
-  "IP address of the Fronius inverter": "",
-  "IP(192.168.x.x) or URL(sub.domain.tld)": "",
-  "Polling interval in seconds.": "",
-  "Query interval": "",
-  "on save adapter restarts with new config immediately": "en el adaptador de guardar se reinicia con nueva configuración de inmediato"
+  "Check IP": "Compruebe la dirección IP",
+  "IP address of the Fronius inverter": "Dirección IP del inversor Fronius.",
+  "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) o URL (subdominio.tld)",
+  "Polling interval in seconds.": "Intervalo de sondeo en segundos.",
+  "Query interval": "intervalo de sondeo",
+  "on save adapter restarts with new config immediately": "Al guardar la configuración de los adaptadores se reiniciará inmediatamente."
 }

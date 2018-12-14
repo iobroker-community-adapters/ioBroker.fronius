@@ -1,5 +1,5 @@
 <h1>
-  <img src="https://github.com/ldittmar81/ioBroker.fronius/blob/master/admin/fronius.png" width="64"/>
+  <img src="https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png" width="64"/>
   ioBroker.fronius
 </h1>
 
