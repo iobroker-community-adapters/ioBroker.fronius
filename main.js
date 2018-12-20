@@ -8,12 +8,13 @@
  *
  */
 
+/* global __dirname */
 /* jshint -W097 */// jshint strict:false
 /*jslint node: true */
 "use strict";
 
 // you have to require the utils module and call adapter function
-const utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
+const utils = require(__dirname + '/lib/utils'); // Get common adapter utils
 
 const request = require('request');
 const ping = require(__dirname + '/lib/ping');
@@ -23,7 +24,7 @@ const ping = require(__dirname + '/lib/ping');
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 const adapter = utils.Adapter('fronius');
 
-let ip, baseurl, apiver,requestType;
+let ip, baseurl, apiver, requestType;
 let hybrid = false;
 let isConnected = null;
 
@@ -135,7 +136,7 @@ function getActiveDeviceInfo(type, url, callback) {
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
                 callback({error: 0, message: deviceData.Body.Data});
             } else {
-                adapter.log.warn(data.Head.Status.Reason);
+                adapter.log.warn(deviceData.Head.Status.Reason);
                 callback({error: 1, message: {}});
             }
         } catch (e) {
@@ -671,10 +672,10 @@ function getInverterRealtimeData(id) {
                     }
 
                     const status = resp.DeviceStatus;
-                    const statusCode = parseInt(status.StatusCode);
+                    let statusCode = parseInt(status.StatusCode);
                     adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
 
-                    const statusCodeString = "Startup";
+                    let statusCodeString = "Startup";
                     if (statusCode === 7) {
                         statusCodeString = "Running";
                     } else if (statusCode === 8) {
@@ -1624,7 +1625,7 @@ function createInfoObjects() {
     adapter.setObjectNotExists('info', {
         type: 'channel',
         common: {
-            name: "Information",
+            name: "Information"
         },
         native: {}
     });
