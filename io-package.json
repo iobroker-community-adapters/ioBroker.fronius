@@ -1,8 +1,19 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.0.4",
+        "version": "1.0.5",
         "news": {
+            "1.0.5": {
+                "en": "compact mode compatibility added",
+                "de": "Kompaktmodus-Kompatibilität hinzugefügt",
+                "ru": "добавлена ​​совместимость с компактным режимом",
+                "pt": "compatibilidade de modo compacto adicionada",
+                "nl": "compatibiliteit met compacte modus toegevoegd",
+                "fr": "Compatibilité en mode compact ajoutée",
+                "it": "aggiunta la compatibilità in modalità compatta",
+                "es": "compatibilidad de modo compacto agregado",
+                "pl": "Dodano kompatybilność w trybie kompaktowym"
+            },
             "1.0.4": {
                 "en": "Fix assignment to constant variable error",
                 "de": "Zuordnung zu konstantem Variablenfehler korrigieren",
@@ -141,6 +152,7 @@
         "authors": [
             "ldittmar <iobroker@lmdsoft.de>"
         ],
+        "compact": true,
         "platform": "Javascript/Node.js",
         "mode": "daemon",
         "icon": "fronius.png",

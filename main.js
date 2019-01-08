@@ -19,96 +19,105 @@ const utils = require(__dirname + '/lib/utils'); // Get common adapter utils
 const request = require('request');
 const ping = require(__dirname + '/lib/ping');
 
+let ip, baseurl, apiver, requestType;
+let isConnected = null;
+
+
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
-const adapter = utils.Adapter('fronius');
+let adapter;
+function startAdapter(options) {
+    options = options || {};
+    Object.assign(options, {
+        name: 'fronius'
+    });
+    adapter = new utils.Adapter(options);
 
-let ip, baseurl, apiver, requestType;
-let hybrid = false;
-let isConnected = null;
-
-// is called when adapter shuts down - callback has to be called under any circumstances!
-adapter.on('unload', function (callback) {
-    try {
-        adapter.log.info('cleaned everything up...');
-        callback();
-    } catch (e) {
-        callback();
-    }
-});
-
-// is called if a subscribed object changes
-adapter.on('objectChange', function (id, obj) {
-    // Warning, obj can be null if it was deleted
-    adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
-});
-
-// is called if a subscribed state changes
-adapter.on('stateChange', function (id, state) {
-    // Warning, state can be null if it was deleted
-    adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
-
-    // you can use the ack flag to detect if it is status (true) or command (false)
-    if (state && !state.ack) {
-        adapter.log.info('ack is not set!');
-    }
-});
-
-// Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
-adapter.on('message', function (obj) {
-    let wait = false;
-    if (obj) {
-        switch (obj.command) {
-            case 'checkIP':
-                checkIP(obj.message, function (res) {
-                    if (obj.callback)
-                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
-                });
-                wait = true;
-                break;
-            case 'getDeviceInfo':
-                getActiveDeviceInfo("System", obj.message, function (res) {
-                    if (obj.callback)
-                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
-                });
-                wait = true;
-                break;
-            case 'getDeviceInfoInverter':
-                getActiveDeviceInfo("Inverter", obj.message, function (res) {
-                    if (obj.callback)
-                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
-                });
-                wait = true;
-                break;
-            case 'getDeviceInfoSensor':
-                getActiveDeviceInfo("SensorCard", obj.message, function (res) {
-                    if (obj.callback)
-                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
-                });
-                wait = true;
-                break;
-            case 'getDeviceInfoString':
-                getActiveDeviceInfo("StringControl", obj.message, function (res) {
-                    if (obj.callback)
-                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
-                });
-                wait = true;
-                break;
-            default:
-                adapter.log.warn("Unknown command: " + obj.command);
-                break;
+    // is called when adapter shuts down - callback has to be called under any circumstances!
+    adapter.on('unload', function (callback) {
+        try {
+            adapter.log.info('cleaned everything up...');
+            callback();
+        } catch (e) {
+            callback();
         }
-    }
-    if (!wait && obj.callback) {
-        adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
-    }
-    return true;
-});
+    });
 
-// is called when databases are connected and adapter received configuration.
-// start here!
-adapter.on('ready', main);
+    // is called if a subscribed object changes
+    adapter.on('objectChange', function (id, obj) {
+        // Warning, obj can be null if it was deleted
+        adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
+    });
+
+    // is called if a subscribed state changes
+    adapter.on('stateChange', function (id, state) {
+        // Warning, state can be null if it was deleted
+        adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
+
+        // you can use the ack flag to detect if it is status (true) or command (false)
+        if (state && !state.ack) {
+            adapter.log.info('ack is not set!');
+        }
+    });
+
+    // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
+    adapter.on('message', function (obj) {
+        let wait = false;
+        if (obj) {
+            switch (obj.command) {
+                case 'checkIP':
+                    checkIP(obj.message, function (res) {
+                        if (obj.callback)
+                            adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    });
+                    wait = true;
+                    break;
+                case 'getDeviceInfo':
+                    getActiveDeviceInfo("System", obj.message, function (res) {
+                        if (obj.callback)
+                            adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    });
+                    wait = true;
+                    break;
+                case 'getDeviceInfoInverter':
+                    getActiveDeviceInfo("Inverter", obj.message, function (res) {
+                        if (obj.callback)
+                            adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    });
+                    wait = true;
+                    break;
+                case 'getDeviceInfoSensor':
+                    getActiveDeviceInfo("SensorCard", obj.message, function (res) {
+                        if (obj.callback)
+                            adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    });
+                    wait = true;
+                    break;
+                case 'getDeviceInfoString':
+                    getActiveDeviceInfo("StringControl", obj.message, function (res) {
+                        if (obj.callback)
+                            adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                    });
+                    wait = true;
+                    break;
+                default:
+                    adapter.log.warn("Unknown command: " + obj.command);
+                    break;
+            }
+        }
+        if (!wait && obj.callback) {
+            adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
+        }
+        return true;
+    });
+
+    // is called when databases are connected and adapter received configuration.
+    // start here!
+    adapter.on('ready', main);
+
+    return adapter;
+}
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
@@ -1784,3 +1793,11 @@ function main() {
 
 
 }
+
+// If started as allInOne/compact mode => return function to create instance
+if (module && module.parent) {
+    module.exports = startAdapter;
+} else {
+    // or start the instance directly
+    startAdapter();
+} 
