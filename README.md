@@ -21,6 +21,7 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
 
 ### 1.0.5
 * (ldittmar) compact mode compatibility added
+* (ldittmar) add chinese support
 
 ### 1.0.4
 * (ldittmar) Fix assignment to constant variable error
