@@ -12,7 +12,8 @@
                 "fr": "Compatibilité en mode compact ajoutée",
                 "it": "aggiunta la compatibilità in modalità compatta",
                 "es": "compatibilidad de modo compacto agregado",
-                "pl": "Dodano kompatybilność w trybie kompaktowym"
+                "pl": "Dodano kompatybilność w trybie kompaktowym",
+                "zh-cn": "增加了紧凑模式兼容性"
             },
             "1.0.4": {
                 "en": "Fix assignment to constant variable error",
@@ -23,7 +24,8 @@
                 "fr": "Correction de l'affectation à l'erreur de variable constante",
                 "it": "Correzione dell'assegnazione all'errore di variabile costante",
                 "es": "Corregir asignación a error variable constante",
-                "pl": "Napraw przypisanie do stałego błędu zmiennej"
+                "pl": "Napraw przypisanie do stałego błędu zmiennej",
+                "zh-cn": "修复对常量变量错误的分配"
             },
             "1.0.3": {
                 "en": "Support of admin3",
@@ -34,7 +36,8 @@
                 "fr": "Support de admin3",
                 "it": "Supporto di admin3",
                 "es": "Soporte de admin3",
-                "pl": "Wsparcie dla administratora3"
+                "pl": "Wsparcie dla administratora3",
+                "zh-cn": "支持管理员3"
             },
             "1.0.2": {
                 "en": "(Tobintax) Bugfix - Inverter Query regarding PAC adjusted.",
@@ -45,7 +48,8 @@
                 "fr": "(Tobintax) Correction de bug - Requête de l'inverseur concernant le PAC ajusté.",
                 "it": "(Tobintax) Bugfix - Inverter Query riguardante il PAC regolato.",
                 "es": "(Tobintax) Corrección de errores - Consulta del inversor con respecto al PAC ajustado.",
-                "pl": "(Tobintax) Bugfix - Zapytanie o inwerter dotyczące korygowanego PAC."
+                "pl": "(Tobintax) Bugfix - Zapytanie o inwerter dotyczące korygowanego PAC.",
+                "zh-cn": "(Tobintax) 修正 - 关于PAC调整的逆变器查询。"
             },
             "1.0.1": {
                 "en": "(Tobintax) Added Values from Smartmeter. Added more Powerflow Values.",
@@ -56,7 +60,8 @@
                 "fr": "(Tobintax) Valeurs ajoutées par Smartmeter. Ajout de plus de valeurs Powerflow.",
                 "it": "(Tobintax) Valori aggiunti da Smartmeter. Aggiunto più valori di flusso di corrente.",
                 "es": "(Tobintax) Valores agregados de Smartmeter. Agregado más valores de Powerflow.",
-                "pl": "(Tobintax) Dodano wartości z Smartmetera. Dodano więcej wartości Powerflow."
+                "pl": "(Tobintax) Dodano wartości z Smartmetera. Dodano więcej wartości Powerflow.",
+                "zh-cn": "(Tobintax) 从Smartmeter添加值。 添加了更多Powerflow值。"
             },
             "1.0.0": {
                 "en": "Little changes",
@@ -78,7 +83,8 @@
                 "fr": "Lire les données de stockage et les codes d'erreur / d'état",
                 "it": "Leggi i dati di archiviazione e i codici di errore / stato",
                 "es": "Leer datos de almacenamiento y códigos de error / estado.",
-                "pl": "Odczytaj dane dotyczące pamięci i kody błędów / statusu"
+                "pl": "Odczytaj dane dotyczące pamięci i kody błędów / statusu",
+                "zh-cn": "读取存储数据和错误/状态代码"
             },
             "0.0.4": {
                 "en": "Read more data",
@@ -89,7 +95,8 @@
                 "fr": "Lire plus de données",
                 "it": "Leggi più dati",
                 "es": "Leer más datos",
-                "pl": "Czytaj więcej danych"
+                "pl": "Czytaj więcej danych",
+                "zh-cn": "阅读更多数据"
             },
             "0.0.3": {
                 "en": "Improved installation routine",
@@ -100,7 +107,8 @@
                 "fr": "Amélioration de la routine d'installation",
                 "it": "Miglioramento della routine di installazione",
                 "es": "Rutina de instalación mejorada",
-                "pl": "Ulepszona procedura instalacji"
+                "pl": "Ulepszona procedura instalacji",
+                "zh-cn": "改进了安装程序"
             },
             "0.0.2": {
                 "en": "First data is read",
@@ -111,7 +119,8 @@
                 "fr": "Les premières données sont lues",
                 "it": "I primi dati vengono letti",
                 "es": "Se leen los primeros datos",
-                "pl": "Pierwsze dane są odczytywane"
+                "pl": "Pierwsze dane są odczytywane",
+                "zh-cn": "读取第一个数据"
             },
             "0.0.1": {
                 "en": "initial adapter",
@@ -122,7 +131,8 @@
                 "nl": "Eerste release",
                 "it": "Versione iniziale",
                 "es": "Versión inicial",
-                "pl": "Początkowa wersja"
+                "pl": "Początkowa wersja",
+                "zh-cn": "初始版本"
             }
         },
         "title": "Fronius inverters adapter",
@@ -135,7 +145,8 @@
             "fr": "Adaptateur d'onduleurs Fronius",
             "it": "Inverter Fronius Adattatore",
             "es": "Inversor Fronius Adaptador",
-            "pl": "Adapter inwerterów Fronius"
+            "pl": "Adapter inwerterów Fronius",
+            "zh-cn": "Fronius逆变器适配器"
         },
         "desc": {
             "en": "For your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.",
@@ -146,7 +157,8 @@
             "fr": "Pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1 ou Fronius Datamanager à partir de la version 3.0.3-1.",
             "it": "Per il tuo inverter Fronius PV con Fronius Datalogger Web dalla versione 2.0.4-1 in poi o Fronius Datamanager dalla versione 3.0.3-1 in poi.",
             "es": "Para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1 o Fronius Datamanager a partir de la versión 3.0.3-1.",
-            "pl": "Do falownika Fronius PV z oprogramowaniem Fronius Datalogger Web od wersji 2.0.4-1 lub urządzeniem Fronius Datamanager od wersji 3.0.3-1."
+            "pl": "Do falownika Fronius PV z oprogramowaniem Fronius Datalogger Web od wersji 2.0.4-1 lub urządzeniem Fronius Datamanager od wersji 3.0.3-1.",
+            "zh-cn": "适用于Fronius PV变频器，带有Fronius Datalogger Web 2.0.4-1版本或Fronius Datamanager 3.0.3-1版本。"
         },
         "license": "MIT",
         "authors": [
