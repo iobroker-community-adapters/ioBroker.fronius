@@ -14,16 +14,16 @@ var version = (pkg && pkg.version) ? pkg.version : iopackage.common.version;
  */
 const fileName = 'words.js';
 var languages = {
-    en: {},
-    de: {},
-    ru: {},
-    pt: {},
-    nl: {},
-    fr: {},
-    it: {},
-    es: {},
-    pl: {},
-    zh: {}
+    'en': {},
+    'de': {},
+    'ru': {},
+    'pt': {},
+    'nl': {},
+    'fr': {},
+    'it': {},
+    'es': {},
+    'pl': {},
+    'zh-cn': {}
 };
 
 function lang2data(lang, isFlat) {
