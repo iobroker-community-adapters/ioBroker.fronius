@@ -11,7 +11,7 @@
 [![NPM](https://nodei.co/npm/iobroker.fronius.png?downloads=true)](https://nodei.co/npm/iobroker.fronius/)
 
 **Tests:** Linux/Mac: [![Travis-CI](http://img.shields.io/travis/ldittmar81/ioBroker.fronius/master.svg)](https://travis-ci.org/ldittmar81/ioBroker.fronius)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/ldittmar81/ioBroker.fronius?branch=master&svg=true)](https://ci.appveyor.com/project/ldittmar81/ioBroker-fronius/)
+Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/ldittmar81/ioBroker.fronius?branch=master&svg=true)](https://ci.appveyor.com/project/ldittmar81/ioBroker-fronius/) [![Greenkeeper badge](https://badges.greenkeeper.io/ldittmar81/ioBroker.fronius.svg)](https://greenkeeper.io/)
 
 ## A Fronius inverter adapter for ioBroker
 
