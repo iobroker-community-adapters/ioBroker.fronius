@@ -12,7 +12,7 @@
       "email": ""
     }
   ],
-  "homepage": "https://github.com/ldittmar81/ioBroker.fronius",
+  "homepage": "https://github.com/iobroker-community-adapters/ioBroker.fronius",
   "license": "MIT",
   "keywords": [
     "ioBroker",
@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ldittmar81/ioBroker.fronius"
+    "url": "https://github.com/iobroker-community-adapters/ioBroker.fronius"
   },
   "dependencies": {
     "request": "^2.88.0"
@@ -43,7 +43,7 @@
     "test": "node node_modules/mocha/bin/mocha --exit"
   },
   "bugs": {
-    "url": "https://github.com/ldittmar81/ioBroker.fronius/issues"
+    "url": "https://github.com/iobroker-community-adapters/ioBroker.fronius/issues"
   },
   "readmeFilename": "README.md"
 }

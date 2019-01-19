@@ -172,7 +172,7 @@
         "materialize": true,
         "enabled": true,
         "messagebox": true,
-        "extIcon": "https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png",
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
         "keywords": [
             "Fronius",
             "inverter",
@@ -180,7 +180,7 @@
             "hybrid",
             "Symo"
         ],
-        "readme": "https://github.com/ldittmar81/ioBroker.fronius/blob/master/README.md",
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
         "loglevel": "info",
         "type": "energy"
     },

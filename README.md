@@ -1,17 +1,18 @@
 <h1>
-  <img src="https://raw.githubusercontent.com/ldittmar81/ioBroker.fronius/master/admin/fronius.png" width="64"/>
+  <img src="https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png" width="64"/>
   ioBroker.fronius
 </h1>
 
 [![NPM version](http://img.shields.io/npm/v/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
-[![Dependency Status](https://img.shields.io/david/ldittmar81/iobroker.fronius.svg)](https://david-dm.org/ldittmar81/iobroker.fronius)
-[![Known Vulnerabilities](https://snyk.io/test/github/ldittmar81/ioBroker.fronius/badge.svg)](https://snyk.io/test/github/ldittmar81/ioBroker.fronius)
+[![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.fronius.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.fronius)
+[![Known Vulnerabilities](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.fronius/badge.svg)](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.fronius)
 
 [![NPM](https://nodei.co/npm/iobroker.fronius.png?downloads=true)](https://nodei.co/npm/iobroker.fronius/)
 
-**Tests:** Linux/Mac: [![Travis-CI](http://img.shields.io/travis/ldittmar81/ioBroker.fronius/master.svg)](https://travis-ci.org/ldittmar81/ioBroker.fronius)
-Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/ldittmar81/ioBroker.fronius?branch=master&svg=true)](https://ci.appveyor.com/project/ldittmar81/ioBroker-fronius/) [![Greenkeeper badge](https://badges.greenkeeper.io/ldittmar81/ioBroker.fronius.svg)](https://greenkeeper.io/)
+**Tests:** Linux/Mac: [![Travis-CI](http://img.shields.io/travis/iobroker-community-adapters/ioBroker.fronius/master.svg)](https://travis-ci.org/iobroker-community-adapters/ioBroker.fronius)
+Windows: [![AppVeyor](https://ci.appveyor.com/api/projects/status/github/iobroker-community-adapters/ioBroker.fronius?branch=master&svg=true)](https://ci.appveyor.com/project/iobroker-community-adapters/ioBroker-fronius/) 
+[![Greenkeeper badge](https://badges.greenkeeper.io/iobroker-community-adapters/ioBroker.fronius.svg)](https://greenkeeper.io/)
 
 ## A Fronius inverter adapter for ioBroker
 
