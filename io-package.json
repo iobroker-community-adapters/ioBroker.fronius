@@ -72,7 +72,8 @@
                 "fr": "Petits changements",
                 "it": "Piccoli cambiamenti",
                 "es": "Pequeños cambios",
-                "pl": "Małe zmiany"
+                "pl": "Małe zmiany",
+                "zh-cn": "变化不大"
             },
             "0.0.5": {
                 "en": "Read storage data and error/status codes",

@@ -1,8 +1,8 @@
 {
-  "Check IP": "Sprawdź adres IP",
-  "IP address of the Fronius inverter": "Adres IP falownika Fronius",
-  "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) lub URL (subdomain.tld)",
-  "Polling interval in seconds.": "Interwał sondowania w sekundach.",
-  "Query interval": "interwał odpytywania",
-  "on save adapter restarts with new config immediately": "Po zapisaniu ustawień karty zostaną natychmiast ponownie uruchomione."
+    "Check IP": "Sprawdź adres IP",
+    "IP address of the Fronius inverter": "Adres IP falownika Fronius",
+    "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) lub URL (subdomain.tld)",
+    "Polling interval in seconds.": "Interwał sondowania w sekundach.",
+    "Query interval": "interwał odpytywania",
+    "on save adapter restarts with new config immediately": "Po zapisaniu ustawień karty zostaną natychmiast ponownie uruchomione."
 }
