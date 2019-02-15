@@ -136,18 +136,18 @@
                 "zh-cn": "初始版本"
             }
         },
-        "title": "Fronius inverters adapter",
+        "title": "Fronius inverter",
         "titleLang": {
-            "en": "Fronius inverters Adapter",
-            "de": "Fronius Wechselrichter Adapter",
-            "ru": "Драйвер для инвертора Fronius",
-            "pt": "Adaptador de inversores Fronius",
-            "nl": "Fronius omvormers adapter",
-            "fr": "Adaptateur d'onduleurs Fronius",
-            "it": "Inverter Fronius Adattatore",
-            "es": "Inversor Fronius Adaptador",
-            "pl": "Adapter inwerterów Fronius",
-            "zh-cn": "Fronius逆变器适配器"
+            "en": "Fronius inverter",
+            "de": "Fronius Wechselrichter",
+            "ru": "Fronius инвертор",
+            "pt": "Inversor Fronius",
+            "nl": "Fronius-omvormer",
+            "fr": "Onduleur Fronius",
+            "it": "Inverter Fronius",
+            "es": "Inversor Fronius",
+            "pl": "Falownik Fronius",
+            "zh-cn": "Fronius逆變器"
         },
         "desc": {
             "en": "For your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.",
