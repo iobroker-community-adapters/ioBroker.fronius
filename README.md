@@ -3,7 +3,7 @@
   ioBroker.fronius
 </h1>
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
+![Number of Installations](http://iobroker.live/badges/fronius-installed.svg) ![Number of Installations](http://iobroker.live/badges/fronius-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fronius.svg)](https://www.npmjs.com/package/iobroker.fronius)
 [![Dependency Status](https://img.shields.io/david/iobroker-community-adapters/iobroker.fronius.svg)](https://david-dm.org/iobroker-community-adapters/iobroker.fronius)
 [![Known Vulnerabilities](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.fronius/badge.svg)](https://snyk.io/test/github/iobroker-community-adapters/ioBroker.fronius)
