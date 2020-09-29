@@ -11,6 +11,8 @@
  *  19.09.2020, nkleber:
  *      Modified creating and filling objects in a way that this will happen mostly dynamic.
  *      So if a object is not predefined, it will created with default settings and filled
+ * 29.9.2020, nkleber
+ *      Modified check of reachable Inverter in a way that a valid response is necessary to set the adapter to connected
  *
  */
 
@@ -2530,43 +2532,59 @@ function checkStatus() {
             adapter.log.error(err);
         }
         if (result) {
-            setConnected(result.alive);
-            if (result.alive) {
-                adapter.config.inverter.split(',').forEach(function (entry) {
-                    getInverterRealtimeData(entry);
-                });
-                if (adapter.config.sensorCard) {
-                    adapter.config.sensorCard.split(',').forEach(function (entry) {
-                        getSensorRealtimeDataNowSensorData(entry);
-                        getSensorRealtimeDataMinMaxSensorData(entry);
-                    });
+            // now try if we can really read data from the API. If not do not further process
+            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+                var testData = null
+                try {
+                    testData = JSON.parse(body);
+                } catch (e) {
+                    adapter.log.debug("Exception thrown in check API: " + e);
                 }
-                if (adapter.config.stringControl) {
-                    adapter.config.stringControl.split(',').forEach(function (entry) {
-                        getStringRealtimeData(entry);
-                    });
-                }
-
-                if (apiver === 1) {
-                    if (adapter.config.meter) {
-                        adapter.config.meter.split(',').forEach(function (entry) {
-                            getMeterRealtimeData(entry);
+                if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
+                    // it seems everything is working, therefore proceed with readout
+                    setConnected(result.alive);
+                    if (result.alive) {
+                        adapter.config.inverter.split(',').forEach(function (entry) {
+                            getInverterRealtimeData(entry);
                         });
-                    }
-                    if (adapter.config.storage) {
-                        adapter.config.storage.split(',').forEach(function (entry) {
-                            getStorageRealtimeData(entry);
-                        });
-                    }
-                    getPowerFlowRealtimeData();
-                }
+                        if (adapter.config.sensorCard) {
+                            adapter.config.sensorCard.split(',').forEach(function (entry) {
+                                getSensorRealtimeDataNowSensorData(entry);
+                                getSensorRealtimeDataMinMaxSensorData(entry);
+                            });
+                        }
+                        if (adapter.config.stringControl) {
+                            adapter.config.stringControl.split(',').forEach(function (entry) {
+                                getStringRealtimeData(entry);
+                            });
+                        }
 
-                adapter.setState("info.lastsync", {val: new Date().toISOString(), ack: true});
-                // allow enough time to finish all the previous state creation before setting the value to true
-                setTimeout(function(){
-                    isObjectsCreated = true
-                },10000);
-            }
+                        if (apiver === 1) {
+                            if (adapter.config.meter) {
+                                adapter.config.meter.split(',').forEach(function (entry) {
+                                    getMeterRealtimeData(entry);
+                                });
+                            }
+                            if (adapter.config.storage) {
+                                adapter.config.storage.split(',').forEach(function (entry) {
+                                    getStorageRealtimeData(entry);
+                                });
+                            }
+                            getPowerFlowRealtimeData();
+                        }
+
+                        adapter.setState("info.lastsync", {val: new Date().toISOString(), ack: true});
+                        // allow enough time to finish all the previous state creation before setting the value to true
+                        setTimeout(function(){
+                            isObjectsCreated = true
+                        },10000);
+                    }
+                } else {
+                    adapter.log.debug("Unable to read data from inverters solarAPI");
+                    setConnected(false);
+                }
+                
+            });
         }
     });
 }
