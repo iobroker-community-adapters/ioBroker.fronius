@@ -3,8 +3,16 @@
  *      ioBroker Fronius inverters Adapter
  *
  *      (c) 2017 ldittmar <iobroker@lmdsoft.de>
+ *      (c) 2020 nkleber
  *
  *      MIT License
+ * 
+ *  changes:
+ *  19.09.2020, nkleber:
+ *      Modified creating and filling objects in a way that this will happen mostly dynamic.
+ *      So if a object is not predefined, it will created with default settings and filled
+ * 29.9.2020, nkleber
+ *      Modified check of reachable Inverter in a way that a valid response is necessary to set the adapter to connected
  *
  */
 
@@ -21,6 +29,7 @@ const ping = require(__dirname + '/lib/ping');
 
 let ip, baseurl, apiver, requestType;
 let isConnected = null;
+let isObjectsCreated = false
 
 
 // you have to call the adapter function and pass a options object
@@ -28,6 +37,7 @@ let isConnected = null;
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 let adapter;
 function startAdapter(options) {
+    isObjectsCreated = false // create missing objects if necessary only on start
     options = options || {};
     Object.assign(options, {
         name: 'fronius',
@@ -146,7 +156,10 @@ function getActiveDeviceInfo(type, url, callback) {
     });
 }
 
-function createInverterObjects(id) {
+function createInverterObjects(id,obj) {
+    if(isObjectsCreated){
+        return
+    }
     adapter.setObjectNotExists('inverter.' + id, {
         type: 'channel',
         common: {
@@ -155,123 +168,156 @@ function createInverterObjects(id) {
         },
         native: {}
     });
-    adapter.setObjectNotExists('inverter.' + id + '.DAY_ENERGY', {
-        type: 'state',
-        common: {
-            name: "day energy",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: "Energy generated on current day"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.FAC', {
-        type: 'state',
-        common: {
-            name: "FAC",
-            type: "number",
-            role: "value",
-            unit: "Hz",
-            read: true,
-            write: false,
-            desc: "AC frequency"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.IAC', {
-        type: "state",
-        common: {
-            name: "IAC",
-            type: "number",
-            role: "value",
-            unit: "A",
-            read: true,
-            write: false,
-            desc: "AC current"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.IDC', {
-        type: "state",
-        common: {
-            name: "IDC",
-            type: "number",
-            role: "value",
-            unit: "A",
-            read: true,
-            write: false,
-            desc: "DC current"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.PAC', {
-        type: "state",
-        common: {
-            name: "PAC",
-            type: "number",
-            role: "value",
-            unit: "W",
-            read: true,
-            write: false,
-            desc: "AC power"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.TOTAL_ENERGY', {
-        type: "state",
-        common: {
-            name: "total energy",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: "Energy generated overall"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.UAC', {
-        type: "state",
-        common: {
-            name: "UAC",
-            type: "number",
-            role: "value",
-            unit: "V",
-            read: true,
-            write: false,
-            desc: "AC voltage"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.UDC', {
-        type: "state",
-        common: {
-            name: "UDC",
-            type: "number",
-            role: "value",
-            unit: "V",
-            read: true,
-            write: false,
-            desc: "DC voltage"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.YEAR_ENERGY', {
-        type: "state",
-        common: {
-            name: "year energy",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: "Energy generated in current year"
-        },
-        native: {}
-    });
+    if(obj.hasOwnProperty("DAY_ENERGY")){
+        adapter.setObjectNotExists('inverter.' + id + '.DAY_ENERGY', {
+            type: 'state',
+            common: {
+                name: "day energy",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: "Energy generated on current day"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("FAC")){
+        adapter.setObjectNotExists('inverter.' + id + '.FAC', {
+            type: 'state',
+            common: {
+                name: "FAC",
+                type: "number",
+                role: "value",
+                unit: "Hz",
+                read: true,
+                write: false,
+                desc: "AC frequency"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("IAC")){
+        adapter.setObjectNotExists('inverter.' + id + '.IAC', {
+            type: "state",
+            common: {
+                name: "IAC",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: "AC current"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("IDC")){
+        adapter.setObjectNotExists('inverter.' + id + '.IDC', {
+            type: "state",
+            common: {
+                name: "IDC",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: "DC current"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PAC")){
+        adapter.setObjectNotExists('inverter.' + id + '.PAC', {
+            type: "state",
+            common: {
+                name: "PAC",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "AC power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SAC")){
+        adapter.setObjectNotExists('inverter.' + id + '.SAC', {
+            type: "state",
+            common: {
+                name: "Apparent power",
+                type: "number",
+                role: "value",
+                unit: "VA",
+                read: true,
+                write: false,
+                desc: "Apparent power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("TOTAL_ENERGY")){
+        adapter.setObjectNotExists('inverter.' + id + '.TOTAL_ENERGY', {
+            type: "state",
+            common: {
+                name: "total energy",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: "Energy generated overall"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("UAC")){
+        adapter.setObjectNotExists('inverter.' + id + '.UAC', {
+            type: "state",
+            common: {
+                name: "UAC",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: "AC voltage"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("UDC")){
+        adapter.setObjectNotExists('inverter.' + id + '.UDC', {
+            type: "state",
+            common: {
+                name: "UDC",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: "DC voltage"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("YEAR_ENERGY")){
+        adapter.setObjectNotExists('inverter.' + id + '.YEAR_ENERGY', {
+            type: "state",
+            common: {
+                name: "year energy",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: "Energy generated in current year"
+            },
+            native: {}
+        });
+    }
     adapter.setObjectNotExists('inverter.' + id + '.StatusCode', {
         type: "state",
         common: {
@@ -320,6 +366,28 @@ function createInverterObjects(id) {
         },
         native: {}
     });
+
+    // wait a bit for creating the previous objects before creating the fallback once
+    setTimeout(function(){
+        adapter.log.debug("Fallback Missing Inverter Objects started")
+        // fallback for not predefined parameters -> defined as number without unit
+        for (var para in obj){
+            adapter.setObjectNotExists('inverter.' + id + '.' + para.toString(), {
+                type: "state",
+                common: {
+                    name: para.toString(),
+                    type: "mixed",
+                    role: "value",
+                    unit: "",
+                    read: true,
+                    write: false,
+                    desc: para.toString()
+                },
+                native: {}
+            });
+        }
+        adapter.log.debug("Fallback Missing Inverter Objects created!")
+    },2000);
 }
 
 function getStringErrorCode100(errorcode) {
@@ -643,37 +711,28 @@ function getStringErrorCode700(errorcode) {
 
 //Get Infos from Inverter
 function getInverterRealtimeData(id) {
+    // fallback if no id set
+    if(id == ""){
+        id = 0;
+    }
     request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
 
-                    createInverterObjects(id);
-
                     const resp = data.Body.Data;
-                    adapter.setState("inverter." + id + ".DAY_ENERGY", {val: resp.DAY_ENERGY.Value, ack: true});
-                    adapter.setState("inverter." + id + ".TOTAL_ENERGY", {val: resp.TOTAL_ENERGY.Value, ack: true});
-                    adapter.setState("inverter." + id + ".YEAR_ENERGY", {val: resp.YEAR_ENERGY.Value, ack: true});
+                    createInverterObjects(id,resp);
 
-                    if ("PAC" in resp) {
-                        adapter.setState("inverter." + id + ".FAC", {val: resp.FAC.Value, ack: true});
-                        adapter.setState("inverter." + id + ".IAC", {val: resp.IAC.Value, ack: true});
-                        adapter.setState("inverter." + id + ".IDC", {val: resp.IDC.Value, ack: true});
-                        adapter.setState("inverter." + id + ".PAC", {val: resp.PAC.Value, ack: true});
-                        adapter.setState("inverter." + id + ".UAC", {val: resp.UAC.Value, ack: true});
-                        adapter.setState("inverter." + id + ".UDC", {val: resp.UDC.Value, ack: true});
-                    } else {
-                        adapter.setState("inverter." + id + ".FAC", {val: 0, ack: true});
-                        adapter.setState("inverter." + id + ".IAC", {val: 0, ack: true});
-                        adapter.setState("inverter." + id + ".IDC", {val: 0, ack: true});
-                        adapter.setState("inverter." + id + ".PAC", {val: 0, ack: true});
-                        adapter.setState("inverter." + id + ".UAC", {val: 0, ack: true});
-                        adapter.setState("inverter." + id + ".UDC", {val: 0, ack: true});
+                    for (var par in resp){
+                        adapter.setState("inverter." + id + "." + par.toString(), {val: resp[par.toString()].Value, ack: true});
                     }
 
                     const status = resp.DeviceStatus;
                     let statusCode = parseInt(status.StatusCode);
+                    if(status){
+                        adapter.setState("inverter." + id + ".DeviceStatus", {val: JSON.stringify(status), ack: true});
+                    }
                     adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
 
                     let statusCodeString = "Startup";
@@ -685,6 +744,9 @@ function getInverterRealtimeData(id) {
                         statusCodeString = "Bootloading";
                     } else if (statusCode === 10) {
                         statusCodeString = "Error";
+                    }
+                    if(status.hasOwnProperty("InverterState")){
+                        statusCodeString = status.InverterState;
                     }
                     adapter.setState("inverter." + id + ".StatusCodeString", {val: statusCodeString, ack: true});
 
@@ -717,7 +779,9 @@ function getInverterRealtimeData(id) {
 }
 
 function createStorageObjects(id) {
-
+    if(isObjectsCreated){
+        return
+    }
     adapter.setObjectNotExists('storage', {
         type: 'channel',
         common: {
@@ -892,8 +956,13 @@ function getStorageRealtimeData(id) {
     });
 }
 
-function createMeterObjects(id) {
+function createMeterObjects(id,obj) {
 
+    if(isObjectsCreated){
+        return
+    }
+
+    adapter.log.debug("Creating missed MeterObjects...")
     adapter.setObjectNotExists('meter', {
         type: 'channel',
         common: {
@@ -922,384 +991,1079 @@ function createMeterObjects(id) {
         },
         native: {}
     });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Sum', {
-        type: "state",
-        common: {
-            name: "current power",
+    if(obj.hasOwnProperty("PowerReal_P_Sum")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Sum', {
+            type: "state",
+            common: {
+                name: "current power",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "current total power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerReal_P_Phase_1")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_1', {
+            type: "state",
+            common: {
+                name: "PowerReal_P_Phase_1",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerReal_P_Phase_2")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_2', {
+            type: "state",
+            common: {
+                name: "PowerReal_P_Phase_2",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerReal_P_Phase_3")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_3', {
+            type: "state",
+            common: {
+                name: "PowerReal_P_Phase_3",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerReactive_Q_Sum")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Sum', {
+            type: "state",
+            common: {
+                name: "REACTIVE Power total",
+                type: "number",
+                role: "value",
+                unit: "VAr",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERREACTIVE_MEAN_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERREACTIVE_MEAN_SUM_F64',{
+          type: "state",
+          common: {
+            name: "REACTIVE Power total",
             type: "number",
             role: "value",
-            unit: "W",
+            unit: "VAr",
             read: true,
             write: false,
-            desc: "current total power"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_1', {
-        type: "state",
-        common: {
-            name: "PowerReal_P_Phase_1",
+            desc: "SMARTMETER_POWERREACTIVE_MEAN_SUM_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("PowerReactive_Q_Phase_1")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_1', {
+            type: "state",
+            common: {
+                name: "REACTIVE Power L1",
+                type: "number",
+                role: "value",
+                unit: "VAr",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERREACTIVE_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERREACTIVE_01_F64',{
+          type: "state",
+          common: {
+            name: "REACTIVE Power L1",
             type: "number",
             role: "value",
-            unit: "W",
+            unit: "VAr",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_2', {
-        type: "state",
-        common: {
-            name: "PowerReal_P_Phase_2",
+            desc: "SMARTMETER_POWERREACTIVE_01_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("PowerReactive_Q_Phase_2")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_2', {
+            type: "state",
+            common: {
+                name: "REACTIVE Power L2",
+                type: "number",
+                role: "value",
+                unit: "VAr",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERREACTIVE_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERREACTIVE_02_F64',{
+          type: "state",
+          common: {
+            name: "REACTIVE Power L2",
             type: "number",
             role: "value",
-            unit: "W",
+            unit: "VAr",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReal_P_Phase_3', {
-        type: "state",
-        common: {
-            name: "PowerReal_P_Phase_3",
+            desc: "SMARTMETER_POWERREACTIVE_02_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("PowerReactive_Q_Phase_3")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_3', {
+            type: "state",
+            common: {
+                name: "REACTIVE Power L3",
+                type: "number",
+                role: "value",
+                unit: "VAr",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERREACTIVE_03_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERREACTIVE_03_F64',{
+          type: "state",
+          common: {
+            name: "REACTIVE Power L3",
             type: "number",
             role: "value",
-            unit: "W",
+            unit: "VAr",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Sum', {
-        type: "state",
-        common: {
-            name: "PowerReactive_Q_Sum",
-            type: "number",
-            role: "value",
-            unit: "?",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_1', {
-        type: "state",
-        common: {
-            name: "PowerReactive_Q_Phase_1",
-            type: "number",
-            role: "value",
-            unit: "?",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_2', {
-        type: "state",
-        common: {
-            name: "PowerReactive_Q_Phase_2",
-            type: "number",
-            role: "value",
-            unit: "?",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerReactive_Q_Phase_3', {
-        type: "state",
-        common: {
-            name: "PowerReactive_Q_Phase_3",
-            type: "number",
-            role: "value",
-            unit: "?",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_1', {
-        type: "state",
-        common: {
-            name: "Current_AC_Phase_1",
+            desc: "SMARTMETER_POWERREACTIVE_03_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("Current_AC_Phase_1")){
+        adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_1', {
+            type: "state",
+            common: {
+                name: "AC current L1",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("ACBRIDGE_CURRENT_ACTIVE_MEAN_01_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.ACBRIDGE_CURRENT_ACTIVE_MEAN_01_F32',{
+          type: "state",
+          common: {
+            name: "AVG AC current L1",
             type: "number",
             role: "value",
             unit: "A",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_2', {
-        type: "state",
-        common: {
-            name: "Current_AC_Phase_2",
+            desc: "ACBRIDGE_CURRENT_ACTIVE_MEAN_01_F32"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("Current_AC_Phase_2")){
+        adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_2', {
+            type: "state",
+            common: {
+                name: "AC current L2",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("ACBRIDGE_CURRENT_ACTIVE_MEAN_02_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.ACBRIDGE_CURRENT_ACTIVE_MEAN_02_F32',{
+          type: "state",
+          common: {
+            name: "AVG AC current L2",
             type: "number",
             role: "value",
             unit: "A",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_3', {
-        type: "state",
-        common: {
-            name: "Current_AC_Phase_3",
+            desc: "ACBRIDGE_CURRENT_ACTIVE_MEAN_02_F32"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("Current_AC_Phase_3")){
+        adapter.setObjectNotExists('meter.' + id + '.Current_AC_Phase_3', {
+            type: "state",
+            common: {
+                name: "AC current L3",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("ACBRIDGE_CURRENT_ACTIVE_MEAN_03_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.ACBRIDGE_CURRENT_ACTIVE_MEAN_03_F32',{
+          type: "state",
+          common: {
+            name: "AVG AC current L3",
             type: "number",
             role: "value",
             unit: "A",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_1', {
-        type: "state",
-        common: {
-            name: "Voltage_AC_Phase_1",
+            desc: "ACBRIDGE_CURRENT_ACTIVE_MEAN_03_F32"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("Voltage_AC_Phase_1")){
+        adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_1', {
+            type: "state",
+            common: {
+                name: "AC VOLTAGE L1",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_VOLTAGE_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_VOLTAGE_01_F64',{
+          type: "state",
+          common: {
+            name: "AC VOLTAGE L1",
             type: "number",
             role: "value",
             unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_2', {
-        type: "state",
-        common: {
-            name: "Voltage_AC_Phase_2",
+            desc: "SMARTMETER_VOLTAGE_01_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_VOLTAGE_MEAN_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_VOLTAGE_MEAN_01_F64',{
+          type: "state",
+          common: {
+            name: "AVG AC VOLTAGE L1",
             type: "number",
             role: "value",
             unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_3', {
-        type: "state",
-        common: {
-            name: "Voltage_AC_Phase_3",
+            desc: "SMARTMETER_VOLTAGE_MEAN_01_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("Voltage_AC_Phase_2")){
+        adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_2', {
+            type: "state",
+            common: {
+                name: "AC VOLTAGE L2",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_VOLTAGE_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_VOLTAGE_02_F64',{
+          type: "state",
+          common: {
+            name: "AC VOLTAGE L2",
             type: "number",
             role: "value",
             unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_12', {
-        type: "state",
-        common: {
-            name: "Voltage_AC_PhaseToPhase_12",
+            desc: "SMARTMETER_VOLTAGE_02_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_VOLTAGE_MEAN_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_VOLTAGE_MEAN_02_F64',{
+          type: "state",
+          common: {
+            name: "AVG AC VOLTAGE L2",
             type: "number",
             role: "value",
             unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_23', {
-        type: "state",
-        common: {
-            name: "Voltage_AC_PhaseToPhase_23",
+            desc: "SMARTMETER_VOLTAGE_MEAN_02_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("Voltage_AC_Phase_3")){
+        adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_Phase_3', {
+            type: "state",
+            common: {
+                name: "AC VOLTAGE L3",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_VOLTAGE_03_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_VOLTAGE_03_F64',{
+          type: "state",
+          common: {
+            name: "AC VOLTAGE L3",
             type: "number",
             role: "value",
             unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_31', {
-        type: "state",
-        common: {
-            name: "Voltage_AC_PhaseToPhase_31",
+            desc: "SMARTMETER_VOLTAGE_03_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("SMARTMETER_VOLTAGE_MEAN_03_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_VOLTAGE_MEAN_03_F64',{
+            type: "state",
+            common: {
+            name: "AVG AC VOLTAGE L3",
             type: "number",
             role: "value",
             unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.Frequency_Phase_Average', {
-        type: "state",
-        common: {
-            name: "Frequency_Phase_Average",
+            desc: "SMARTMETER_VOLTAGE_MEAN_03_F64"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("Voltage_AC_PhaseToPhase_12")){
+        adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_12', {
+            type: "state",
+            common: {
+                name: "Voltage_AC_PhaseToPhase_12",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("ACBRIDGE_VOLTAGE_MEAN_12_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.ACBRIDGE_VOLTAGE_MEAN_12_F32',{
+          type: "state",
+          common: {
+            name: "AVG AC voltage L1-L2",
             type: "number",
             role: "value",
-            unit: "HZ",
+            unit: "V",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerApparent_S_Sum', {
+            desc: "ACBRIDGE_VOLTAGE_MEAN_12_F32"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("Voltage_AC_PhaseToPhase_23")){
+        adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_23', {
+            type: "state",
+            common: {
+                name: "Voltage_AC_PhaseToPhase_23",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("ACBRIDGE_VOLTAGE_MEAN_23_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.ACBRIDGE_VOLTAGE_MEAN_23_F32',{
+          type: "state",
+          common: {
+            name: "AVG AC voltage L2-L3",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: "ACBRIDGE_VOLTAGE_MEAN_23_F32"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("Voltage_AC_PhaseToPhase_31")){
+        adapter.setObjectNotExists('meter.' + id + '.Voltage_AC_PhaseToPhase_31', {
+            type: "state",
+            common: {
+                name: "Voltage_AC_PhaseToPhase_31",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("ACBRIDGE_VOLTAGE_MEAN_31_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.ACBRIDGE_VOLTAGE_MEAN_31_F32',{
+          type: "state",
+          common: {
+            name: "AVG AC voltage L3-L1",
+            type: "number",
+            role: "value",
+            unit: "V",
+            read: true,
+            write: false,
+            desc: "ACBRIDGE_VOLTAGE_MEAN_31_F32"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("Frequency_Phase_Average")){
+        adapter.setObjectNotExists('meter.' + id + '.Frequency_Phase_Average', {
+            type: "state",
+            common: {
+                name: "AVG GRID FREQUENCY",
+                type: "number",
+                role: "value",
+                unit: "HZ",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("GRID_FREQUENCY_MEAN_F32")){
+        adapter.setObjectNotExists('meter.' + id + '.GRID_FREQUENCY_MEAN_F32',{
+          type: "state",
+          common: {
+            name: "AVG GRID FREQUENCY",
+            type: "number",
+            role: "value",
+            unit: "Hz",
+            read: true,
+            write: false,
+            desc: "GRID_FREQUENCY_MEAN_F32"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("PowerApparent_S_Sum")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerApparent_S_Sum', {
+            type: "state",
+            common: {
+                name: "APPARENT POWER total",
+                type: "number",
+                role: "value",
+                unit: "VA",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_01_F64',{
+          type: "state",
+          common: {
+            name: "APPARENT POWER L1",
+            type: "number",
+            role: "value",
+            unit: "VA",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_POWERAPPARENT_01_F64"
+          },
+          native: {}
+        });
+      }
+      if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_02_F64',{
+          type: "state",
+          common: {
+            name: "APPARENT POWER L2",
+            type: "number",
+            role: "value",
+            unit: "VA",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_POWERAPPARENT_02_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_03_F64")){
+      adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_03_F64',{
         type: "state",
         common: {
-            name: "PowerApparent_S_Sum",
+          name: "APPARENT Power L3",
+          type: "number",
+          role: "value",
+          unit: "VA",
+          read: true,
+          write: false,
+          desc: "SMARTMETER_POWERAPPARENT_03_F64"
+        },
+        native: {}
+      });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_MEAN_01_F64")){
+      adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_MEAN_01_F64',{
+        type: "state",
+        common: {
+          name: "AVG APPARENT Power L1",
+          type: "number",
+          role: "value",
+          unit: "VA",
+          read: true,
+          write: false,
+          desc: "SMARTMETER_POWERAPPARENT_MEAN_01_F64"
+        },
+        native: {}
+      });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_MEAN_02_F64")){
+      adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_MEAN_02_F64',{
+        type: "state",
+        common: {
+          name: "AVG APPARENT Power L2",
+          type: "number",
+          role: "value",
+          unit: "VA",
+          read: true,
+          write: false,
+          desc: "SMARTMETER_POWERAPPARENT_MEAN_02_F64"
+        },
+        native: {}
+      });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_MEAN_03_F64")){
+      adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_MEAN_03_F64',{
+        type: "state",
+        common: {
+          name: "AVG APPARENT Power L3",
+          type: "number",
+          role: "value",
+          unit: "VA",
+          read: true,
+          write: false,
+          desc: "SMARTMETER_POWERAPPARENT_MEAN_03_F64"
+        },
+        native: {}
+      });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERAPPARENT_MEAN_SUM_F64")){
+      adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERAPPARENT_MEAN_SUM_F64',{
+        type: "state",
+        common: {
+          name: "AVG APPARENT Power total",
+          type: "number",
+          role: "value",
+          unit: "VA",
+          read: true,
+          write: false,
+          desc: "SMARTMETER_POWERAPPARENT_MEAN_SUM_F64"
+        },
+        native: {}
+      });
+    }
+    if(obj.hasOwnProperty("PowerFactor_Sum")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Sum', {
+            type: "state",
+            common: {
+                name: "POWERFACTOR total",
+                type: "number",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_FACTOR_POWER_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_FACTOR_POWER_SUM_F64',{
+          type: "state",
+          common: {
+            name: "POWERFACTOR total",
+            type: "number",
+            role: "value",
+            unit: "",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_FACTOR_POWER_SUM_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerFactor_Phase_1")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_1', {
+            type: "state",
+            common: {
+                name: "POWERFACTOR L1",
+                type: "number",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_FACTOR_POWER_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_FACTOR_POWER_01_F64',{
+          type: "state",
+          common: {
+            name: "POWERFACTOR L1",
+            type: "number",
+            role: "value",
+            unit: "",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_FACTOR_POWER_01_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerFactor_Phase_2")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_2', {
+            type: "state",
+            common: {
+                name: "POWERFACTOR L2",
+                type: "number",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_FACTOR_POWER_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_FACTOR_POWER_02_F64',{
+          type: "state",
+          common: {
+            name: "POWERFACTOR L2",
+            type: "number",
+            role: "value",
+            unit: "",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_FACTOR_POWER_02_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("PowerFactor_Phase_3")){
+        adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_3', {
+            type: "state",
+            common: {
+                name: "POWERFACTOR L3",
+                type: "number",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_FACTOR_POWER_03_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_FACTOR_POWER_03_F64',{
+          type: "state",
+          common: {
+            name: "POWERFACTOR L3",
+            type: "number",
+            role: "value",
+            unit: "",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_FACTOR_POWER_03_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("EnergyReal_WAC_Sum_Produced")){
+        adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Sum_Produced', {
+            type: "state",
+            common: {
+                name: "SUM ACTIVE ENERGY PRODUCED",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_ENERGYACTIVE_PRODUCED_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_ENERGYACTIVE_PRODUCED_SUM_F64',{
+          type: "state",
+          common: {
+            name: "SUM ACTIVE ENERGY PRODUCED",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_ENERGYACTIVE_PRODUCED_SUM_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("EnergyReal_WAC_Sum_Consumed")){
+        adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Sum_Consumed', {
+            type: "state",
+            common: {
+                name: "SUM ACTIVE ENERGY CONSUMED",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_ENERGYACTIVE_CONSUMED_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_ENERGYACTIVE_CONSUMED_SUM_F64',{
+          type: "state",
+          common: {
+            name: "SUM ACTIVE ENERGY CONSUMED",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_ENERGYACTIVE_CONSUMED_SUM_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("EnergyReactive_VArAC_Sum_Produced")){
+        adapter.setObjectNotExists('meter.' + id + '.EnergyReactive_VArAC_Sum_Produced', {
+            type: "state",
+            common: {
+                name: "SUM REACTIVE ENERGY PRODUCED",
+                type: "number",
+                role: "value",
+                unit: "VArh",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_ENERGYREACTIVE_PRODUCED_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_ENERGYREACTIVE_PRODUCED_SUM_F64',{
+          type: "state",
+          common: {
+            name: "SUM REACTIVE ENERGY PRODUCED",
+            type: "number",
+            role: "value",
+            unit: "VArh",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_ENERGYREACTIVE_PRODUCED_SUM_F64"
+          },
+          native: {}
+        });
+      }
+    if(obj.hasOwnProperty("EnergyReactive_VArAC_Sum_Consumed")){
+        adapter.setObjectNotExists('meter.' + id + '.EnergyReactive_VArAC_Sum_Consumed', {
+            type: "state",
+            common: {
+                name: "SUM REACTIVE ENERGY CONSUMED",
+                type: "number",
+                role: "value",
+                unit: "VArh",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_ENERGYREACTIVE_CONSUMED_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_ENERGYREACTIVE_CONSUMED_SUM_F64',{
+          type: "state",
+          common: {
+            name: "SUM REACTIVE ENERGY CONSUMED",
+            type: "number",
+            role: "value",
+            unit: "VArh",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_ENERGYREACTIVE_CONSUMED_SUM_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("EnergyReal_WAC_Plus_Absolute")){
+        adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Plus_Absolute', {
+            type: "state",
+            common: {
+                name: "ACTIVE Energy consumed from grid",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_ENERGYACTIVE_ABSOLUT_PLUS_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_ENERGYACTIVE_ABSOLUT_PLUS_F64',{
+          type: "state",
+          common: {
+            name: "ACTIVE Energy consumed from grid",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_ENERGYACTIVE_ABSOLUT_PLUS_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("EnergyReal_WAC_Minus_Absolute")){
+        adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Minus_Absolute', {
+            type: "state",
+            common: {
+                name: "ACTIVE Energy feed in",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_ENERGYACTIVE_ABSOLUT_MINUS_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_ENERGYACTIVE_ABSOLUT_MINUS_F64',{
+          type: "state",
+          common: {
+            name: "ACTIVE Energy feed in",
+            type: "number",
+            role: "value",
+            unit: "Wh",
+            read: true,
+            write: false,
+            desc: "SMARTMETER_ENERGYACTIVE_ABSOLUT_MINUS_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_01_F64',{
+          type: "state",
+          common: {
+            name: "ACTIVE POWER L1",
             type: "number",
             role: "value",
             unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Sum', {
-        type: "state",
-        common: {
-            name: "PowerFactor_Sum",
+            desc: "SMARTMETER_POWERACTIVE_01_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_02_F64',{
+          type: "state",
+          common: {
+            name: "ACTIVE POWER L2",
             type: "number",
             role: "value",
-            unit: "?",
+            unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_1', {
-        type: "state",
-        common: {
-            name: "PowerFactor_Phase_1",
+            desc: "SMARTMETER_POWERACTIVE_02_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_03_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_03_F64',{
+          type: "state",
+          common: {
+            name: "ACTIVE POWER L3",
             type: "number",
             role: "value",
-            unit: "?",
+            unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_2', {
-        type: "state",
-        common: {
-            name: "PowerFactor_Phase_2",
+            desc: "SMARTMETER_POWERACTIVE_03_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_MEAN_01_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_MEAN_01_F64',{
+          type: "state",
+          common: {
+            name: "AVG ACTIVE POWER L1",
             type: "number",
             role: "value",
-            unit: "?",
+            unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.PowerFactor_Phase_3', {
-        type: "state",
-        common: {
-            name: "PowerFactor_Phase_3",
+            desc: "SMARTMETER_POWERACTIVE_MEAN_01_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_MEAN_02_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_MEAN_02_F64',{
+          type: "state",
+          common: {
+            name: "AVG ACTIVE POWER L2",
             type: "number",
             role: "value",
-            unit: "?",
+            unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Sum_Produced', {
-        type: "state",
-        common: {
-            name: "EnergyReal_WAC_Sum_Produced",
+            desc: "SMARTMETER_POWERACTIVE_MEAN_02_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_MEAN_03_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_MEAN_03_F64',{
+          type: "state",
+          common: {
+            name: "AVG ACTIVE POWER L3",
             type: "number",
             role: "value",
-            unit: "Wh",
+            unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Sum_Consumed', {
-        type: "state",
-        common: {
-            name: "EnergyReal_WAC_Sum_Consumed",
+            desc: "SMARTMETER_POWERACTIVE_MEAN_03_F64"
+          },
+          native: {}
+        });
+    }
+    if(obj.hasOwnProperty("SMARTMETER_POWERACTIVE_MEAN_SUM_F64")){
+        adapter.setObjectNotExists('meter.' + id + '.SMARTMETER_POWERACTIVE_MEAN_SUM_F64',{
+          type: "state",
+          common: {
+            name: "AVG ACTIVE POWER total",
             type: "number",
             role: "value",
-            unit: "Wh",
+            unit: "W",
             read: true,
             write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReactive_VArAC_Sum_Produced', {
-        type: "state",
-        common: {
-            name: "EnergyReactive_VArAC_Sum_Produced",
-            type: "number",
-            role: "value",
-            unit: "?",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReactive_VArAC_Sum_Consumed', {
-        type: "state",
-        common: {
-            name: "EnergyReactive_VArAC_Sum_Consumed",
-            type: "number",
-            role: "value",
-            unit: "?",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Plus_Absolute', {
-        type: "state",
-        common: {
-            name: "EnergyReal_WAC_Plus_Absolute",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('meter.' + id + '.EnergyReal_WAC_Minus_Absolute', {
-        type: "state",
-        common: {
-            name: "EnergyReal_WAC_Minus_Absolute",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: ""
-        },
-        native: {}
-    });
-
+            desc: "SMARTMETER_POWERACTIVE_MEAN_SUM_F64"
+          },
+          native: {}
+        });
+      }
+    adapter.log.debug("MeterObjects created!")
+    
+    // wait a bit for creating the previous objects before creating the fallback once
+    setTimeout(function(){
+        adapter.log.debug("Fallback MissingMeterObjects started")
+        // fallback for not predefined parameters -> defined as number without unit
+        for (var para in obj){
+            adapter.setObjectNotExists('meter.' + id + '.' + para.toString(), {
+                type: "state",
+                common: {
+                    name: para.toString(),
+                    type: "number",
+                    role: "value",
+                    unit: "",
+                    read: true,
+                    write: false,
+                    desc: para.toString()
+                },
+                native: {}
+            });
+        }
+        adapter.log.debug("FAllback MissingMeterObjects created!")
+    },2000);
 }
 
 function getMeterRealtimeData(id) {
@@ -1308,42 +2072,11 @@ function getMeterRealtimeData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-
-                    createMeterObjects(id);
-
                     const resp = data.Body.Data;
-
-                    adapter.setState("meter." + id + ".Model", {val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true});
-                    adapter.setState("meter." + id + ".PowerReal_P_Sum", {val: resp.PowerReal_P_Sum, ack: true});
-                    adapter.setState("meter." + id + ".PowerReal_P_Phase_1", {val: resp.PowerReal_P_Phase_1, ack: true});
-                    adapter.setState("meter." + id + ".PowerReal_P_Phase_2", {val: resp.PowerReal_P_Phase_2, ack: true});
-                    adapter.setState("meter." + id + ".PowerReal_P_Phase_3", {val: resp.PowerReal_P_Phase_3, ack: true});
-                    adapter.setState("meter." + id + ".PowerReactive_Q_Sum", {val: resp.PowerReactive_Q_Sum, ack: true});
-                    adapter.setState("meter." + id + ".PowerReactive_Q_Phase_1", {val: resp.PowerReactive_Q_Phase_1, ack: true});
-                    adapter.setState("meter." + id + ".PowerReactive_Q_Phase_2", {val: resp.PowerReactive_Q_Phase_2, ack: true});
-                    adapter.setState("meter." + id + ".PowerReactive_Q_Phase_3", {val: resp.PowerReactive_Q_Phase_3, ack: true});
-                    adapter.setState("meter." + id + ".Current_AC_Phase_1", {val: resp.Current_AC_Phase_1, ack: true});
-                    adapter.setState("meter." + id + ".Current_AC_Phase_2", {val: resp.Current_AC_Phase_2, ack: true});
-                    adapter.setState("meter." + id + ".Current_AC_Phase_3", {val: resp.Current_AC_Phase_3, ack: true});
-                    adapter.setState("meter." + id + ".Voltage_AC_Phase_1", {val: resp.Voltage_AC_Phase_1, ack: true});
-                    adapter.setState("meter." + id + ".Voltage_AC_Phase_2", {val: resp.Voltage_AC_Phase_2, ack: true});
-                    adapter.setState("meter." + id + ".Voltage_AC_Phase_3", {val: resp.Voltage_AC_Phase_3, ack: true});
-                    adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_12", {val: resp.Voltage_AC_PhaseToPhase_12, ack: true});
-                    adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_23", {val: resp.Voltage_AC_PhaseToPhase_23, ack: true});
-                    adapter.setState("meter." + id + ".Voltage_AC_PhaseToPhase_31", {val: resp.Voltage_AC_PhaseToPhase_31, ack: true});
-                    adapter.setState("meter." + id + ".Frequency_Phase_Average", {val: resp.Frequency_Phase_Average, ack: true});
-                    adapter.setState("meter." + id + ".PowerApparent_S_Sum", {val: resp.PowerApparent_S_Sum, ack: true});
-                    adapter.setState("meter." + id + ".PowerFactor_Sum", {val: resp.PowerFactor_Sum, ack: true});
-                    adapter.setState("meter." + id + ".PowerFactor_Phase_1", {val: resp.PowerFactor_Phase_1, ack: true});
-                    adapter.setState("meter." + id + ".PowerFactor_Phase_2", {val: resp.PowerFactor_Phase_2, ack: true});
-                    adapter.setState("meter." + id + ".PowerFactor_Phase_3", {val: resp.PowerFactor_Phase_3, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Produced", {val: resp.EnergyReal_WAC_Sum_Produced, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReal_WAC_Sum_Consumed", {val: resp.EnergyReal_WAC_Sum_Consumed, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Produced", {val: resp.EnergyReactive_VArAC_Sum_Produced, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReactive_VArAC_Sum_Consumed", {val: resp.EnergyReactive_VArAC_Sum_Consumed, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReal_WAC_Plus_Absolute", {val: resp.EnergyReal_WAC_Plus_Absolute, ack: true});
-                    adapter.setState("meter." + id + ".EnergyReal_WAC_Minus_Absolute", {val: resp.EnergyReal_WAC_Minus_Absolute, ack: true});
-
+                    createMeterObjects(id,resp);
+                    for (var par in resp){
+                        adapter.setState("meter." + id + "." + par.toString(), {val: resp[par.toString()], ack: true});
+                    }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
@@ -1355,7 +2088,9 @@ function getMeterRealtimeData(id) {
 }
 
 function createSensorNowObjects(id) {
-
+    if(isObjectsCreated){
+        return
+    }
     adapter.setObjectNotExists('sensor', {
         type: 'channel',
         common: {
@@ -1397,7 +2132,9 @@ function getSensorRealtimeDataNowSensorData(id) {
 }
 
 function createSensorMinMaxObjects(id) {
-
+    if(isObjectsCreated){
+        return
+    }
     adapter.setObjectNotExists('sensor', {
         type: 'channel',
         common: {
@@ -1442,8 +2179,10 @@ function getStringRealtimeData(id) {
 
 }
 
-function createPowerFlowObjects() {
-
+function createPowerFlowObjects(obj) {
+    if(isObjectsCreated){
+        return
+    }
     adapter.setObjectNotExists('powerflow', {
         type: 'channel',
         common: {
@@ -1453,135 +2192,237 @@ function createPowerFlowObjects() {
         native: {}
     });
 
-    adapter.setObjectNotExists('powerflow.Mode', {
-        type: "state",
-        common: {
-            name: "Mode",
-            type: "string",
-            role: "value",
-            read: true,
-            write: false,
-            desc: "Power Flow Mode"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.P_Grid', {
-        type: "state",
-        common: {
-            name: "grid power",
-            type: "number",
-            role: "value",
-            unit: "W",
-            read: true,
-            write: false,
-            desc: "grid power"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.P_Load', {
-        type: "state",
-        common: {
-            name: "load power",
-            type: "number",
-            role: "value",
-            unit: "W",
-            read: true,
-            write: false,
-            desc: "load power"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.P_Akku', {
-        type: "state",
-        common: {
-            name: "akku power",
-            type: "number",
-            role: "value",
-            unit: "W",
-            read: true,
-            write: false,
-            desc: "akku power"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.P_PV', {
-        type: "state",
-        common: {
-            name: "pv power",
-            type: "number",
-            role: "value",
-            unit: "W",
-            read: true,
-            write: false,
-            desc: "pv power"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.E_Day', {
-        type: "state",
-        common: {
-            name: "pv power day",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: "pv power day"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.E_Year', {
-        type: "state",
-        common: {
-            name: "pv power year",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: "pv power year"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.E_Total', {
-        type: "state",
-        common: {
-            name: "pv power total",
-            type: "number",
-            role: "value",
-            unit: "Wh",
-            read: true,
-            write: false,
-            desc: "pv power total"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.P_Autonomy', {
-        type: "state",
-        common: {
-            name: "pv Autonomy",
-            type: "number",
-            role: "value",
-            unit: "%",
-            read: true,
-            write: false,
-            desc: "pv autonomy"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('powerflow.P_SelfConsumption', {
-        type: "state",
-        common: {
-            name: "pv SelfConsumption",
-            type: "number",
-            role: "value",
-            unit: "%",
-            read: true,
-            write: false,
-            desc: "pv self consumption"
-        },
-        native: {}
-    });
+    if(obj.hasOwnProperty("Mode")){
+        adapter.setObjectNotExists('powerflow.Mode', {
+            type: "state",
+            common: {
+                name: "Mode",
+                type: "string",
+                role: "value",
+                read: true,
+                write: false,
+                desc: "Power Flow Mode"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("P_Grid")){
+        adapter.setObjectNotExists('powerflow.P_Grid', {
+            type: "state",
+            common: {
+                name: "grid power",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "grid power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("P_Load")){
+        adapter.setObjectNotExists('powerflow.P_Load', {
+            type: "state",
+            common: {
+                name: "load power",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "load power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("P_Akku")){
+        adapter.setObjectNotExists('powerflow.P_Akku', {
+            type: "state",
+            common: {
+                name: "akku power",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "akku power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("P_PV")){
+        adapter.setObjectNotExists('powerflow.P_PV', {
+            type: "state",
+            common: {
+                name: "pv power",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "pv power"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("E_Day")){
+        adapter.setObjectNotExists('powerflow.E_Day', {
+            type: "state",
+            common: {
+                name: "pv power day",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: "pv power day"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("E_Year")){
+        adapter.setObjectNotExists('powerflow.E_Year', {
+            type: "state",
+            common: {
+                name: "pv power year",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: "pv power year"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("E_Total")){
+        adapter.setObjectNotExists('powerflow.E_Total', {
+            type: "state",
+            common: {
+                name: "pv power total",
+                type: "number",
+                role: "value",
+                unit: "Wh",
+                read: true,
+                write: false,
+                desc: "pv power total"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("P_Autonomy")){
+        adapter.setObjectNotExists('powerflow.P_Autonomy', {
+            type: "state",
+            common: {
+                name: "pv Autonomy",
+                type: "number",
+                role: "value",
+                unit: "%",
+                read: true,
+                write: false,
+                desc: "pv autonomy"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("rel_Autonomy")){
+        adapter.setObjectNotExists('powerflow.rel_Autonomy', {
+            type: "state",
+            common: {
+                name: "pv Autonomy",
+                type: "number",
+                role: "value",
+                unit: "%",
+                read: true,
+                write: false,
+                desc: "pv autonomy"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("P_SelfConsumption")){
+        adapter.setObjectNotExists('powerflow.P_SelfConsumption', {
+            type: "state",
+            common: {
+                name: "pv SelfConsumption",
+                type: "number",
+                role: "value",
+                unit: "%",
+                read: true,
+                write: false,
+                desc: "pv self consumption"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("rel_SelfConsumption")){
+        adapter.setObjectNotExists('powerflow.rel_SelfConsumption', {
+            type: "state",
+            common: {
+                name: "pv SelfConsumption",
+                type: "number",
+                role: "value",
+                unit: "%",
+                read: true,
+                write: false,
+                desc: "pv self consumption"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("BatteryStandby")){
+        adapter.setObjectNotExists('powerflow.BatteryStandby', {
+            type: "state",
+            common: {
+                name: "Battery standby",
+                type: "boolean",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: "Battery standby"
+            },
+            native: {}
+        });
+    }
+    if(obj.hasOwnProperty("Meter_Location")){
+        adapter.setObjectNotExists('powerflow.Meter_Location', {
+            type: "state",
+            common: {
+                name: "SmartMeter location",
+                type: "string",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: "Smartmeter location"
+            },
+            native: {}
+        });
+    }
+
+    // wait a bit for creating the previous objects before creating the fallback once
+    setTimeout(function(){
+        adapter.log.debug("Fallback creating missing Powerflow objects started")
+        // fallback for not predefined parameters -> defined as number without unit
+        for (var para in obj){
+            adapter.setObjectNotExists('powerflow.' + para.toString(), {
+                type: "state",
+                common: {
+                    name: para.toString(),
+                    type: "number",
+                    role: "value",
+                    unit: "",
+                    read: true,
+                    write: false,
+                    desc: para.toString()
+                },
+                native: {}
+            });
+        }
+        adapter.log.debug("Fallback creating missing Powerflow objects finished!")
+    },2000);
 }
 
 function getPowerFlowRealtimeData() {
@@ -1591,20 +2432,13 @@ function getPowerFlowRealtimeData() {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
 
-                    createPowerFlowObjects();
+                    
 
                     const resp = data.Body.Data.Site;
-
-                    adapter.setState("powerflow.Mode", {val: resp.Mode, ack: true});
-                    adapter.setState("powerflow.P_Grid", {val: resp.P_Grid == null ? 0 : resp.P_Grid, ack: true});
-                    adapter.setState("powerflow.P_Load", {val: resp.P_Load == null ? 0 : resp.P_Load, ack: true});
-                    adapter.setState("powerflow.P_Akku", {val: resp.P_Akku == null ? 0 : resp.P_Akku, ack: true});
-                    adapter.setState("powerflow.P_PV", {val: resp.P_PV == null ? 0 : resp.P_PV, ack: true});
-                    adapter.setState("powerflow.E_Day", {val: resp.P_PV == null ? 0 : resp.E_Day, ack: true});
-                    adapter.setState("powerflow.E_Year", {val: resp.P_PV == null ? 0 : resp.E_Year, ack: true});
-                    adapter.setState("powerflow.E_Total", {val: resp.P_PV == null ? 0 : resp.E_Total, ack: true});
-                    adapter.setState("powerflow.P_Autonomy", {val: resp.P_PV == null ? 0 : resp.rel_Autonomy, ack: true});
-                    adapter.setState("powerflow.P_SelfConsumption", {val: resp.P_PV == null ? 0 : resp.rel_SelfConsumption, ack: true});
+                    createPowerFlowObjects(resp);
+                    for (var par in resp){
+                        adapter.setState("powerflow." + par.toString(), {val: resp[par.toString()]==null ? 0:resp[par.toString()], ack: true});
+                    }
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
@@ -1617,7 +2451,9 @@ function getPowerFlowRealtimeData() {
 }
 
 function createInfoObjects() {
-
+    if(isObjectsCreated){
+        return
+    }
     adapter.delObject('connection');
     adapter.delObject('lastsync');
     adapter.delObject('HWVersion');
@@ -1696,39 +2532,59 @@ function checkStatus() {
             adapter.log.error(err);
         }
         if (result) {
-            setConnected(result.alive);
-            if (result.alive) {
-                adapter.config.inverter.split(',').forEach(function (entry) {
-                    getInverterRealtimeData(entry);
-                });
-                if (adapter.config.sensorCard) {
-                    adapter.config.sensorCard.split(',').forEach(function (entry) {
-                        getSensorRealtimeDataNowSensorData(entry);
-                        getSensorRealtimeDataMinMaxSensorData(entry);
-                    });
+            // now try if we can really read data from the API. If not do not further process
+            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+                var testData = null
+                try {
+                    testData = JSON.parse(body);
+                } catch (e) {
+                    adapter.log.debug("Exception thrown in check API: " + e);
                 }
-                if (adapter.config.stringControl) {
-                    adapter.config.stringControl.split(',').forEach(function (entry) {
-                        getStringRealtimeData(entry);
-                    });
-                }
-
-                if (apiver === 1) {
-                    if (adapter.config.meter) {
-                        adapter.config.meter.split(',').forEach(function (entry) {
-                            getMeterRealtimeData(entry);
+                if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
+                    // it seems everything is working, therefore proceed with readout
+                    setConnected(result.alive);
+                    if (result.alive) {
+                        adapter.config.inverter.split(',').forEach(function (entry) {
+                            getInverterRealtimeData(entry);
                         });
-                    }
-                    if (adapter.config.storage) {
-                        adapter.config.storage.split(',').forEach(function (entry) {
-                            getStorageRealtimeData(entry);
-                        });
-                    }
-                    getPowerFlowRealtimeData();
-                }
+                        if (adapter.config.sensorCard) {
+                            adapter.config.sensorCard.split(',').forEach(function (entry) {
+                                getSensorRealtimeDataNowSensorData(entry);
+                                getSensorRealtimeDataMinMaxSensorData(entry);
+                            });
+                        }
+                        if (adapter.config.stringControl) {
+                            adapter.config.stringControl.split(',').forEach(function (entry) {
+                                getStringRealtimeData(entry);
+                            });
+                        }
 
-                adapter.setState("info.lastsync", {val: new Date().toISOString(), ack: true});
-            }
+                        if (apiver === 1) {
+                            if (adapter.config.meter) {
+                                adapter.config.meter.split(',').forEach(function (entry) {
+                                    getMeterRealtimeData(entry);
+                                });
+                            }
+                            if (adapter.config.storage) {
+                                adapter.config.storage.split(',').forEach(function (entry) {
+                                    getStorageRealtimeData(entry);
+                                });
+                            }
+                            getPowerFlowRealtimeData();
+                        }
+
+                        adapter.setState("info.lastsync", {val: new Date().toISOString(), ack: true});
+                        // allow enough time to finish all the previous state creation before setting the value to true
+                        setTimeout(function(){
+                            isObjectsCreated = true
+                        },10000);
+                    }
+                } else {
+                    adapter.log.debug("Unable to read data from inverters solarAPI");
+                    setConnected(false);
+                }
+                
+            });
         }
     });
 }
@@ -1741,8 +2597,10 @@ function getLoggerInfo() {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     const resp = data.Body.LoggerInfo;
-                    adapter.setState("info.HWVersion", {val: resp.HWVersion, ack: true});
-                    adapter.setState("info.SWVersion", {val: resp.SWVersion, ack: true});
+                    if(resp && resp.hasOwnProperty("HWVersion")){
+                        adapter.setState("info.HWVersion", {val: resp.HWVersion, ack: true});
+                        adapter.setState("info.SWVersion", {val: resp.SWVersion, ack: true});
+                    }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason);
                 }
