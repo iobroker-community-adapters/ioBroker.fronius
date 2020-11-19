@@ -78,6 +78,7 @@ function startAdapter(options) {
                         break;
                     case 'getDeviceInfo':
                         getActiveDeviceInfo("System", obj.message, function (res) {
+                            adapter.log.debug("DeviceInfoSystem: " + JSON.stringify(res))
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                         });
@@ -85,6 +86,7 @@ function startAdapter(options) {
                         break;
                     case 'getDeviceInfoInverter':
                         getActiveDeviceInfo("Inverter", obj.message, function (res) {
+                            adapter.log.debug("DeviceInfo Inverter: " + JSON.stringify(res))
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                         });
@@ -729,45 +731,45 @@ function getInverterRealtimeData(id) {
                     }
 
                     const status = resp.DeviceStatus;
-                    let statusCode = parseInt(status.StatusCode);
                     if(status){
+                        let statusCode = parseInt(status.StatusCode);
                         adapter.setState("inverter." + id + ".DeviceStatus", {val: JSON.stringify(status), ack: true});
-                    }
-                    adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
+                    
+                        adapter.setState("inverter." + id + ".StatusCode", {val: statusCode, ack: true});
 
-                    let statusCodeString = "Startup";
-                    if (statusCode === 7) {
-                        statusCodeString = "Running";
-                    } else if (statusCode === 8) {
-                        statusCodeString = "Standby";
-                    } else if (statusCode === 9) {
-                        statusCodeString = "Bootloading";
-                    } else if (statusCode === 10) {
-                        statusCodeString = "Error";
-                    }
-                    if(status.hasOwnProperty("InverterState")){
-                        statusCodeString = status.InverterState;
-                    }
-                    adapter.setState("inverter." + id + ".StatusCodeString", {val: statusCodeString, ack: true});
+                        let statusCodeString = "Startup";
+                        if (statusCode === 7) {
+                            statusCodeString = "Running";
+                        } else if (statusCode === 8) {
+                            statusCodeString = "Standby";
+                        } else if (statusCode === 9) {
+                            statusCodeString = "Bootloading";
+                        } else if (statusCode === 10) {
+                            statusCodeString = "Error";
+                        }
+                        if(status.hasOwnProperty("InverterState")){
+                            statusCodeString = status.InverterState;
+                        }
+                        adapter.setState("inverter." + id + ".StatusCodeString", {val: statusCodeString, ack: true});
 
-                    statusCode = parseInt(status.ErrorCode);
-                    adapter.setState("inverter." + id + ".ErrorCode", {val: statusCode, ack: true});
+                        statusCode = parseInt(status.ErrorCode);
+                        adapter.setState("inverter." + id + ".ErrorCode", {val: statusCode, ack: true});
 
-                    if (statusCode >= 700) {
-                        statusCodeString = getStringErrorCode700(statusCode);
-                    } else if (statusCode >= 600) {
-                        statusCodeString = getStringErrorCode600(statusCode);
-                    } else if (statusCode >= 500) {
-                        statusCodeString = getStringErrorCode500(statusCode);
-                    } else if (statusCode >= 400) {
-                        statusCodeString = getStringErrorCode400(statusCode);
-                    } else if (statusCode >= 300) {
-                        statusCodeString = getStringErrorCode300(statusCode);
-                    } else {
-                        statusCodeString = getStringErrorCode100(statusCode);
+                        if (statusCode >= 700) {
+                            statusCodeString = getStringErrorCode700(statusCode);
+                        } else if (statusCode >= 600) {
+                            statusCodeString = getStringErrorCode600(statusCode);
+                        } else if (statusCode >= 500) {
+                            statusCodeString = getStringErrorCode500(statusCode);
+                        } else if (statusCode >= 400) {
+                            statusCodeString = getStringErrorCode400(statusCode);
+                        } else if (statusCode >= 300) {
+                            statusCodeString = getStringErrorCode300(statusCode);
+                        } else {
+                            statusCodeString = getStringErrorCode100(statusCode);
+                        }
+                        adapter.setState("inverter." + id + ".ErrorCodeString", {val: statusCodeString, ack: true});
                     }
-                    adapter.setState("inverter." + id + ".ErrorCodeString", {val: statusCodeString, ack: true});
-
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
                 }
@@ -2052,7 +2054,7 @@ function createMeterObjects(id,obj) {
                 type: "state",
                 common: {
                     name: para.toString(),
-                    type: "number",
+                    type: "mixed",
                     role: "value",
                     unit: "",
                     read: true,
@@ -2411,7 +2413,7 @@ function createPowerFlowObjects(obj) {
                 type: "state",
                 common: {
                     name: para.toString(),
-                    type: "number",
+                    type: "mixed",
                     role: "value",
                     unit: "",
                     read: true,
