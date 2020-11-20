@@ -3,6 +3,18 @@
         "name": "fronius",
         "version": "1.0.6",
         "news": {
+            "1.0.6": {
+                "en": "Implementation change for support of SYMO GEN24",
+                "de": "Implementierungsänderung zur Unterstützung von SYMO GEN24",
+                "ru": "Изменение реализации для поддержки SYMO GEN24",
+                "pt": "Mudança de implementação para suporte de SYMO GEN24",
+                "nl": "Implementatiewijziging voor ondersteuning van SYMO GEN24",
+                "fr": "Changement d'implémentation pour le support de SYMO GEN24",
+                "it": "Modifica dell'implementazione per il supporto di SYMO GEN24",
+                "es": "Cambio de implementación para el soporte de SYMO GEN24",
+                "pl": "Zmiana wdrożeniowa dla obsługi SYMO GEN24",
+                "zh-cn": "支持SYMO GEN24的实现更改"
+            },
             "1.0.5": {
                 "en": "compact mode compatibility added",
                 "de": "Kompaktmodus-Kompatibilität hinzugefügt",
@@ -74,66 +86,6 @@
                 "es": "Pequeños cambios",
                 "pl": "Małe zmiany",
                 "zh-cn": "变化不大"
-            },
-            "0.0.5": {
-                "en": "Read storage data and error/status codes",
-                "de": "Akku Daten und Status-/Fehlercodes auslesen",
-                "ru": "Считывание данных для хранения и коды ошибок / состояния",
-                "pt": "Ler dados de armazenamento e códigos de erro / status",
-                "nl": "Lees opslaggegevens en fout- / statuscodes",
-                "fr": "Lire les données de stockage et les codes d'erreur / d'état",
-                "it": "Leggi i dati di archiviazione e i codici di errore / stato",
-                "es": "Leer datos de almacenamiento y códigos de error / estado.",
-                "pl": "Odczytaj dane dotyczące pamięci i kody błędów / statusu",
-                "zh-cn": "读取存储数据和错误/状态代码"
-            },
-            "0.0.4": {
-                "en": "Read more data",
-                "de": "Weitere Daten ausgelesen",
-                "ru": "читать далее данные",
-                "pt": "Leia mais dados",
-                "nl": "Meer gegevens lezen",
-                "fr": "Lire plus de données",
-                "it": "Leggi più dati",
-                "es": "Leer más datos",
-                "pl": "Czytaj więcej danych",
-                "zh-cn": "阅读更多数据"
-            },
-            "0.0.3": {
-                "en": "Improved installation routine",
-                "de": "Verbesserte Installationsroutine",
-                "ru": "Улучшеный процесс установки",
-                "pt": "Rotina de instalação aprimorada",
-                "nl": "Verbeterde installatieroutine",
-                "fr": "Amélioration de la routine d'installation",
-                "it": "Miglioramento della routine di installazione",
-                "es": "Rutina de instalación mejorada",
-                "pl": "Ulepszona procedura instalacji",
-                "zh-cn": "改进了安装程序"
-            },
-            "0.0.2": {
-                "en": "First data is read",
-                "de": "Ersten Daten werden gelesen",
-                "ru": "Первые данные читаются",
-                "pt": "Primeiros dados são lidos",
-                "nl": "Eerste gegevens worden gelezen",
-                "fr": "Les premières données sont lues",
-                "it": "I primi dati vengono letti",
-                "es": "Se leen los primeros datos",
-                "pl": "Pierwsze dane są odczytywane",
-                "zh-cn": "读取第一个数据"
-            },
-            "0.0.1": {
-                "en": "initial adapter",
-                "de": "Initiale Version",
-                "ru": "Первоначальный адаптер",
-                "pt": "Versão inicial",
-                "fr": "Version initiale",
-                "nl": "Eerste release",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Początkowa wersja",
-                "zh-cn": "初始版本"
             }
         },
         "title": "Fronius inverter",
