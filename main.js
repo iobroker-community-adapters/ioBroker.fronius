@@ -932,6 +932,10 @@ function getStorageRealtimeData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
+                    if(data.Body.Data != null){
+                        adapter.log.debug("Storage object is not supported: " + JSON.stringify(data));
+                        return;
+                    }
 
                     createStorageObjects(id);
 
