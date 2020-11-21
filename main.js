@@ -2471,12 +2471,13 @@ function getPowerFlowRealtimeData() {
                         var keys = Object.keys(data.Body.Data.Inverters);
                         for(var inv in keys){
                             resp = data.Body.Data.Inverters[keys[inv]];
-                            //createInverterObjects(keys[inv],resp);
                             createPowerFlowInverterObjects(keys[inv],resp);                            
                             for (var par in resp){
-                                adapter.setState("powerflow.inverter"+ keys.toString() + "." + par.toString(), {val: resp[par.toString()]==null ? 0:resp[par.toString()], ack: true});
-                            }
-                        }
+                                adapter.log.debug("Detected parameter = " + par.toString() + ", Value = " + resp[par]);
+                                adapter.log.debug("object to set value: powerflow.inverter"+ keys[inv].toString() + "." + par.toString());
+                                adapter.setState("powerflow.inverter"+ keys[inv].toString() + "." + par.toString(), {val: resp[par.toString()]==null ? 0:resp[par.toString()], ack: true});
+                            }                        
+                        }                     
                     }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
