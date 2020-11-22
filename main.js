@@ -14,6 +14,8 @@
  * 29.9.2020, nkleber
  *      Modified check of reachable Inverter in a way that a valid response is necessary to set the adapter to connected
  *
+ * 21.11.2020, nkleber
+ *      Improved object evaluation for Smartmeter (Type, Serial, Manufacturer) and Powerflow objects to get Battery info
  */
 
 /* global __dirname */
@@ -932,6 +934,10 @@ function getStorageRealtimeData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
+                    if(data.Body.Data != null){
+                        adapter.log.debug("Storage object is not supported: " + JSON.stringify(data));
+                        return;
+                    }
 
                     createStorageObjects(id);
 
@@ -990,6 +996,18 @@ function createMeterObjects(id,obj) {
             read: true,
             write: false,
             desc: "Manufacturer & Model"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('meter.' + id + '.Serial', {
+        type: "state",
+        common: {
+            name: "Serialnumber",
+            type: "string",
+            role: "value",
+            read: true,
+            write: false,
+            desc: "Smartmeter serial number"
         },
         native: {}
     });
@@ -2050,19 +2068,21 @@ function createMeterObjects(id,obj) {
         adapter.log.debug("Fallback MissingMeterObjects started")
         // fallback for not predefined parameters -> defined as number without unit
         for (var para in obj){
-            adapter.setObjectNotExists('meter.' + id + '.' + para.toString(), {
-                type: "state",
-                common: {
-                    name: para.toString(),
-                    type: "mixed",
-                    role: "value",
-                    unit: "",
-                    read: true,
-                    write: false,
-                    desc: para.toString()
-                },
-                native: {}
-            });
+            if(para != "Details"){
+                adapter.setObjectNotExists('meter.' + id + '.' + para.toString(), {
+                    type: "state",
+                    common: {
+                        name: para.toString(),
+                        type: "mixed",
+                        role: "value",
+                        unit: "",
+                        read: true,
+                        write: false,
+                        desc: para.toString()
+                    },
+                    native: {}
+                });
+            }
         }
         adapter.log.debug("FAllback MissingMeterObjects created!")
     },2000);
@@ -2077,7 +2097,15 @@ function getMeterRealtimeData(id) {
                     const resp = data.Body.Data;
                     createMeterObjects(id,resp);
                     for (var par in resp){
-                        adapter.setState("meter." + id + "." + par.toString(), {val: resp[par.toString()], ack: true});
+                        if(par == "Details"){
+                            if(resp.Details.hasOwnProperty("Manufacturer") & resp.Details.hasOwnProperty("Model") & resp.Details.hasOwnProperty("Serial")){
+                                adapter.setState("meter." + id + ".Model", {val: resp.Details.Manufacturer + " " + resp.Details.Model, ack: true});
+                                adapter.setState("meter." + id + ".Serial", {val: resp.Details.Serial, ack: true});
+                            }
+                        }else{
+                            adapter.setState("meter." + id + "." + par.toString(), {val: resp[par.toString()], ack: true});
+                        }
+                        
                     }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
@@ -2179,6 +2207,30 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
 
 function getStringRealtimeData(id) {
 
+}
+
+function createPowerFlowInverterObjects(inverter,obj) {
+    if(isObjectsCreated){
+        return
+    }
+    adapter.log.debug("Fallback creating missing PowerflowInverter objects started");
+    // fallback for not predefined parameters -> defined as number without unit
+    for (var para in obj){
+        adapter.setObjectNotExists('powerflow.inverter' + inverter.toString() + "." + para.toString(), {
+            type: "state",
+            common: {
+                name: para.toString(),
+                type: "mixed",
+                role: "value",
+                unit: "",
+                read: true,
+                write: false,
+                desc: para.toString()
+            },
+            native: {}
+        });
+    }
+    adapter.log.debug("Fallback creating missing PowerflowInverter objects finished!");
 }
 
 function createPowerFlowObjects(obj) {
@@ -2433,15 +2485,24 @@ function getPowerFlowRealtimeData() {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-
-                    
-
-                    const resp = data.Body.Data.Site;
+                    var resp = data.Body.Data.Site;
                     createPowerFlowObjects(resp);
                     for (var par in resp){
                         adapter.setState("powerflow." + par.toString(), {val: resp[par.toString()]==null ? 0:resp[par.toString()], ack: true});
                     }
 
+                    if(data.Body.Data.hasOwnProperty("Inverters")){
+                        var keys = Object.keys(data.Body.Data.Inverters);
+                        for(var inv in keys){
+                            resp = data.Body.Data.Inverters[keys[inv]];
+                            createPowerFlowInverterObjects(keys[inv],resp);                            
+                            for (var par in resp){
+                                adapter.log.debug("Detected parameter = " + par.toString() + ", Value = " + resp[par]);
+                                adapter.log.debug("object to set value: powerflow.inverter"+ keys[inv].toString() + "." + par.toString());
+                                adapter.setState("powerflow.inverter"+ keys[inv].toString() + "." + par.toString(), {val: resp[par.toString()]==null ? 0:resp[par.toString()], ack: true});
+                            }                        
+                        }                     
+                    }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }

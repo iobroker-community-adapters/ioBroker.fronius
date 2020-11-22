@@ -134,6 +134,19 @@
                                 setError();
                             }
                         });
+                        sendTo('fronius.' + instance, 'getDeviceInfoInverter', ip + baseurl, function (res) {
+                            try {
+                                const data = JSON.parse(res);
+                                if (data.error === 0) {
+                                    const result = data.message;
+                                    $('#inverter').val(Object.keys(result));
+                                } else {
+                                    setError();
+                                }
+                            } catch (err) {
+                                setError();
+                            }
+                        });
                     } else if (ip && baseurl && apiversion === 0) {
                         sendTo('fronius.' + instance, 'getDeviceInfoInverter', ip + baseurl, function (res) {
                             try {
