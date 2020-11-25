@@ -1,0 +1,41 @@
+{
+	"cli": true,
+	"adapterName": "fronius",
+	"title": "Fronius",
+	"description": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.",
+	"keywords": [
+		"Fronius",
+		"inverter",
+		"symo",
+		"hybrid",
+		"Wechselrichter"
+	],
+	"expert": "yes",
+	"features": [
+		"adapter"
+	],
+	"adminFeatures": [],
+	"type": "energy",
+	"startMode": "daemon",
+	"connectionType": "local",
+	"dataSource": "poll",
+	"connectionIndicator": "yes",
+	"language": "JavaScript",
+	"adminReact": "no",
+	"tools": [
+		"ESLint",
+		"type checking"
+	],
+	"indentation": "Tab",
+	"quotes": "double",
+	"es6class": "yes",
+	"authorName": "ldittmar",
+	"authorGithub": "ldittmar81",
+	"authorEmail": "iobroker@lmdsoft.de",
+	"gitRemoteProtocol": "HTTPS",
+	"gitCommit": "no",
+	"license": "MIT License",
+	"ci": "gh-actions",
+	"dependabot": "yes",
+	"creatorVersion": "1.30.1"
+}

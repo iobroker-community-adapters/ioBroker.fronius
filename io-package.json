@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.0.6",
+        "version": "1.1.0",
         "news": {
-            "1.0.6": {
+            "1.1.0": {
                 "en": "Implementation change for support of SYMO GEN24",
                 "de": "Implementierungsänderung zur Unterstützung von SYMO GEN24",
                 "ru": "Изменение реализации для поддержки SYMO GEN24",
@@ -102,16 +102,7 @@
             "zh-cn": "Fronius逆變器"
         },
         "desc": {
-            "en": "For your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards or Fronius Datamanager from version 3.0.3-1 onwards.",
-            "de": "Für Ihren Fronius PV-Wechselrichter mit Fronius Datalogger Web ab Version 2.0.4-1 oder Fronius Datamanager ab Version 3.0.3-1.",
-            "ru": "Для вашего PV преобразователя Fronius с Fronius Datalogger Web начиная с версии 2.0.4-1 или Fronius Datamanager начиная с версии 3.0.3-1 и далее.",
-            "pt": "Para o seu inversor Fronius PV com o Fronius Datalogger Web a partir da versão 2.0.4-1 ou Fronius Datamanager da versão 3.0.3-1 em diante.",
-            "nl": "Voor uw Fronius PV-omvormer met Fronius Datalogger Web vanaf versie 2.0.4-1 of Fronius Datamanager vanaf versie 3.0.3-1.",
-            "fr": "Pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1 ou Fronius Datamanager à partir de la version 3.0.3-1.",
-            "it": "Per il tuo inverter Fronius PV con Fronius Datalogger Web dalla versione 2.0.4-1 in poi o Fronius Datamanager dalla versione 3.0.3-1 in poi.",
-            "es": "Para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1 o Fronius Datamanager a partir de la versión 3.0.3-1.",
-            "pl": "Do falownika Fronius PV z oprogramowaniem Fronius Datalogger Web od wersji 2.0.4-1 lub urządzeniem Fronius Datamanager od wersji 3.0.3-1.",
-            "zh-cn": "适用于Fronius PV变频器，带有Fronius Datalogger Web 2.0.4-1版本或Fronius Datamanager 3.0.3-1版本。"
+            "en": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24."
         },
         "license": "MIT",
         "authors": [
@@ -134,7 +125,9 @@
         ],
         "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
         "loglevel": "info",
-        "type": "energy"
+        "type": "energy",
+        "connectionType": "local",
+        "dataSource": "poll"
     },
     "native": {
         "ip": "",
