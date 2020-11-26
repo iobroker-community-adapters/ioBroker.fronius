@@ -106,7 +106,7 @@
         },
         "license": "MIT",
         "authors": [
-            "ldittmar <iobroker@lmdsoft.de>"
+            "ldittmar <iobroker@lmdsoft.de>", "nkleber78"
         ],
         "compact": true,
         "platform": "Javascript/Node.js",
