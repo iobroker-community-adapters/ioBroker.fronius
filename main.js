@@ -2818,6 +2818,136 @@ function createInfoObjects() {
         },
         native: {}
     });
+    adapter.setObjectNotExists('info.CO2Factor', {
+        type: 'state',
+        common: {
+            name: "CO2Factor",
+            type: "number",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "CO2Factor"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.CashFactor', {
+        type: 'state',
+        common: {
+            name: "CashFactor",
+            type: "number",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "CashFactor"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.DefaultLanguage', {
+        type: 'state',
+        common: {
+            name: "DefaultLanguage",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "DefaultLanguage"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.DeliveryFactor', {
+        type: 'state',
+        common: {
+            name: "DeliveryFactor",
+            type: "number",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "DeliveryFactor"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.PlatformID', {
+        type: 'state',
+        common: {
+            name: "PlatformID",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "PlatformID"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.ProductID', {
+        type: 'state',
+        common: {
+            name: "ProductID",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "ProductID"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.TimezoneLocation', {
+        type: 'state',
+        common: {
+            name: "TimezoneLocation",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "TimezoneLocation"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.TimezoneName', {
+        type: 'state',
+        common: {
+            name: "TimezoneName",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "TimezoneName"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.UTCOffset', {
+        type: 'state',
+        common: {
+            name: "UTCOffset",
+            type: "number",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "UTCOffset"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.UniqueID', {
+        type: 'state',
+        common: {
+            name: "UniqueID",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "UniqueID"
+        },
+        native: {}
+    });
 }
 
 function setConnected(_isConnected) {
@@ -2902,6 +3032,36 @@ function getLoggerInfo() {
                     if (resp && resp.hasOwnProperty("HWVersion")) {
                         adapter.setState("info.HWVersion", { val: resp.HWVersion, ack: true });
                         adapter.setState("info.SWVersion", { val: resp.SWVersion, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("CO2Factor")) {
+                        adapter.setState("info.CO2Factor", { val: resp.CO2Factor, ack: true, unit: resp.CO2Unit });
+                    }
+                    if (resp && resp.hasOwnProperty("CashFactor")) {
+                        adapter.setState("info.CashFactor", { val: resp.CashFactor, ack: true, unit: resp.CashCurrency });
+                    }
+                    if (resp && resp.hasOwnProperty("DefaultLanguage")) {
+                        adapter.setState("info.DefaultLanguage", { val: resp.DefaultLanguage, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("DeliveryFactor")) {
+                        adapter.setState("info.DeliveryFactor", { val: resp.DeliveryFactor, ack: true, unit: resp.CashCurrency });
+                    }
+                    if (resp && resp.hasOwnProperty("PlatformID")) {
+                        adapter.setState("info.PlatformID", { val: resp.PlatformID, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("ProductID")) {
+                        adapter.setState("info.ProductID", { val: resp.ProductID, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("TimezoneLocation")) {
+                        adapter.setState("info.TimezoneLocation", { val: resp.TimezoneLocation, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("TimezoneName")) {
+                        adapter.setState("info.TimezoneName", { val: resp.TimezoneName, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("UTCOffset")) {
+                        adapter.setState("info.UTCOffset", { val: resp.UTCOffset, ack: true });
+                    }
+                    if (resp && resp.hasOwnProperty("UniqueID")) {
+                        adapter.setState("info.UniqueID", { val: resp.UniqueID, ack: true });
                     }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason);
