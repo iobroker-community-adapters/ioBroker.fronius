@@ -2723,7 +2723,12 @@ function getInverterInfo() {
                         var resp = data.Body.Data[keys[inv]];
                         createInverterInfoObjects(keys[inv], resp);
                         for (var par in resp) {
-                            adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()], ack: true });
+                            if (par.toString() == "CustomName") {
+                                adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: convertCustomname(resp[par.toString()]), ack: true });
+                            }
+                            else {
+                                adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()], ack: true });
+                            }
                         }
                     }
                 } else {
@@ -2734,6 +2739,16 @@ function getInverterInfo() {
             }
         }
     });
+}
+
+function convertCustomname(nameraw) {
+    var out = "";
+    nameraw.split(';').forEach(function (entry) {
+        if (entry != "") {
+            out = out + String.fromCharCode(entry.replace("&#", ""));
+        }
+    });
+    return out;
 }
 
 function createInfoObjects() {
