@@ -6,14 +6,14 @@
             "1.1.1": {
                 "en": "Added inverterinfo, missing loggerinfo and missing units",
                 "de": "Inverterinfo, fehlende LoggerInfos und fehlende Einheiten hinzugefügt",
-                "ru": "небольшие изменения",
-                "pt": "Pequenas mudanças",
-                "nl": "Weinig veranderingen",
-                "fr": "Petits changements",
-                "it": "Piccoli cambiamenti",
-                "es": "Pequeños cambios",
-                "pl": "Małe zmiany",
-                "zh-cn": "变化不大"
+                "ru": "Добавлена ​​информация о инверторе, отсутствующая информация о журнале и отсутствующие блоки",
+                "pt": "Adicionado inverterinfo, ausente loggerinfo e unidades ausentes",
+                "nl": "Omvormerinfo, ontbrekende loggerinfo en ontbrekende eenheden toegevoegd",
+                "fr": "Ajout de l'inverterinfo, du journal manquant et des unités manquantes",
+                "it": "Aggiunto inverterinfo, loggerinfo mancante e unità mancanti",
+                "es": "Se agregó información de inversor, información de registro faltante y unidades faltantes",
+                "pl": "Dodano informacje o inwerterze, brakujące informacje o logowaniu i brakujące jednostki",
+                "zh-cn": "添加了反相器信息，缺少的loggerinfo和缺少的单位"
             },
             "1.1.0": {
                 "en": "Implementation change for support of SYMO GEN24",
@@ -114,11 +114,22 @@
             "zh-cn": "Fronius逆變器"
         },
         "desc": {
-            "en": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24."
+            "en": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.",
+            "de": "Dies ist ein ioBroker-Adapter für Ihren Fronius PV-Wechselrichter mit Fronius Datalogger Web ab Version 2.0.4-1, Fronius Datamanager ab Version 3.0.3-1 und Symo Gen24.",
+            "ru": "Это адаптер ioBroker для вашего фотоэлектрического инвертора Fronius с Fronius Datalogger Web начиная с версии 2.0.4-1, Fronius Datamanager начиная с версии 3.0.3-1 и Symo Gen24.",
+            "pt": "Este é um adaptador ioBroker para seu inversor Fronius PV com Fronius Datalogger Web da versão 2.0.4-1 em diante, Fronius Datamanager da versão 3.0.3-1 em diante e Symo Gen24.",
+            "nl": "Dit is een ioBroker-adapter voor uw Fronius PV-omvormer met Fronius Datalogger Web vanaf versie 2.0.4-1, Fronius Datamanager vanaf versie 3.0.3-1 en Symo Gen24.",
+            "fr": "Il s'agit d'un adaptateur ioBroker pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1, Fronius Datamanager à partir de la version 3.0.3-1 et Symo Gen24.",
+            "it": "Questo è un adattatore ioBroker per il tuo inverter FV Fronius con Fronius Datalogger Web dalla versione 2.0.4-1 in poi, Fronius Datamanager dalla versione 3.0.3-1 in poi e Symo Gen24.",
+            "es": "Se trata de un adaptador ioBroker para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1, Fronius Datamanager a partir de la versión 3.0.3-1 y Symo Gen24.",
+            "pl": "Jest to adapter ioBroker do falownika Fronius PV z Fronius Datalogger Web od wersji 2.0.4-1, Fronius Datamanager od wersji 3.0.3-1 i Symo Gen24.",
+            "zh-cn": "这是适用于Fronius PV逆变器的ioBroker适配器，具有版本2.0.4-1起的Fronius Datalogger Web，版本3.0.3-1起的Fronius Datamanager和Symo Gen24。"
         },
         "license": "MIT",
         "authors": [
-            "ldittmar <iobroker@lmdsoft.de>", "nkleber78", "schweigel"
+            "ldittmar <iobroker@lmdsoft.de>",
+            "nkleber78",
+            "schweigel"
         ],
         "compact": true,
         "platform": "Javascript/Node.js",
