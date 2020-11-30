@@ -1,11 +1,11 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.2.0",
+        "version": "1.1.1",
         "news": {
-            "1.2.0": {
-                "en": "Added inverterinfo and missing units",
-                "de": "Inverterinfo und fehlende Einheiten hinzugefügt",
+            "1.1.1": {
+                "en": "Added inverterinfo, missing loggerinfo and missing units",
+                "de": "Inverterinfo, fehlende LoggerInfos und fehlende Einheiten hinzugefügt",
                 "ru": "небольшие изменения",
                 "pt": "Pequenas mudanças",
                 "nl": "Weinig veranderingen",

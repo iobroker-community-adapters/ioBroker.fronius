@@ -2831,6 +2831,19 @@ function createInfoObjects() {
         },
         native: {}
     });
+    adapter.setObjectNotExists('info.CO2Unit', {
+        type: 'state',
+        common: {
+            name: "CO2Unit",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "CO2Unit"
+        },
+        native: {}
+    });
     adapter.setObjectNotExists('info.CashFactor', {
         type: 'state',
         common: {
@@ -2841,6 +2854,19 @@ function createInfoObjects() {
             write: false,
             def: "",
             desc: "CashFactor"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.CashCurrency', {
+        type: 'state',
+        common: {
+            name: "CashCurrency",
+            type: "string",
+            role: "meta",
+            read: true,
+            write: false,
+            def: "",
+            desc: "CashCurrency"
         },
         native: {}
     });
@@ -3034,16 +3060,16 @@ function getLoggerInfo() {
                         adapter.setState("info.SWVersion", { val: resp.SWVersion, ack: true });
                     }
                     if (resp && resp.hasOwnProperty("CO2Factor")) {
-                        adapter.setState("info.CO2Factor", { val: resp.CO2Factor, ack: true, unit: resp.CO2Unit });
+                        adapter.setState("info.CO2Factor", { val: resp.CO2Factor, ack: true });
+                        adapter.setState("info.CO2Unit", { val: resp.CO2Unit, ack: true });
                     }
                     if (resp && resp.hasOwnProperty("CashFactor")) {
-                        adapter.setState("info.CashFactor", { val: resp.CashFactor, ack: true, unit: resp.CashCurrency });
+                        adapter.setState("info.CashFactor", { val: resp.CashFactor, ack: true });
+                        adapter.setState("info.CashCurrency", { val: resp.CashCurrency, ack: true });
+                        adapter.setState("info.DeliveryFactor", { val: resp.DeliveryFactor, ack: true });
                     }
                     if (resp && resp.hasOwnProperty("DefaultLanguage")) {
                         adapter.setState("info.DefaultLanguage", { val: resp.DefaultLanguage, ack: true });
-                    }
-                    if (resp && resp.hasOwnProperty("DeliveryFactor")) {
-                        adapter.setState("info.DeliveryFactor", { val: resp.DeliveryFactor, ack: true, unit: resp.CashCurrency });
                     }
                     if (resp && resp.hasOwnProperty("PlatformID")) {
                         adapter.setState("info.PlatformID", { val: resp.PlatformID, ack: true });
