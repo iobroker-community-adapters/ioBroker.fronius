@@ -2106,11 +2106,11 @@ function createMeterObjects(id, obj) {
             native: {}
         });
     }
-    if (obj.hasOwnProperty("PowerApparent_S_Phase_2")) {
-        adapter.setObjectNotExists('meter.' + id + '.PowerApparent_S_Phase_2', {
+    if (obj.hasOwnProperty("PowerApparent_S_Phase_3")) {
+        adapter.setObjectNotExists('meter.' + id + '.PowerApparent_S_Phase_3', {
             type: "state",
             common: {
-                name: "PowerApparent_S_Phase_2",
+                name: "PowerApparent_S_Phase_3",
                 type: "number",
                 role: "value",
                 unit: "VA",
