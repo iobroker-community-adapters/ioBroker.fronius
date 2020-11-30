@@ -2629,7 +2629,105 @@ function getPowerFlowRealtimeData() {
                         }
                     }
                 } else {
-                    adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(data.Head.Status.Reason + " powerflow");
+                }
+            } catch (e) {
+                adapter.log.warn(e);
+            }
+        }
+    });
+}
+
+function createInverterInfoObjects(id, obj) {
+    if (isObjectsCreated) {
+        return
+    }
+    adapter.setObjectNotExists('inverterinfo', {
+        type: 'channel',
+        common: {
+            name: "general information about the inverter",
+            role: "info"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('inverterinfo.' + id, {
+        type: 'channel',
+        common: {
+            name: "inverterinfo with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
+
+    if (obj.hasOwnProperty("CustomName")) {
+        adapter.setObjectNotExists('inverterinfo.' + id + '.CustomName', {
+            type: "state",
+            common: {
+                name: "Mode",
+                type: "string",
+                role: "value",
+                read: true,
+                write: false,
+                desc: "Custom name of the inverter"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("PVPower")) {
+        adapter.setObjectNotExists('inverterinfo.' + id + '.PVPower', {
+            type: "state",
+            common: {
+                name: "pv peak power",
+                type: "number",
+                role: "value",
+                unit: "W",
+                read: true,
+                write: false,
+                desc: "pv peak power"
+            },
+            native: {}
+        });
+    }
+
+    // wait a bit for creating the previous objects before creating the fallback once
+    setTimeout(function () {
+        adapter.log.debug("Fallback creating missing InverterInfo objects started")
+        // fallback for not predefined parameters -> defined as number without unit
+        for (var para in obj) {
+            adapter.setObjectNotExists('inverterinfo.' + id + '.' + para.toString(), {
+                type: "state",
+                common: {
+                    name: para.toString(),
+                    type: "mixed",
+                    role: "value",
+                    unit: "",
+                    read: true,
+                    write: false,
+                    desc: para.toString()
+                },
+                native: {}
+            });
+        }
+        adapter.log.debug("Fallback creating missing InverterInfo objects finished!")
+    }, 2000);
+}
+
+function getInverterInfo() {
+    request.get(requestType + ip + baseurl + 'GetInverterInfo.cgi', function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                const data = JSON.parse(body);
+                if ("Body" in data) {
+                    var keys = Object.keys(data.Body.Data);
+                    for (var inv in keys) {
+                        var resp = data.Body.Data[keys[inv]];
+                        createInverterInfoObjects(keys[inv], resp);
+                        for (var par in resp) {
+                            adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()], ack: true });
+                        }
+                    }
+                } else {
+                    adapter.log.warn(data.Head.Status.Reason + " inverterinfo");
                 }
             } catch (e) {
                 adapter.log.warn(e);
@@ -2759,6 +2857,7 @@ function checkStatus() {
                                 });
                             }
                             getPowerFlowRealtimeData();
+                            getInverterInfo();
                         }
 
                         adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
