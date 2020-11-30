@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.1.0",
+        "version": "1.2.0",
         "news": {
+            "1.2.0": {
+                "en": "Added inverterinfo and missing units",
+                "de": "Inverterinfo und fehlende Einheiten hinzugefügt",
+                "ru": "небольшие изменения",
+                "pt": "Pequenas mudanças",
+                "nl": "Weinig veranderingen",
+                "fr": "Petits changements",
+                "it": "Piccoli cambiamenti",
+                "es": "Pequeños cambios",
+                "pl": "Małe zmiany",
+                "zh-cn": "变化不大"
+            },
             "1.1.0": {
                 "en": "Implementation change for support of SYMO GEN24",
                 "de": "Implementierungsänderung zur Unterstützung von SYMO GEN24",
@@ -106,7 +118,7 @@
         },
         "license": "MIT",
         "authors": [
-            "ldittmar <iobroker@lmdsoft.de>", "nkleber78"
+            "ldittmar <iobroker@lmdsoft.de>", "nkleber78", "schweigel"
         ],
         "compact": true,
         "platform": "Javascript/Node.js",
