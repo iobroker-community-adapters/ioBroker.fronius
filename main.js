@@ -937,12 +937,12 @@ function GetArchiveData(id) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
-                if ("Head" in data) {
+                if ("Body" in data) {
+                    var inverter = data.Body.Data["inverter/" + id];
 
-                    const resp = data.Head.RequestArguments.Channel;
+                    const resp = inverter.Data;
                     createArchiveObjects(id, resp);
 
-                    var inverter = data.Body.Data["inverter/" + id];
                     var values = inverter.Data.Current_DC_String_1.Values;
                     var keys = Object.keys(values);
                     var s1current = values[keys[keys.length - 1]];
