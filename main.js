@@ -489,7 +489,7 @@ function createArchiveObjects(id, obj) {
                 name: "Power_DC_String_1",
                 type: "number",
                 role: "value",
-                unit: "V",
+                unit: "W",
                 read: true,
                 write: false,
                 desc: "Power_DC_String_1"
@@ -504,7 +504,7 @@ function createArchiveObjects(id, obj) {
                 name: "Power_DC_String_2",
                 type: "number",
                 role: "value",
-                unit: "V",
+                unit: "W",
                 read: true,
                 write: false,
                 desc: "Power_DC_String_2"
