@@ -855,6 +855,413 @@ function getStringErrorCode700(errorcode) {
     }
 }
 
+function getStringDeviceType(dt) {
+    switch (dt) {
+        case 54:
+            return "Fronius Primo Hybrid 5.0-1 240";
+        case 55:
+            return "Fronius Primo Hybrid 6.0-1 240";
+        case 56:
+            return "Fronius Primo Hybrid 8.0-1 240";
+        case 57:
+            return "Fronius Primo Hybrid 10.0-1 240";
+        case 58:
+            return "Fronius Primo Hybrid 3.6-1";
+        case 59:
+            return "Fronius Primo Hybrid 4.0-1";
+        case 60:
+            return "Fronius Primo Hybrid 4.6-1";
+        case 61:
+            return "Fronius Primo Hybrid 5.0-1";
+        case 62:
+            return "Fronius Primo Hybrid 6.0-1";
+        case 63:
+            return "Fronius Primo Hybrid 8.0-1";
+        case 64:
+            return "Fronius Primo Hybrid 11.4-1";
+        case 65:
+            return "Fronius Primo Hybrid 10.0-1";
+        case 66:
+            return "Fronius Primo Hybrid 11.4-1 240";
+        case 67:
+            return "Fronius Primo 15.0-1 208-240";
+        case 68:
+            return "Fronius Primo 12.5-1 208-240";
+        case 69:
+            return "Fronius Primo 11.4-1 208-240";
+        case 70:
+            return "Fronius Primo 10.0-1 208-240";
+        case 71:
+            return "Fronius Symo 15.0-3 208";
+        case 72:
+            return "Fronius Eco 27.0-3-S";
+        case 73:
+            return "Fronius Eco 25.0-3-S";
+        case 75:
+            return "Fronius Primo 6.0-1";
+        case 76:
+            return "Fronius Primo 5.0-1";
+        case 77:
+            return "Fronius Primo 4.6-1";
+        case 78:
+            return "Fronius Primo 4.0-1";
+        case 79:
+            return "Fronius Primo 3.6-1";
+        case 80:
+            return "Fronius Primo 3.5-1";
+        case 81:
+            return "Fronius Primo 3.0-1";
+        case 82:
+            return "Fronius Symo Hybrid 4.0-3-S";
+        case 83:
+            return "Fronius Symo Hybrid 3.0-3-S";
+        case 84:
+            return "Fronius IG Plus 120 V-1";
+        case 85:
+            return "Fronius Primo 3.8-1 208-240";
+        case 86:
+            return "Fronius Primo 5.0-1 208-240";
+        case 87:
+            return "Fronius Primo 6.0-1 208-240";
+        case 88:
+            return "Fronius Primo 7.6-1 208-240";
+        case 89:
+            return "Fronius Symo 24.0-3 USA Dummy";
+        case 90:
+            return "Fronius Symo 24.0-3 480";
+        case 91:
+            return "Fronius Symo 22.7-3 480";
+        case 92:
+            return "Fronius Symo 20.0-3 480";
+        case 93:
+            return "Fronius Symo 17.5-3 480";
+        case 94:
+            return "Fronius Symo 15.0-3 480";
+        case 95:
+            return "Fronius Symo 12.5-3 480";
+        case 96:
+            return "Fronius Symo 10.0-3 480";
+        case 97:
+            return "Fronius Symo 12.0-3 208-240";
+        case 98:
+            return "Fronius Symo 10.0-3 208-240";
+        case 99:
+            return "Fronius Symo Hybrid 5.0-3-S";
+        case 100:
+            return "Fronius Primo 8.2-1 Dummy";
+        case 101:
+            return "Fronius Primo 8.2-1 208-240";
+        case 102:
+            return "Fronius Primo 8.2-1";
+        case 103:
+            return "Fronius Agilo TL 360.0-3";
+        case 104:
+            return "Fronius Agilo TL 460.0-3";
+        case 105:
+            return "Fronius Symo 7.0-3-M";
+        case 106:
+            return "Fronius Galvo 3.1-1 208-240";
+        case 107:
+            return "Fronius Galvo 2.5-1 208-240";
+        case 108:
+            return "Fronius Galvo 2.0-1 208-240";
+        case 109:
+            return "Fronius Galvo 1.5-1 208-240";
+        case 110:
+            return "Fronius Symo 6.0-3-M";
+        case 111:
+            return "Fronius Symo 4.5-3-M";
+        case 112:
+            return "Fronius Symo 3.7-3-M";
+        case 113:
+            return "Fronius Symo 3.0-3-M";
+        case 114:
+            return "Fronius Symo 17.5-3-M";
+        case 115:
+            return "Fronius Symo 15.0-3-M";
+        case 116:
+            return "Fronius Agilo 75.0-3 Outdoor";
+        case 117:
+            return "Fronius Agilo 100.0-3 Outdoor";
+        case 118:
+            return "Fronius IG Plus 55 V-1";
+        case 119:
+            return "Fronius IG Plus 55 V-2";
+        case 120:
+            return "Fronius Symo 20.0-3 Dummy";
+        case 121:
+            return "Fronius Symo 20.0-3-M";
+        case 122:
+            return "Fronius Symo 5.0-3-M";
+        case 123:
+            return "Fronius Symo 8.2-3-M";
+        case 124:
+            return "Fronius Symo 6.7-3-M";
+        case 125:
+            return "Fronius Symo 5.5-3-M";
+        case 126:
+            return "Fronius Symo 4.5-3-S";
+        case 127:
+            return "Fronius Symo 3.7-3-S";
+        case 128:
+            return "Fronius IG Plus 60 V-2";
+        case 129:
+            return "Fronius IG Plus 60 V-1";
+        case 130:
+            return "SPR 8001F - 3 EU";
+        case 131:
+            return "Fronius IG Plus 25 V - 1";
+        case 132:
+            return "Fronius IG Plus 100 V - 3";
+        case 133:
+            return "Fronius Agilo 100.0 - 3";
+        case 134:
+            return "SPR 3001F-1 EU";
+        case 135:
+            return "Fronius IG Plus V/A 10.0-3 Delta";
+        case 136:
+            return "Fronius IG 50";
+        case 137:
+            return "Fronius IG Plus 30 V-1";
+        case 138:
+            return "SPR - 11401f - 1 UNI";
+        case 139:
+            return "SPR-12001f-3 WYE277";
+        case 140:
+            return "SPR - 11401f - 3 Delta";
+        case 141:
+            return "SPR-10001f-1 UNI";
+        case 142:
+            return "SPR - 7501f - 1 UNI";
+        case 143:
+            return "SPR-6501f-1 UNI";
+        case 144:
+            return "SPR - 3801f - 1 UNI";
+        case 145:
+            return "SPR-3301f-1 UNI";
+        case 146:
+            return "SPR 12001F - 3 EU";
+        case 147:
+            return "SPR 10001F-3 EU";
+        case 148:
+            return "SPR 8001F - 2 EU";
+        case 149:
+            return "SPR 6501F-2 EU";
+        case 150:
+            return "SPR 4001F - 1 EU";
+        case 151:
+            return "SPR 3501F-1 EU";
+        case 152:
+            return "Fronius CL 60.0 WYE277 Dummy";
+        case 153:
+            return "Fronius CL 55.5 Delta Dummy";
+        case 154:
+            return "Fronius CL 60.0 Dummy";
+        case 155:
+            return "Fronius IG Plus V 12.0-3 Dummy";
+        case 156:
+            return "Fronius IG Plus V 7.5-1 Dummy";
+        case 157:
+            return "Fronius IG Plus V 3.8-1 Dummy";
+        case 158:
+            return "Fronius IG Plus 150 V-3 Dummy";
+        case 159:
+            return "Fronius IG Plus 100 V-2 Dummy";
+        case 160:
+            return "Fronius IG Plus 50 V-1 Dummy";
+        case 161:
+            return "Fronius IG Plus V/A 12.0-3 WYE";
+        case 162:
+            return "Fronius IG Plus V/A 11.4-3 Delta";
+        case 163:
+            return "Fronius IG Plus V/A 11.4-1 UNI";
+        case 164:
+            return "Fronius IG Plus V/A 10.0-1 UNI";
+        case 165:
+            return "Fronius IG Plus V/A 7.5-1 UNI";
+        case 166:
+            return "Fronius IG Plus V/A 6.0-1 UNI";
+        case 167:
+            return "Fronius IG Plus V/A 5.0-1 UNI";
+        case 168:
+            return "Fronius IG Plus V/A 3.8-1 UNI";
+        case 169:
+            return "Fronius IG Plus V/A 3.0-1 UNI";
+        case 170:
+            return "Fronius IG Plus 150 V-3";
+        case 171:
+            return "Fronius IG Plus 120 V-3";
+        case 172:
+            return "Fronius IG Plus 100 V-2";
+        case 173:
+            return "Fronius IG Plus 100 V-1";
+        case 174:
+            return "Fronius IG Plus 70 V-2";
+        case 175:
+            return "Fronius IG Plus 70 V-1";
+        case 176:
+            return "Fronius IG Plus 50 V-1";
+        case 177:
+            return "Fronius IG Plus 35 V-1";
+        case 178:
+            return "SPR 11400f - 3 208 / 240";
+        case 179:
+            return "SPR 12000f-277";
+        case 180:
+            return "SPR 10000f";
+        case 181:
+            return "SPR 10000F EU";
+        case 182:
+            return "Fronius CL 33.3 Delta";
+        case 183:
+            return "Fronius CL 44.4 Delta";
+        case 184:
+            return "Fronius CL 55.5 Delta";
+        case 185:
+            return "Fronius CL 36.0 WYE277";
+        case 186:
+            return "Fronius CL 48.0 WYE277";
+        case 187:
+            return "Fronius CL 60.0 WYE277";
+        case 188:
+            return "Fronius CL 36.0";
+        case 189:
+            return "Fronius CL 48.0";
+        case 190:
+            return "Fronius IG TL 3.0";
+        case 191:
+            return "Fronius IG TL 4.0";
+        case 192:
+            return "Fronius IG TL 5.0";
+        case 193:
+            return "Fronius IG TL 3.6";
+        case 194:
+            return "Fronius IG TL Dummy";
+        case 195:
+            return "Fronius IG TL 4.6";
+        case 196:
+            return "SPR 12000F EU";
+        case 197:
+            return "SPR 8000F EU";
+        case 198:
+            return "SPR 6500F EU";
+        case 199:
+            return "SPR 4000F EU";
+        case 200:
+            return "SPR 3300F EU";
+        case 201:
+            return "Fronius CL 60.0";
+        case 202:
+            return "SPR 12000f";
+        case 203:
+            return "SPR 8000f";
+        case 204:
+            return "SPR 6500f";
+        case 205:
+            return "SPR 4000f";
+        case 206:
+            return "SPR 3300f";
+        case 207:
+            return "Fronius IG Plus 12.0-3 WYE277";
+        case 208:
+            return "Fronius IG Plus 50";
+        case 209:
+            return "Fronius IG Plus 100";
+        case 210:
+            return "Fronius IG Plus 100";
+        case 211:
+            return "Fronius IG Plus 150";
+        case 212:
+            return "Fronius IG Plus 35";
+        case 213:
+            return "Fronius IG Plus 70";
+        case 214:
+            return "Fronius IG Plus 70";
+        case 215:
+            return "Fronius IG Plus 120";
+        case 216:
+            return "Fronius IG Plus 3.0-1 UNI";
+        case 217:
+            return "Fronius IG Plus 3.8-1 UNI";
+        case 218:
+            return "Fronius IG Plus 5.0-1 UNI";
+        case 219:
+            return "Fronius IG Plus 6.0-1 UNI";
+        case 220:
+            return "Fronius IG Plus 7.5-1 UNI";
+        case 221:
+            return "Fronius IG Plus 10.0-1 UNI";
+        case 222:
+            return "Fronius IG Plus 11.4-1 UNI";
+        case 223:
+            return "Fronius IG Plus 11.4-3 Delta";
+        case 224:
+            return "Fronius Galvo 3.0-1";
+        case 225:
+            return "Fronius Galvo 2.5-1";
+        case 226:
+            return "Fronius Galvo 2.0-1";
+        case 227:
+            return "Fronius IG 4500-LV";
+        case 228:
+            return "Fronius Galvo 1.5-1";
+        case 229:
+            return "Fronius IG 2500-LV";
+        case 230:
+            return "Fronius Agilo 75.0-3";
+        case 231:
+            return "Fronius Agilo 100.0-3 Dummy";
+        case 232:
+            return "Fronius Symo 10.0-3-M";
+        case 233:
+            return "Fronius Symo 12.5-3-M";
+        case 234:
+            return "Fronius IG 5100";
+        case 235:
+            return "Fronius IG 4000";
+        case 236:
+            return "Fronius Symo 8.2-3-M Dummy";
+        case 237:
+            return "Fronius IG 3000";
+        case 238:
+            return "Fronius IG 2000";
+        case 239:
+            return "Fronius Galvo 3.1-1 Dummy";
+        case 240:
+            return "Fronius IG Plus 80 V-3";
+        case 241:
+            return "Fronius IG Plus 60 V-3";
+        case 242:
+            return "Fronius IG Plus 55 V-3";
+        case 243:
+            return "Fronius IG 60 ADV";
+        case 244:
+            return "Fronius IG 500";
+        case 245:
+            return "Fronius IG 400";
+        case 246:
+            return "Fronius IG 300";
+        case 247:
+            return "Fronius Symo 3.0-3-S";
+        case 248:
+            return "Fronius Galvo 3.1-1";
+        case 249:
+            return "Fronius IG 60 HV";
+        case 250:
+            return "Fronius IG 40";
+        case 251:
+            return "Fronius IG 30 Dummy";
+        case 252:
+            return "Fronius IG 30";
+        case 253:
+            return "Fronius IG 20";
+        case 254:
+            return "Fronius IG 15";
+        default:
+            return "";
+    }
+}
+
 //Get Infos from Inverter
 function getInverterRealtimeData(id) {
     // fallback if no id set
@@ -968,8 +1375,8 @@ function GetArchiveData(id) {
                     var s2voltage = values[keys[keys.length - 1]];
                     adapter.setState("inverter." + id + ".Voltage_DC_String_2", { val: s2voltage, ack: true });
 
-                    adapter.setState("inverter." + id + ".Power_DC_String_1", { val: s1voltage*s1current, ack: true });
-                    adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage*s2current, ack: true });
+                    adapter.setState("inverter." + id + ".Power_DC_String_1", { val: s1voltage * s1current, ack: true });
+                    adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage * s2current, ack: true });
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " archive: " + id);
@@ -2534,6 +2941,34 @@ function createPowerFlowInverterObjects(inverter, obj) {
             native: {}
         });
     }
+    if (obj.hasOwnProperty("DT")) {
+        adapter.setObjectNotExists('powerflow.inverter' + inverter.toString() + '.DT', {
+            type: "state",
+            common: {
+                name: "device type inverter " + inverter.toString(),
+                type: "number",
+                role: "value",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("DT")) {
+        adapter.setObjectNotExists('powerflow.inverter' + inverter.toString() + '.DTString', {
+            type: "state",
+            common: {
+                name: "device type inverter " + inverter.toString(),
+                type: "string",
+                role: "value",
+                read: true,
+                write: false,
+                desc: ""
+            },
+            native: {}
+        });
+    }
 
     // wait a bit for creating the previous objects before creating the fallback once
     setTimeout(function () {
@@ -2824,7 +3259,13 @@ function getPowerFlowRealtimeData() {
                             for (var par in resp) {
                                 adapter.log.debug("Detected parameter = " + par.toString() + ", Value = " + resp[par]);
                                 adapter.log.debug("object to set value: powerflow.inverter" + keys[inv].toString() + "." + par.toString());
-                                adapter.setState("powerflow.inverter" + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()] == null ? 0 : resp[par.toString()], ack: true });
+                                if (par.toString() == "DT") {
+                                    adapter.setState("powerflow.inverter" + keys[inv].toString() + ".DT", { val: resp[par.toString()], ack: true });
+                                    adapter.setState("powerflow.inverter" + keys[inv].toString() + ".DTString", { val: getStringDeviceType(resp[par.toString()]), ack: true });
+                                }
+                                else {
+                                    adapter.setState("powerflow.inverter" + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()] == null ? 0 : resp[par.toString()], ack: true });
+                                }
                             }
                         }
                     }
@@ -2863,12 +3304,38 @@ function createInverterInfoObjects(id, obj) {
         adapter.setObjectNotExists('inverterinfo.' + id + '.CustomName', {
             type: "state",
             common: {
-                name: "Mode",
+                name: "Custom name of the inverter",
                 type: "string",
                 role: "value",
                 read: true,
                 write: false,
                 desc: "Custom name of the inverter"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("DT")) {
+        adapter.setObjectNotExists('inverterinfo.' + id + '.DT', {
+            type: "state",
+            common: {
+                name: "device type inverter " + id,
+                type: "number",
+                role: "value",
+                read: true,
+                write: false,
+                desc: "device type inverter " + id
+            },
+            native: {}
+        });
+        adapter.setObjectNotExists('inverterinfo.' + id + '.DTString', {
+            type: "state",
+            common: {
+                name: "device type inverter " + id,
+                type: "string",
+                role: "value",
+                read: true,
+                write: false,
+                desc: "device type inverter " + id
             },
             native: {}
         });
@@ -2925,6 +3392,10 @@ function getInverterInfo() {
                         for (var par in resp) {
                             if (par.toString() == "CustomName") {
                                 adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: convertCustomname(resp[par.toString()]), ack: true });
+                            }
+                            else if (par.toString() == "DT") {
+                                adapter.setState("inverterinfo." + keys[inv].toString() + ".DT", { val: resp[par.toString()], ack: true });
+                                adapter.setState("inverterinfo." + keys[inv].toString() + ".DTString", { val: getStringDeviceType(resp[par.toString()]), ack: true });
                             }
                             else {
                                 adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()], ack: true });

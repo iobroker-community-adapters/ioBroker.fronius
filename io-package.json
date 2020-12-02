@@ -4,16 +4,16 @@
         "version": "1.1.2",
         "news": {
             "1.1.2": {
-                "en": "Added DC current and voltage for both strings and tempreture of archive request",
-                "de": "DC Stromstärke und Spannung für beide Strings und Temperatur aus Archivanfrage hinzugefügt",
-                "ru": "Добавлены постоянный ток и напряжение как для строк, так и для температуры запроса архива.",
-                "pt": "Adicionadas corrente DC e tensão para ambas as strings e temperatura da solicitação de arquivo",
-                "nl": "DC-stroom en -spanning toegevoegd voor beide strings en tempreture van archiefverzoek",
-                "fr": "Ajout de courant continu et de tension pour les deux chaînes et la température de la demande d'archive",
-                "it": "Aggiunta corrente e tensione CC per entrambe le stringhe e temperatura della richiesta di archivio",
-                "es": "Corriente y voltaje de CC agregados para ambas cadenas y temperatura de solicitud de archivo",
-                "pl": "Dodano prąd stały i napięcie dla obu łańcuchów oraz temperaturę żądania archiwum",
-                "zh-cn": "为归档请求的字符串和温度添加了直流电流和电压"
+                "en": "Added DC current, voltage and power for both strings and tempreture of archive request and added device type mapping",
+                "de": "DC Stromstärke, Spannung und Leistung für beide Strings und Temperatur aus Archivanfrage sowie Gerätetypzuordnung hinzugefügt",
+                "ru": "Добавлен постоянный ток, напряжение и мощность как для строк, так и для времени запроса архива, а также добавлено сопоставление типов устройств",
+                "pt": "Adicionada corrente DC, tensão e energia para strings e temperatura de solicitação de arquivo e mapeamento de tipo de dispositivo adicionado",
+                "nl": "Toegevoegde gelijkstroom, spanning en vermogen voor beide strings en tempreture van archiefverzoek en toegevoegde apparaattypetoewijzing",
+                "fr": "Ajout du courant continu, de la tension et de l'alimentation pour les chaînes et la température de la demande d'archive et ajout du mappage du type de périphérique",
+                "it": "Aggiunta corrente continua, tensione e potenza per entrambe le stringhe e la temperatura della richiesta di archivio e aggiunta la mappatura del tipo di dispositivo",
+                "es": "Se agregó corriente, voltaje y potencia de CC para ambas cadenas y la temperatura de la solicitud de archivo y se agregó el mapeo del tipo de dispositivo",
+                "pl": "Dodano prąd stały, napięcie i moc dla obu stringów oraz temperaturę żądania archiwum i dodano mapowanie typu urządzenia",
+                "zh-cn": "为归档请求的字符串和温度添加了直流电流，电压和功率，并添加了设备类型映射"
             },
             "1.1.1": {
                 "en": "Added inverterinfo, missing loggerinfo and missing units",
