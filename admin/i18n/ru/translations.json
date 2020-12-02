@@ -4,5 +4,6 @@
     "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) или URL (subdomain.tld)",
     "Polling interval in seconds": "Интервал опроса в секундах",
     "Query interval": "интервал опроса",
+    "Query interval archive": "Архив интервала запросов",
     "on save adapter restarts with new config immediately": "При сохранении настроек адаптеры будут перезагружены сразу."
 }

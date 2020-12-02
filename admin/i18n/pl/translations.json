@@ -4,5 +4,6 @@
     "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) lub URL (subdomain.tld)",
     "Polling interval in seconds": "Interwał sondowania w sekundach",
     "Query interval": "interwał odpytywania",
+    "Query interval archive": "Archiwum okresów zapytań",
     "on save adapter restarts with new config immediately": "Po zapisaniu ustawień karty zostaną natychmiast ponownie uruchomione."
 }
