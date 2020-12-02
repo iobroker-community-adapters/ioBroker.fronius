@@ -44,6 +44,7 @@
 
                 if (!$('#baseurl').val()) {
                     $('#poll').prop('disabled', true).val("30");
+                    $('#pollarchive').prop('disabled', true).val("150");
                 }
 
                 socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
@@ -126,6 +127,7 @@
                                     $('#meter').val(result.hasOwnProperty('Meter') ? Object.keys(result.Meter) : '');
                                     $('#storage').val(result.hasOwnProperty('Storage') ? Object.keys(result.Storage) : '');
                                     $('#poll').prop('disabled', false);
+                                    $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').removeClass("red-text").addClass("green-text").text("check_circle");
                                 } else {
                                     setError();
@@ -181,6 +183,7 @@
                                     const result = data.message;
                                     $('#stringControl').val(Object.keys(result));
                                     $('#poll').prop('disabled', false);
+                                    $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').removeClass("red-text").addClass("green-text").text("check_circle");
                                 } else {
                                     setError();
@@ -203,6 +206,7 @@
                     $('#meter').val("");
                     $('#storage').val("");
                     $('#poll').prop('disabled', true).val("30");
+                    $('#pollarchive').prop('disabled', true).val("150");
                     $('#checkIcon').removeClass("green-text").addClass("red-text").html("cancel");
                 });
             });
@@ -243,6 +247,11 @@
                         <input type="number" class="value" id="poll" />
                         <label for="poll" class="translate">Query interval</label>
                         <span class="translate">Polling interval in seconds.</span>
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <input type="number" class="value" id="pollarchive" />
+                        <label for="pollarchive" class="translate">Query interval archive</label>
+                        <span class="translate">Polling interval archive in seconds.</span>
                     </div>
                 </div>
                 <div class="row">

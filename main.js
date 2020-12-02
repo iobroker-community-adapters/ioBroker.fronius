@@ -370,71 +370,6 @@ function createInverterObjects(id, obj) {
         },
         native: {}
     });
-    adapter.setObjectNotExists('inverter.' + id + '.Current_DC_String_1', {
-        type: "state",
-        common: {
-            name: "Current_DC_String_1",
-            type: "number",
-            role: "value",
-            unit: "A",
-            read: true,
-            write: false,
-            desc: "Current_DC_String_1"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.Current_DC_String_2', {
-        type: "state",
-        common: {
-            name: "Current_DC_String_1",
-            type: "number",
-            role: "value",
-            unit: "A",
-            read: true,
-            write: false,
-            desc: "Current_DC_String_1"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.Temperature_Powerstage', {
-        type: "state",
-        common: {
-            name: "Temperature_Powerstage",
-            type: "number",
-            role: "value",
-            unit: "°C",
-            read: true,
-            write: false,
-            desc: "Temperature_Powerstage"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.Voltage_DC_String_1', {
-        type: "state",
-        common: {
-            name: "Voltage_DC_String_1",
-            type: "number",
-            role: "value",
-            unit: "V",
-            read: true,
-            write: false,
-            desc: "Voltage_DC_String_1"
-        },
-        native: {}
-    });
-    adapter.setObjectNotExists('inverter.' + id + '.Voltage_DC_String_2', {
-        type: "state",
-        common: {
-            name: "Voltage_DC_String_2",
-            type: "number",
-            role: "value",
-            unit: "V",
-            read: true,
-            write: false,
-            desc: "Voltage_DC_String_2"
-        },
-        native: {}
-    });
 
     // wait a bit for creating the previous objects before creating the fallback once
     setTimeout(function () {
@@ -456,6 +391,148 @@ function createInverterObjects(id, obj) {
             });
         }
         adapter.log.debug("Fallback Missing Inverter Objects created!")
+    }, 2000);
+}
+
+function createArchiveObjects(id, obj) {
+    if (isObjectsCreated) {
+        return
+    }
+    adapter.setObjectNotExists('inverter.' + id, {
+        type: 'channel',
+        common: {
+            name: "inverter with device ID " + id,
+            role: "info"
+        },
+        native: {}
+    });
+
+    if (obj.hasOwnProperty("Current_DC_String_1")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Current_DC_String_1', {
+            type: "state",
+            common: {
+                name: "Current_DC_String_1",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: "Current_DC_String_1"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("Current_DC_String_2")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Current_DC_String_2', {
+            type: "state",
+            common: {
+                name: "Current_DC_String_1",
+                type: "number",
+                role: "value",
+                unit: "A",
+                read: true,
+                write: false,
+                desc: "Current_DC_String_1"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("Temperature_Powerstage")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Temperature_Powerstage', {
+            type: "state",
+            common: {
+                name: "Temperature_Powerstage",
+                type: "number",
+                role: "value",
+                unit: "°C",
+                read: true,
+                write: false,
+                desc: "Temperature_Powerstage"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("Voltage_DC_String_1")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Voltage_DC_String_1', {
+            type: "state",
+            common: {
+                name: "Voltage_DC_String_1",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: "Voltage_DC_String_1"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("Voltage_DC_String_2")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Voltage_DC_String_2', {
+            type: "state",
+            common: {
+                name: "Voltage_DC_String_2",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: "Voltage_DC_String_2"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("Voltage_DC_String_1") & obj.hasOwnProperty("Current_DC_String_1")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Power_DC_String_1', {
+            type: "state",
+            common: {
+                name: "Power_DC_String_1",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: "Power_DC_String_1"
+            },
+            native: {}
+        });
+    }
+    if (obj.hasOwnProperty("Voltage_DC_String_2") & obj.hasOwnProperty("Current_DC_String_2")) {
+        adapter.setObjectNotExists('inverter.' + id + '.Power_DC_String_2', {
+            type: "state",
+            common: {
+                name: "Power_DC_String_2",
+                type: "number",
+                role: "value",
+                unit: "V",
+                read: true,
+                write: false,
+                desc: "Power_DC_String_2"
+            },
+            native: {}
+        });
+    }
+
+    // wait a bit for creating the previous objects before creating the fallback once
+    setTimeout(function () {
+        adapter.log.debug("Fallback Missing Archive Objects started")
+        // fallback for not predefined parameters -> defined as number without unit
+        for (var para in obj) {
+            adapter.setObjectNotExists('inverter.' + id + '.' + para.toString(), {
+                type: "state",
+                common: {
+                    name: para.toString(),
+                    type: "mixed",
+                    role: "value",
+                    unit: "",
+                    read: true,
+                    write: false,
+                    desc: para.toString()
+                },
+                native: {}
+            });
+        }
+        adapter.log.debug("Fallback Missing Archive Objects created!")
     }, 2000);
 }
 
@@ -845,39 +922,58 @@ function getInverterRealtimeData(id) {
             }
         }
     });
+}
+
+//Get Infos from Inverter
+function GetArchiveData(id) {
+    // fallback if no id set
+    if (id == "") {
+        id = 1;
+    }
 
     var today = new Date();
     var datum = today.getDate() + "." + (today.getMonth() + 1) + "." + today.getFullYear();
     request.get(requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2', function (error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
-
                 const data = JSON.parse(body);
-                var inverter = data.Body.Data["inverter/" + id];
-                var values = inverter.Data.Current_DC_String_1.Values;
-                var keys = Object.keys(values);
-                var daten = values[keys[keys.length - 1]];
-                adapter.setState("inverter." + id + ".Current_DC_String_1", { val: values[keys[keys.length - 1]], ack: true });
+                if ("Head" in data) {
 
-                var values = inverter.Data.Current_DC_String_2.Values;
-                var keys = Object.keys(values);
-                var daten = values[keys[keys.length - 1]];
-                adapter.setState("inverter." + id + ".Current_DC_String_2", { val: values[keys[keys.length - 1]], ack: true });
+                    const resp = data.Head.RequestArguments.Channel;
+                    createArchiveObjects(id, resp);
 
-                var values = inverter.Data.Temperature_Powerstage.Values;
-                var keys = Object.keys(values);
-                var daten = values[keys[keys.length - 1]];
-                adapter.setState("inverter." + id + ".Temperature_Powerstage", { val: values[keys[keys.length - 1]], ack: true });
+                    var inverter = data.Body.Data["inverter/" + id];
+                    var values = inverter.Data.Current_DC_String_1.Values;
+                    var keys = Object.keys(values);
+                    var s1current = values[keys[keys.length - 1]];
+                    adapter.setState("inverter." + id + ".Current_DC_String_1", { val: s1current, ack: true });
 
-                var values = inverter.Data.Voltage_DC_String_1.Values;
-                var keys = Object.keys(values);
-                var daten = values[keys[keys.length - 1]];
-                adapter.setState("inverter." + id + ".Voltage_DC_String_1", { val: values[keys[keys.length - 1]], ack: true });
+                    var values = inverter.Data.Current_DC_String_2.Values;
+                    var keys = Object.keys(values);
+                    var s2current = values[keys[keys.length - 1]];
+                    adapter.setState("inverter." + id + ".Current_DC_String_2", { val: s2current, ack: true });
 
-                var values = inverter.Data.Voltage_DC_String_2.Values;
-                var keys = Object.keys(values);
-                var daten = values[keys[keys.length - 1]];
-                adapter.setState("inverter." + id + ".Voltage_DC_String_2", { val: values[keys[keys.length - 1]], ack: true });
+                    var values = inverter.Data.Temperature_Powerstage.Values;
+                    var keys = Object.keys(values);
+                    var daten = values[keys[keys.length - 1]];
+                    adapter.setState("inverter." + id + ".Temperature_Powerstage", { val: daten, ack: true });
+
+                    var values = inverter.Data.Voltage_DC_String_1.Values;
+                    var keys = Object.keys(values);
+                    var s1voltage = values[keys[keys.length - 1]];
+                    adapter.setState("inverter." + id + ".Voltage_DC_String_1", { val: s1voltage, ack: true });
+
+                    var values = inverter.Data.Voltage_DC_String_2.Values;
+                    var keys = Object.keys(values);
+                    var s2voltage = values[keys[keys.length - 1]];
+                    adapter.setState("inverter." + id + ".Voltage_DC_String_2", { val: s2voltage, ack: true });
+
+                    adapter.setState("inverter." + id + ".Power_DC_String_1", { val: s1voltage*s1current, ack: true });
+                    adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage*s2current, ack: true });
+
+                } else {
+                    adapter.log.warn(data.Head.Status.Reason + " archive: " + id);
+                }
 
             } catch (e) {
                 adapter.log.warn(e);
@@ -2861,6 +2957,7 @@ function createInfoObjects() {
     }
     adapter.delObject('connection');
     adapter.delObject('lastsync');
+    adapter.delObject('lastsyncarchive');
     adapter.delObject('HWVersion');
     adapter.delObject('SWVersion');
 
@@ -2893,6 +2990,18 @@ function createInfoObjects() {
             read: true,
             write: false,
             desc: "Last successful synchronization"
+        },
+        native: {}
+    });
+    adapter.setObjectNotExists('info.lastsyncarchive', {
+        type: 'state',
+        common: {
+            name: "Last successful sync of archive data",
+            type: "string",
+            role: "value.datetime",
+            read: true,
+            write: false,
+            desc: "Last successful synchronization of archive data"
         },
         native: {}
     });
@@ -3151,6 +3260,46 @@ function checkStatus() {
     });
 }
 
+function checkArchiveStatus() {
+    ping.probe(ip, { log: adapter.log.debug }, function (err, result) {
+        if (err) {
+            adapter.log.error(err);
+        }
+        if (result) {
+            // now try if we can really read data from the API. If not do not further process
+            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+                var testData = null
+                try {
+                    testData = JSON.parse(body);
+                } catch (e) {
+                    adapter.log.debug("Exception thrown in check API: " + e);
+                }
+                if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
+                    // it seems everything is working, therefore proceed with readout
+                    setConnected(result.alive);
+                    if (result.alive) {
+                        if (apiver === 1) {
+                            adapter.config.inverter.split(',').forEach(function (entry) {
+                                GetArchiveData(entry);
+                            });
+                        }
+
+                        adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
+                        // allow enough time to finish all the previous state creation before setting the value to true
+                        setTimeout(function () {
+                            isObjectsCreated = true
+                        }, 10000);
+                    }
+                } else {
+                    adapter.log.debug("Unable to read data from inverters solarAPI");
+                    setConnected(false);
+                }
+
+            });
+        }
+    });
+}
+
 //Hardware and Software Version
 function getLoggerInfo() {
     request.get(requestType + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
@@ -3221,6 +3370,7 @@ function main() {
         createInfoObjects();
         getLoggerInfo();
         checkStatus();
+        checkArchiveStatus();
 
         let secs = adapter.config.poll;
         if (isNaN(secs) || secs < 1) {
@@ -3228,6 +3378,13 @@ function main() {
         }
 
         setInterval(checkStatus, secs * 1000);
+
+        let archivesecs = adapter.config.pollarchive;
+        if (isNaN(archivesecs) || archivesecs < 1) {
+            archivesecs = 150;
+        }
+
+        setInterval(checkArchiveStatus, archivesecs * 1000);
 
     } else {
         adapter.log.error("Please configure the Fronius adapter");

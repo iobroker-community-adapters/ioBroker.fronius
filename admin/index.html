@@ -34,6 +34,10 @@
                     "en": "Query interval in seconds",
                     "ru": "Интервал опроса в секундах"
                 },
+                "Intervall Archive": {
+                    "de": "Abfrageintervall Archiv in Sekunden",
+                    "en": "Query interval archive in seconds",
+                },
                 "Settings": {
                     "de": "Einstellungen",
                     "ru": "Настройки"
@@ -43,9 +47,13 @@
                     "ru": "Примечания"
                 },
                 "tooltip_poll": {
-                    "de": "Wie oft wird das Gerät abgefragt. In Sekunden.",
+                    "de": "Wie oft wird das Gerät abgefragt, in Sekunden.",
                     "en": "Polling interval in seconds.",
                     "ru": "Интервал опроса устройства в секундах"
+                },
+                "tooltip_pollarchive": {
+                    "de": "Wie oft werden Archivdaten das Gerät abgefragt, in Sekunden.",
+                    "en": "Polling interval in seconds for archive data.",
                 },
             };
 
@@ -72,6 +80,7 @@
 
                 if (!$('#baseurl').val()) {
                     $('#poll').prop('disabled', true).val("30");
+                    $('#pollarchive').prop('disabled', true).val("150");
                 }
 
                 socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
@@ -149,6 +158,7 @@
                                     $('#meter').val(result.hasOwnProperty('Meter') ? Object.keys(result.Meter) : '');
                                     $('#storage').val(result.hasOwnProperty('Storage') ? Object.keys(result.Storage) : '');
                                     $('#poll').prop('disabled', false);
+                                    $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').attr("src", "img/ok.png");
                                 } else {
                                     setError();
@@ -204,6 +214,7 @@
                                     var result = data.message;
                                     $('#stringControl').val(Object.keys(result));
                                     $('#poll').prop('disabled', false);
+                                    $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').attr("src", "img/ok.png");
                                 } else {
                                     setError();
@@ -226,6 +237,7 @@
                     $('#meter').val("");
                     $('#storage').val("");
                     $('#poll').prop('disabled', true).val("30");
+                    $('#pollarchive').prop('disabled', true).val("150");
                     $('#checkIcon').attr("src", "img/cancel.png");
                 });
             });
@@ -271,6 +283,15 @@
                     <td class="admin-icon"></td>
                     <td colspan="2">
                         <input class="value" id="poll" type="text" size="6" maxlength="4"/>
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><label class="translate" for="pollarchive">Intervall Archive</label></td>
+                    <td class="admin-icon"></td>
+                    <td colspan="2">
+                        <input class="value" id="pollarchive" type="text" size="6" maxlength="4"/>
                     </td>
                 </tr>
             </table>
