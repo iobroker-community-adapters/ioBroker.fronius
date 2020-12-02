@@ -2,6 +2,7 @@
     "Check IP": "Sprawdź adres IP",
     "IP address of the Fronius inverter": "Adres IP falownika Fronius",
     "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) lub URL (subdomain.tld)",
+    "Polling interval archive in seconds": "Archiwum okresów odpytywania w sekundach",
     "Polling interval in seconds": "Interwał sondowania w sekundach",
     "Query interval": "interwał odpytywania",
     "Query interval archive": "Archiwum okresów zapytań",

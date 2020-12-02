@@ -2,6 +2,7 @@
     "Check IP": "检查IP",
     "IP address of the Fronius inverter": "Fronius逆变器的IP地址",
     "IP(192.168.x.x) or URL(sub.domain.tld)": "IP（192.168.x.x）或URL（sub.domain.tld）",
+    "Polling interval archive in seconds": "轮询间隔存档（以秒为单位）",
     "Polling interval in seconds": "轮询间隔，以秒为单位。",
     "Query interval": "查询间隔",
     "Query interval archive": "查询间隔存档",

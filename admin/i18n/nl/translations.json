@@ -2,6 +2,7 @@
     "Check IP": "Controleer het IP-adres",
     "IP address of the Fronius inverter": "IP-adres van de Fronius-omvormer",
     "IP(192.168.x.x) or URL(sub.domain.tld)": "IP (192.168.x.x) of URL (subdomain.tld)",
+    "Polling interval archive in seconds": "Polling-intervalarchief in seconden",
     "Polling interval in seconds": "Polling-interval in seconden",
     "Query interval": "navraaginterval",
     "Query interval archive": "Query-intervalarchief",
