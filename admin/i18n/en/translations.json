@@ -2,7 +2,9 @@
     "Check IP": "Check IP",
     "IP address of the Fronius inverter": "IP address of the Fronius inverter",
     "IP(192.168.x.x) or URL(sub.domain.tld)": "IP(192.168.x.x) or URL(sub.domain.tld)",
-    "Polling interval in seconds.": "Polling interval in seconds.",
+    "Polling interval archive in seconds": "Polling interval archive in seconds",
+    "Polling interval in seconds": "Polling interval in seconds",
     "Query interval": "Query interval",
+    "Query interval archive": "Query interval archive",
     "on save adapter restarts with new config immediately": "on save adapter restarts with new config immediately"
 }

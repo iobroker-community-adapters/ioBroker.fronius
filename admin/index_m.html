@@ -44,6 +44,7 @@
 
                 if (!$('#baseurl').val()) {
                     $('#poll').prop('disabled', true).val("30");
+                    $('#pollarchive').prop('disabled', true).val("150");
                 }
 
                 socket.emit('getState', 'system.adapter.' + adapter + '.' + instance + '.alive', function (err, state) {
@@ -126,6 +127,7 @@
                                     $('#meter').val(result.hasOwnProperty('Meter') ? Object.keys(result.Meter) : '');
                                     $('#storage').val(result.hasOwnProperty('Storage') ? Object.keys(result.Storage) : '');
                                     $('#poll').prop('disabled', false);
+                                    $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').removeClass("red-text").addClass("green-text").text("check_circle");
                                 } else {
                                     setError();
@@ -181,6 +183,7 @@
                                     const result = data.message;
                                     $('#stringControl').val(Object.keys(result));
                                     $('#poll').prop('disabled', false);
+                                    $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').removeClass("red-text").addClass("green-text").text("check_circle");
                                 } else {
                                     setError();
@@ -203,6 +206,7 @@
                     $('#meter').val("");
                     $('#storage').val("");
                     $('#poll').prop('disabled', true).val("30");
+                    $('#pollarchive').prop('disabled', true).val("150");
                     $('#checkIcon').removeClass("green-text").addClass("red-text").html("cancel");
                 });
             });
@@ -232,7 +236,7 @@
                     <div class="input-field col s12 m6 l4">
                         <i id="checkIcon" class="material-icons prefix red-text">cancel</i>
                         <input class="value" id="ip" type="text" size="25" maxlength="150">
-                        <label for="ip">IP address of the Fronius inverter</label>
+                        <label for="ip" class="translate">IP address of the Fronius inverter</label>
                         <span class="translate">IP(192.168.x.x) or URL(sub.domain.tld)</span>
                         <button id="checkIp" class="btn waves-effect waves-light">
                             <span class="translate">Check IP</span>
@@ -242,7 +246,12 @@
                     <div class="input-field col s12 m6 l4">
                         <input type="number" class="value" id="poll" />
                         <label for="poll" class="translate">Query interval</label>
-                        <span class="translate">Polling interval in seconds.</span>
+                        <span class="translate">Polling interval in seconds</span>
+                    </div>
+                    <div class="input-field col s12 m6 l4">
+                        <input type="number" class="value" id="pollarchive" />
+                        <label for="pollarchive" class="translate">Query interval archive</label>
+                        <span class="translate">Polling interval archive in seconds</span>
                     </div>
                 </div>
                 <div class="row">
