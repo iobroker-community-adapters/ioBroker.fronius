@@ -32,7 +32,7 @@ const devStrings = require(__dirname + '/lib/devStrings');
 const devObjects = require(__dirname + '/lib/devObjects');
 
 let ip, baseurl, apiver, requestType;
-let isConnected = null;
+let isConnected = null, isObjectsCreated = false;
 
 
 // you have to call the adapter function and pass a options object
@@ -40,7 +40,7 @@ let isConnected = null;
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 let adapter;
 function startAdapter(options) {
-    devObjects.isObjectsCreated = false; // create missing objects if necessary only on start
+    isObjectsCreated = false; // create missing objects if necessary only on start
     options = options || {};
     Object.assign(options, {
         name: 'fronius',
@@ -175,7 +175,9 @@ function getInverterRealtimeData(id) {
                 if ("Body" in data) {
 
                     const resp = data.Body.Data;
-                    createInverterObjects(id, resp);
+                    if(!isObjectsCreated){
+                        devObjects.createInverterObjects(adapter, id, resp);
+                    }
 
                     for (var par in resp) {
                         adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
@@ -248,7 +250,9 @@ function GetArchiveData(id) {
                     var inverter = data.Body.Data["inverter/" + id];
 
                     const resp = inverter.Data;
-                    createArchiveObjects(id, resp);
+                    if(!isObjectsCreated){
+                        devObjects.createArchiveObjects(adapter, id, resp);
+                    }
 
                     var values = inverter.Data.Current_DC_String_1.Values;
                     var keys = Object.keys(values);
@@ -299,8 +303,9 @@ function getStorageRealtimeData(id) {
                         adapter.log.debug("Storage object is not supported: " + JSON.stringify(data));
                         return;
                     }
-
-                    createStorageObjects(id);
+                    if(!isObjectsCreated){
+                        devObjects.createStorageObjects(adapter, id);
+                    }
 
                     const resp = data.Body.Data.Controller;
 
@@ -332,7 +337,9 @@ function getMeterRealtimeData(id) {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     const resp = data.Body.Data;
-                    createMeterObjects(id, resp);
+                    if(!isObjectsCreated){
+                        devObjects.createMeterObjects(adapter, id, resp);
+                    }
                     for (var par in resp) {
                         if (par == "Details") {
                             if (resp.Details.hasOwnProperty("Manufacturer") & resp.Details.hasOwnProperty("Model") & resp.Details.hasOwnProperty("Serial")) {
@@ -360,9 +367,9 @@ function getSensorRealtimeDataNowSensorData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-
-                    createSensorNowObjects(id);
-
+                    if(!isObjectsCreated){
+                        devObjects.createSensorNowObjects(adapter, id);
+                    }
                     const resp = data.Body.Data;
 
                 } else {
@@ -381,9 +388,9 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-
-                    createSensorMinMaxObjects(id);
-
+                    if(!isObjectsCreated){
+                        devObjects.createSensorMinMaxObjects(adapter, id);
+                    }
                     const resp = data.Body.Data;
 
                 } else {
@@ -407,7 +414,9 @@ function getPowerFlowRealtimeData() {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     var resp = data.Body.Data.Site;
-                    createPowerFlowObjects(resp);
+                    if(!isObjectsCreated){
+                        devObjects.createPowerFlowObjects(adapter, resp);
+                    }
                     for (var par in resp) {
                         adapter.setState("powerflow." + par.toString(), { val: resp[par.toString()] == null ? 0 : resp[par.toString()], ack: true });
                     }
@@ -416,7 +425,9 @@ function getPowerFlowRealtimeData() {
                         var keys = Object.keys(data.Body.Data.Inverters);
                         for (var inv in keys) {
                             resp = data.Body.Data.Inverters[keys[inv]];
-                            createPowerFlowInverterObjects(keys[inv], resp);
+                            if(!isObjectsCreated){
+                                devObjects.createPowerFlowInverterObjects(adapter, keys[inv], resp);
+                            }
                             for (var par in resp) {
                                 adapter.log.debug("Detected parameter = " + par.toString() + ", Value = " + resp[par]);
                                 adapter.log.debug("object to set value: powerflow.inverter" + keys[inv].toString() + "." + par.toString());
@@ -449,7 +460,9 @@ function getInverterInfo() {
                     var keys = Object.keys(data.Body.Data);
                     for (var inv in keys) {
                         var resp = data.Body.Data[keys[inv]];
-                        createInverterInfoObjects(keys[inv], resp);
+                        if(!isObjectsCreated){
+                            devObjects.createInverterInfoObjects(adapter, keys[inv], resp);
+                        }
                         for (var par in resp) {
                             if (par.toString() == "CustomName") {
                                 adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: devStrings.convertCustomname(resp[par.toString()]), ack: true });
@@ -531,7 +544,7 @@ function checkStatus() {
                         adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
                         // allow enough time to finish all the previous state creation before setting the value to true
                         setTimeout(function () {
-                            devObjects.isObjectsCreated = true
+                            isObjectsCreated = true
                         }, 10000);
                     }
                 } else {
@@ -571,7 +584,7 @@ function checkArchiveStatus() {
                         adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
                         // allow enough time to finish all the previous state creation before setting the value to true
                         setTimeout(function () {
-                            devObjects.isObjectsCreated = true
+                            isObjectsCreated = true
                         }, 10000);
                     }
                 } else {
@@ -650,8 +663,9 @@ function main() {
     requestType = adapter.config.requestType;
 
     if (ip && baseurl) {
-
-        createInfoObjects();
+        if(!isObjectsCreated){
+            devObjects.createInfoObjects(adapter);
+        }
         getLoggerInfo();
         checkStatus();
         checkArchiveStatus();
