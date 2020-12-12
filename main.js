@@ -121,9 +121,7 @@ function startAdapter(options) {
         },
         ready: main
     });
-    adapter = new utils.Adapter(options);
-    devObjects.adapter = adapter; // make sure that the same adapter object is used during objects creation
-    
+    adapter = new utils.Adapter(options);    
     return adapter;
 }
 
