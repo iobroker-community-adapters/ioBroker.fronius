@@ -427,8 +427,6 @@ function getPowerFlowRealtimeData() {
                                 devObjects.createPowerFlowInverterObjects(adapter, keys[inv], resp);
                             }
                             for (var par in resp) {
-                                adapter.log.debug("Detected parameter = " + par.toString() + ", Value = " + resp[par]);
-                                adapter.log.debug("object to set value: powerflow.inverter" + keys[inv].toString() + "." + par.toString());
                                 if (par.toString() == "DT") {
                                     adapter.setState("powerflow.inverter" + keys[inv].toString() + ".DT", { val: resp[par.toString()], ack: true });
                                     adapter.setState("powerflow.inverter" + keys[inv].toString() + ".DTString", { val: devStrings.getStringDeviceType(resp[par.toString()]), ack: true });
