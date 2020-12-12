@@ -214,34 +214,6 @@
             "native": {}
         },
         {
-            "_id": "info.HWVersion",
-            "type": "state",
-            "common": {
-                "name": "Hardware Version",
-                "type": "string",
-                "role": "meta",
-                "read": true,
-                "write": false,
-                "def": "",
-                "desc": "Hardware Version"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.SWVersion",
-            "type": "state",
-            "common": {
-                "name": "Software Version",
-                "type": "string",
-                "role": "meta",
-                "read": true,
-                "write": false,
-                "def": "",
-                "desc": "Software Version"
-            },
-            "native": {}
-        },
-        {
             "_id": "inverter",
             "type": "channel",
             "common": {

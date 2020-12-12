@@ -603,6 +603,9 @@ function getLoggerInfo() {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     const resp = data.Body.LoggerInfo;
+                    if(!isObjectsCreated){
+                        devObjects.createInfoObjects(adapter,resp);
+                    }
                     if (resp && resp.hasOwnProperty("HWVersion")) {
                         adapter.setState("info.HWVersion", { val: resp.HWVersion, ack: true });
                         adapter.setState("info.SWVersion", { val: resp.SWVersion, ack: true });
@@ -661,9 +664,6 @@ function main() {
     requestType = adapter.config.requestType;
 
     if (ip && baseurl) {
-        if(!isObjectsCreated){
-            devObjects.createInfoObjects(adapter);
-        }
         getLoggerInfo();
         checkStatus();
         checkArchiveStatus();
