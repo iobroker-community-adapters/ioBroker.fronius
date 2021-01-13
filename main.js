@@ -225,7 +225,7 @@ function getInverterRealtimeData(id) {
                     adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getInverterRealtimeData: " + e);
             }
         }
     });
@@ -285,7 +285,7 @@ function GetArchiveData(id) {
                 }
 
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("GetArchiveData: " + e);
             }
         }
     });
@@ -322,7 +322,7 @@ function getStorageRealtimeData(id) {
                     adapter.log.warn(data.Head.Status.Reason + " storage: " + id);
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getStorageRealtimeData: " + e);
             }
         }
     });
@@ -353,7 +353,7 @@ function getMeterRealtimeData(id) {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getMeterRealtimeData: " + e);
             }
         }
     });
@@ -374,7 +374,7 @@ function getSensorRealtimeDataNowSensorData(id) {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getSensorRealtimeDataNowSensorData: " + e);
             }
         }
     });
@@ -395,7 +395,7 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
                     adapter.log.warn(data.Head.Status.Reason + " sensor: " + id);
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getSensorRealtimeDataMinMaxSensorData: " + e);
             }
         }
     });
@@ -441,7 +441,7 @@ function getPowerFlowRealtimeData() {
                     adapter.log.warn(data.Head.Status.Reason + " powerflow");
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getPowerFlowRealtimeData: " + e);
             }
         }
     });
@@ -476,7 +476,7 @@ function getInverterInfo() {
                     adapter.log.warn(data.Head.Status.Reason + " inverterinfo");
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getInverterInfo: " + e);
             }
         }
     });
@@ -642,11 +642,11 @@ function getLoggerInfo() {
                     adapter.log.warn(data.Head.Status.Reason);
                 }
             } catch (e) {
-                adapter.log.warn(e);
+                adapter.log.warn("getLoggerInfo: " + e);
             }
         }
         if (error != null) {
-            adapter.log.warn(error);
+            adapter.log.warn("getLoggerInfo: " + error);
         }
     });
 }
