@@ -247,9 +247,12 @@ function GetArchiveData(id) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
-                if ("Body" in data) {
+                if ("Body" in data && "Data" in data.Body) {
                     var inverter = data.Body.Data["inverter/" + id];
                     var s1current, s2current;
+                    if(!inverter.hasOwnProperty("Data")){ // if inverter object does not have data property just exit
+                        return;
+                    }
                     const resp = inverter.Data;
                     if(!isObjectsCreated){
                         devObjects.createArchiveObjects(adapter, id, resp);
