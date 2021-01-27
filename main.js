@@ -250,7 +250,7 @@ function GetArchiveData(id) {
                 if ("Body" in data && "Data" in data.Body) {
                     var inverter = data.Body.Data["inverter/" + id];
                     var s1current, s2current;
-                    if(!inverter.hasOwnProperty("Data")){ // if inverter object does not have data property just exit
+                    if(inverter === null || !inverter.hasOwnProperty("Data")){ // if inverter object does not exists or does not have data property just exit
                         return;
                     }
                     const resp = inverter.Data;
