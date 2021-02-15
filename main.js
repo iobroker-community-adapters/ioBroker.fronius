@@ -128,6 +128,21 @@ function startAdapter(options) {
     return adapter;
 }
 
+function resetStateToZero(API_response,basePath,state){
+    if(state in API_response){
+        return;
+    }else{
+        adapter.getState(basePath+"."+state,(err, stat) =>{
+            if(stat){
+                adapter.log.debug("State is found in objects but not on API: " + JSON.stringify(stat));
+                if(stat.val != 0){
+                    adapter.setState(basePath+"."+state, 0,true);
+                }
+            }
+        });
+    }
+}
+
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
     request.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
@@ -182,6 +197,17 @@ function getInverterRealtimeData(id) {
 
                     for (var par in resp) {
                         adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
+                    }
+
+                    // make sure to reset the values if they are no longer reported by the API
+                    // Fixes issue #87 from Adapter
+                    if (!("PAC" in resp)) {
+                        resetStateToZero(resp,"inverter." + id,"FAC");
+                        resetStateToZero(resp,"inverter." + id,"IAC");
+                        resetStateToZero(resp,"inverter." + id,"IDC");
+                        resetStateToZero(resp,"inverter." + id,"PAC");
+                        resetStateToZero(resp,"inverter." + id,"UAC");
+                        resetStateToZero(resp,"inverter." + id,"UDC");
                     }
 
                     const status = resp.DeviceStatus;
@@ -250,7 +276,7 @@ function GetArchiveData(id) {
                 if ("Body" in data && "Data" in data.Body) {
                     var inverter = data.Body.Data["inverter/" + id];
                     var s1current, s2current;
-                    if(!inverter.hasOwnProperty("Data")){ // if inverter object does not have data property just exit
+                    if(typeof inverter === 'undefined' || inverter === null || !inverter.hasOwnProperty("Data")){ // if inverter object does not exists or does not have data property just exit
                         return;
                     }
                     const resp = inverter.Data;
