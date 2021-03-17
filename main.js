@@ -184,7 +184,7 @@ function getActiveDeviceInfo(type, url, callback) {
 function getInverterRealtimeData(id) {
     // fallback if no id set
     if (id == "") {
-        id = 0;
+        id = 1; // ensure that it is correct working for symoGEN24
     }
     request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData', function(error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -296,7 +296,7 @@ function getInverterRealtimeData(id) {
 function GetArchiveData(id) {
     // fallback if no id set
     if (id == "") {
-        id = 1;
+        id = 1; // ensure correct working for symoGEN24 if no ID is set
     }
 
     var today = new Date();
