@@ -37,7 +37,7 @@ const devObjects = require(__dirname + '/lib/devObjects');
 let ip, baseurl, apiver, requestType;
 let isConnected = null,
     isObjectsCreated = false,
-    downCount = 5;
+    downCount = 5 /* this variable is used to ensure the object creation over multiple read cycles */;
 
 
 // you have to call the adapter function and pass a options object
