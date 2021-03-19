@@ -36,7 +36,8 @@ const devObjects = require(__dirname + '/lib/devObjects');
 
 let ip, baseurl, apiver, requestType;
 let isConnected = null,
-    isObjectsCreated = false;
+    isObjectsCreated = false,
+    downCount = 5 /* this variable is used to ensure the object creation over multiple read cycles */;
 
 
 // you have to call the adapter function and pass a options object
@@ -558,6 +559,12 @@ function setConnected(_isConnected) {
 }
 
 function checkStatus() {
+    if(isObjectsCreated == false && isConnected){
+        if(--downCount <= 0){
+            isObjectsCreated = true
+        }
+    }
+
     ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
         if (err) {
             adapter.log.error(err);
@@ -606,10 +613,6 @@ function checkStatus() {
                         }
 
                         adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
-                        // allow enough time to finish all the previous state creation before setting the value to true
-                        setTimeout(function() {
-                            isObjectsCreated = true
-                        }, 10000);
                     }
                 } else {
                     adapter.log.debug("Unable to read data from inverters solarAPI");
@@ -646,10 +649,6 @@ function checkArchiveStatus() {
                         }
 
                         adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
-                        // allow enough time to finish all the previous state creation before setting the value to true
-                        setTimeout(function() {
-                            isObjectsCreated = true
-                        }, 10000);
                     }
                 } else {
                     adapter.log.debug("Unable to read data from inverters solarAPI");
@@ -728,6 +727,7 @@ function main() {
     baseurl = adapter.config.baseurl;
     apiver = parseInt(adapter.config.apiversion);
     requestType = adapter.config.requestType;
+    downCount = 5;
 
     if (ip && baseurl) {
         getLoggerInfo();
