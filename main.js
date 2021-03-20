@@ -37,10 +37,11 @@ const devObjects = require(__dirname + '/lib/devObjects');
 let ip, baseurl, apiver, requestType;
 let isConnected = null,
     isObjectsCreated = false,
-    isArchiveObjectsCrated = false,
-    downCount = 5,
+    isArchiveObjectsCreated = false,
     /* this variable is used to ensure the object creation over multiple read cycles */
-    downCountArchive = 5; /* this variable is used to ensure the object creation over multiple read cycles for archive data */ ;
+    downCount = 5,
+    /* this variable is used to ensure the object creation over multiple read cycles for archive data */
+    downCountArchive = 5;
 
 
 // you have to call the adapter function and pass a options object
@@ -316,7 +317,7 @@ function GetArchiveData(id) {
                         return;
                     }
                     const resp = inverter.Data;
-                    if (!isArchiveObjectsCrated) {
+                    if (!isArchiveObjectsCreated) {
                         devObjects.createArchiveObjects(adapter, id, resp);
                     }
                     if (resp.hasOwnProperty('Current_DC_String_1')) {
@@ -629,10 +630,10 @@ function checkStatus() {
 }
 
 function checkArchiveStatus() {
-    if (isArchiveObjectsCrated == false && isConnected) {
+    if (isArchiveObjectsCreated == false && isConnected) {
         adapter.log.debug("Object creation for archive will be done for " + downCountArchive + " times")
         if (--downCountArchive < 0) {
-            isArchiveObjectsCrated = true
+            isArchiveObjectsCreated = true
         }
     }
     ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
