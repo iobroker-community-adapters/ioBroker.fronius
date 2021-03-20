@@ -37,7 +37,10 @@ const devObjects = require(__dirname + '/lib/devObjects');
 let ip, baseurl, apiver, requestType;
 let isConnected = null,
     isObjectsCreated = false,
-    downCount = 5 /* this variable is used to ensure the object creation over multiple read cycles */;
+    isArchiveObjectsCrated = false,
+    downCount = 5,
+    /* this variable is used to ensure the object creation over multiple read cycles */
+    downCountArchive = 5; /* this variable is used to ensure the object creation over multiple read cycles for archive data */ ;
 
 
 // you have to call the adapter function and pass a options object
@@ -313,7 +316,7 @@ function GetArchiveData(id) {
                         return;
                     }
                     const resp = inverter.Data;
-                    if (!isObjectsCreated) {
+                    if (!isArchiveObjectsCrated) {
                         devObjects.createArchiveObjects(adapter, id, resp);
                     }
                     if (resp.hasOwnProperty('Current_DC_String_1')) {
@@ -559,8 +562,9 @@ function setConnected(_isConnected) {
 }
 
 function checkStatus() {
-    if(isObjectsCreated == false && isConnected){
-        if(--downCount <= 0){
+    if (isObjectsCreated == false && isConnected) {
+        adapter.log.debug("Object creation will be done for " + downCount + " times")
+        if (--downCount < 0) {
             isObjectsCreated = true
         }
     }
@@ -625,6 +629,12 @@ function checkStatus() {
 }
 
 function checkArchiveStatus() {
+    if (isArchiveObjectsCrated == false && isConnected) {
+        adapter.log.debug("Object creation for archive will be done for " + downCountArchive + " times")
+        if (--downCountArchive < 0) {
+            isArchiveObjectsCrated = true
+        }
+    }
     ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
         if (err) {
             adapter.log.error(err);
@@ -727,7 +737,8 @@ function main() {
     baseurl = adapter.config.baseurl;
     apiver = parseInt(adapter.config.apiversion);
     requestType = adapter.config.requestType;
-    downCount = 5;
+    downCount = 5; // do the objects creation 5 times after restarting the Adapter
+    downCountArchive = 5; // do the objects creation for archive data 5 times after restarting the Adapter
 
     if (ip && baseurl) {
         getLoggerInfo();
