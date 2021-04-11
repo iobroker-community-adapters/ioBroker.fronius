@@ -207,6 +207,7 @@ function getInverterRealtimeData(id) {
                         // special case for power calculation for DC Strings
                         if (par.toString() === 'UDC') {
                             var current = resp["IDC"].Value;
+                            adapter.log.debug("IDC = " + current + "; " + resp['IDC'].Value);
                             if (typeof current !== 'undefined') {
                                 adapter.setState("inverter." + id + ".PDC", { val: current * resp["UDC"].Value, ack: true });
                             }
