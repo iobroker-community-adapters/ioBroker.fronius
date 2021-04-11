@@ -204,20 +204,6 @@ function getInverterRealtimeData(id) {
 
                     for (var par in resp) {
                         adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
-                        // special case for power calculation for DC Strings
-                        if (par.toString() === 'UDC') {
-                            var current = resp["IDC"].Value;
-                            adapter.log.debug("IDC = " + current + "; " + resp['IDC'].Value);
-                            if (typeof current !== 'undefined') {
-                                adapter.setState("inverter." + id + ".PDC", { val: current * resp["UDC"].Value, ack: true });
-                            }
-                        }
-                        if (par.toString() === 'UDC_2') {
-                            var current = resp["IDC_2"].Value;
-                            if (typeof current !== 'undefined') {
-                                adapter.setState("inverter." + id + ".PDC_2", { val: current * resp["UDC_2"].Value, ack: true });
-                            }
-                        }
                     }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
@@ -241,6 +227,19 @@ function getInverterRealtimeData(id) {
 
                     for (var par in resp) {
                         adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
+                        // special case for power calculation for DC Strings
+                        if (par.toString() === 'UDC') {
+                            var current = resp["IDC"].Value;
+                            if (typeof current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".PDC", { val: current * resp["UDC"].Value, ack: true });
+                            }
+                        }
+                        if (par.toString() === 'UDC_2') {
+                            var current = resp["IDC_2"].Value;
+                            if (typeof current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".PDC_2", { val: current * resp["UDC_2"].Value, ack: true });
+                            }
+                        }
                     }
 
                     // make sure to reset the values if they are no longer reported by the API
@@ -259,13 +258,15 @@ function getInverterRealtimeData(id) {
                         resetStateToZero(resp, "inverter." + id, "UAC_L2");
                         resetStateToZero(resp, "inverter." + id, "UDC");
                         resetStateToZero(resp, "inverter." + id, "UDC_2");
+                        resetStateToZero(resp, "inverter." + id, "PDC");
+                        resetStateToZero(resp, "inverter." + id, "PDC_2");
                     }
 
                     const status = resp.DeviceStatus;
                     if (status) {
                         let statusCode = parseInt(status.StatusCode);
                         adapter.setState("inverter." + id + ".DeviceStatus", { val: JSON.stringify(status), ack: true });
-
+                        adapter.log.debug("inverter." + id + ".StatusCode=" + statusCode)
                         adapter.setState("inverter." + id + ".StatusCode", { val: statusCode, ack: true });
 
                         let statusCodeString = "Startup";
