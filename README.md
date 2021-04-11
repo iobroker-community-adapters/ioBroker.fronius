@@ -17,7 +17,7 @@
 This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.
 
 ## Changelog
-### 1.1.4 (2021-03-xx)
+### 1.1.6 (2021-03-xx)
 * (nkleber78) Fixed issue #97, Added some new predefined objects
 * (nkleber78) Added Inverter Temperature readout (#86)
 

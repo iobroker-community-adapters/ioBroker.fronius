@@ -204,6 +204,19 @@ function getInverterRealtimeData(id) {
 
                     for (var par in resp) {
                         adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
+                        // special case for power calculation for DC Strings
+                        if (par.toString() == 'UDC') {
+                            var current = resp["IDC"].Value;
+                            if (typeof current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".PDC", { val: current * resp["UDC"].Value, ack: true });
+                            }
+                        }
+                        if (par.toString() == 'UDC_2') {
+                            var current = resp["IDC_2"].Value;
+                            if (typeof current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".PDC_2", { val: current * resp["UDC_2"].Value, ack: true });
+                            }
+                        }
                     }
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
