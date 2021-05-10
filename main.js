@@ -22,7 +22,7 @@
  */
 
 /* global __dirname */
-/* jshint -W097 */// jshint strict:false
+/* jshint -W097 */ // jshint strict:false
 /*jslint node: true */
 "use strict";
 
@@ -35,19 +35,26 @@ const devStrings = require(__dirname + '/lib/devStrings');
 const devObjects = require(__dirname + '/lib/devObjects');
 
 let ip, baseurl, apiver, requestType;
-let isConnected = null, isObjectsCreated = false;
+let isConnected = null,
+    isObjectsCreated = false,
+    isArchiveObjectsCreated = false,
+    /* this variable is used to ensure the object creation over multiple read cycles */
+    downCount = 5,
+    /* this variable is used to ensure the object creation over multiple read cycles for archive data */
+    downCountArchive = 5;
 
 
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 let adapter;
+
 function startAdapter(options) {
     isObjectsCreated = false; // create missing objects if necessary only on start
     options = options || {};
     Object.assign(options, {
         name: 'fronius',
-        undload: function (callback) {
+        undload: function(callback) {
             // is called when adapter shuts down - callback has to be called under any circumstances!
             try {
                 adapter.log.info('cleaned everything up...');
@@ -56,11 +63,11 @@ function startAdapter(options) {
                 callback();
             }
         },
-        objectChange: function (id, obj) {
+        objectChange: function(id, obj) {
             // is called if a subscribed object changes
             adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
         },
-        stateChange: function (id, state) {
+        stateChange: function(id, state) {
             // is called if a subscribed state changes
             // Warning, state can be null if it was deleted
             adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
@@ -70,20 +77,20 @@ function startAdapter(options) {
                 adapter.log.info('ack is not set!');
             }
         },
-        message: function (obj) {
+        message: function(obj) {
             // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
             let wait = false;
             if (obj) {
                 switch (obj.command) {
                     case 'checkIP':
-                        checkIP(obj.message, function (res) {
+                        checkIP(obj.message, function(res) {
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                         });
                         wait = true;
                         break;
                     case 'getDeviceInfo':
-                        getActiveDeviceInfo("System", obj.message, function (res) {
+                        getActiveDeviceInfo("System", obj.message, function(res) {
                             adapter.log.debug("DeviceInfoSystem: " + JSON.stringify(res))
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
@@ -91,7 +98,7 @@ function startAdapter(options) {
                         wait = true;
                         break;
                     case 'getDeviceInfoInverter':
-                        getActiveDeviceInfo("Inverter", obj.message, function (res) {
+                        getActiveDeviceInfo("Inverter", obj.message, function(res) {
                             adapter.log.debug("DeviceInfo Inverter: " + JSON.stringify(res))
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
@@ -99,14 +106,14 @@ function startAdapter(options) {
                         wait = true;
                         break;
                     case 'getDeviceInfoSensor':
-                        getActiveDeviceInfo("SensorCard", obj.message, function (res) {
+                        getActiveDeviceInfo("SensorCard", obj.message, function(res) {
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                         });
                         wait = true;
                         break;
                     case 'getDeviceInfoString':
-                        getActiveDeviceInfo("StringControl", obj.message, function (res) {
+                        getActiveDeviceInfo("StringControl", obj.message, function(res) {
                             if (obj.callback)
                                 adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                         });
@@ -124,19 +131,19 @@ function startAdapter(options) {
         },
         ready: main
     });
-    adapter = new utils.Adapter(options);    
+    adapter = new utils.Adapter(options);
     return adapter;
 }
 
-function resetStateToZero(API_response,basePath,state){
-    if(state in API_response){
+function resetStateToZero(API_response, basePath, state) {
+    if (state in API_response) {
         return;
-    }else{
-        adapter.getState(basePath+"."+state,(err, stat) =>{
-            if(stat){
+    } else {
+        adapter.getState(basePath + "." + state, (err, stat) => {
+            if (stat) {
                 adapter.log.debug("State is found in objects but not on API: " + JSON.stringify(stat));
-                if(stat.val != 0){
-                    adapter.setState(basePath+"."+state, 0,true);
+                if (stat.val != 0) {
+                    adapter.setState(basePath + "." + state, 0, true);
                 }
             }
         });
@@ -145,7 +152,7 @@ function resetStateToZero(API_response,basePath,state){
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    request.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+    request.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi', function(error, response, body) {
         try {
             const testData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
@@ -163,7 +170,7 @@ function checkIP(ipToCheck, callback) {
 
 //Check Fronius devices v1
 function getActiveDeviceInfo(type, url, callback) {
-    request.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function (error, response, body) {
+    request.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type, function(error, response, body) {
         try {
             const deviceData = JSON.parse(body);
             if (!error && response.statusCode == 200 && 'Body' in deviceData) {
@@ -182,39 +189,84 @@ function getActiveDeviceInfo(type, url, callback) {
 function getInverterRealtimeData(id) {
     // fallback if no id set
     if (id == "") {
-        id = 0;
+        id = 1; // ensure that it is correct working for symoGEN24
     }
-    request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
 
                     const resp = data.Body.Data;
-                    if(!isObjectsCreated){
+                    if (!isObjectsCreated) {
                         devObjects.createInverterObjects(adapter, id, resp);
                     }
 
                     for (var par in resp) {
                         adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
                     }
+                } else {
+                    adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
+                }
+            } catch (e) {
+                adapter.log.warn("getInverterRealtimeData (3PInverterData): " + e);
+            }
+        }
+    });
+
+    request.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData', function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            try {
+                const data = JSON.parse(body);
+                if ("Body" in data) {
+
+                    const resp = data.Body.Data;
+                    if (!isObjectsCreated) {
+                        devObjects.createInverterObjects(adapter, id, resp);
+                    }
+
+                    for (var par in resp) {
+                        adapter.setState("inverter." + id + "." + par.toString(), { val: resp[par.toString()].Value, ack: true });
+                        // special case for power calculation for DC Strings
+                        if (par.toString() === 'UDC') {
+                            var current = resp["IDC"].Value;
+                            if (typeof current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".PDC", { val: current * resp["UDC"].Value, ack: true });
+                            }
+                        }
+                        if (par.toString() === 'UDC_2') {
+                            var current = resp["IDC_2"].Value;
+                            if (typeof current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".PDC_2", { val: current * resp["UDC_2"].Value, ack: true });
+                            }
+                        }
+                    }
 
                     // make sure to reset the values if they are no longer reported by the API
                     // Fixes issue #87 from Adapter
                     if (!("PAC" in resp)) {
-                        resetStateToZero(resp,"inverter." + id,"FAC");
-                        resetStateToZero(resp,"inverter." + id,"IAC");
-                        resetStateToZero(resp,"inverter." + id,"IDC");
-                        resetStateToZero(resp,"inverter." + id,"PAC");
-                        resetStateToZero(resp,"inverter." + id,"UAC");
-                        resetStateToZero(resp,"inverter." + id,"UDC");
+                        resetStateToZero(resp, "inverter." + id, "FAC");
+                        resetStateToZero(resp, "inverter." + id, "IAC");
+                        resetStateToZero(resp, "inverter." + id, "IAC_L1");
+                        resetStateToZero(resp, "inverter." + id, "IAC_L2");
+                        resetStateToZero(resp, "inverter." + id, "IAC_L3");
+                        resetStateToZero(resp, "inverter." + id, "IDC");
+                        resetStateToZero(resp, "inverter." + id, "IDC_2");
+                        resetStateToZero(resp, "inverter." + id, "PAC");
+                        resetStateToZero(resp, "inverter." + id, "UAC");
+                        resetStateToZero(resp, "inverter." + id, "UAC_L1");
+                        resetStateToZero(resp, "inverter." + id, "UAC_L2");
+                        resetStateToZero(resp, "inverter." + id, "UDC");
+                        resetStateToZero(resp, "inverter." + id, "UDC_2");
+                        resetStateToZero(resp, "inverter." + id, "PDC");
+                        resetStateToZero(resp, "inverter." + id, "PDC_2");
                     }
 
                     const status = resp.DeviceStatus;
                     if (status) {
                         let statusCode = parseInt(status.StatusCode);
                         adapter.setState("inverter." + id + ".DeviceStatus", { val: JSON.stringify(status), ack: true });
-
+                        adapter.log.debug("inverter." + id + ".StatusCode=" + statusCode)
                         adapter.setState("inverter." + id + ".StatusCode", { val: statusCode, ack: true });
 
                         let statusCodeString = "Startup";
@@ -254,7 +306,7 @@ function getInverterRealtimeData(id) {
                     adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
                 }
             } catch (e) {
-                adapter.log.warn("getInverterRealtimeData: " + e);
+                adapter.log.warn("getInverterRealtimeData (CommonInverterData): " + e);
             }
         }
     });
@@ -264,44 +316,44 @@ function getInverterRealtimeData(id) {
 function GetArchiveData(id) {
     // fallback if no id set
     if (id == "") {
-        id = 1;
+        id = 1; // ensure correct working for symoGEN24 if no ID is set
     }
 
     var today = new Date();
     var datum = today.getDate() + "." + (today.getMonth() + 1) + "." + today.getFullYear();
-    request.get(requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data && "Data" in data.Body) {
                     var inverter = data.Body.Data["inverter/" + id];
                     var s1current, s2current;
-                    if(typeof inverter === 'undefined' || inverter === null || !inverter.hasOwnProperty("Data")){ // if inverter object does not exists or does not have data property just exit
+                    if (typeof inverter === 'undefined' || inverter === null || !inverter.hasOwnProperty("Data")) { // if inverter object does not exists or does not have data property just exit
                         return;
                     }
                     const resp = inverter.Data;
-                    if(!isObjectsCreated){
+                    if (!isArchiveObjectsCreated) {
                         devObjects.createArchiveObjects(adapter, id, resp);
                     }
-                    if(resp.hasOwnProperty('Current_DC_String_1')){
+                    if (resp.hasOwnProperty('Current_DC_String_1')) {
                         var values = inverter.Data.Current_DC_String_1.Values;
                         var keys = Object.keys(values);
                         s1current = values[keys[keys.length - 1]];
                         adapter.setState("inverter." + id + ".Current_DC_String_1", { val: s1current, ack: true });
                     }
-                    if(resp.hasOwnProperty('Current_DC_String_2')){
+                    if (resp.hasOwnProperty('Current_DC_String_2')) {
                         var values = inverter.Data.Current_DC_String_2.Values;
                         var keys = Object.keys(values);
                         s2current = values[keys[keys.length - 1]];
                         adapter.setState("inverter." + id + ".Current_DC_String_2", { val: s2current, ack: true });
                     }
-                    if(resp.hasOwnProperty('Temperature_Powerstage')){
+                    if (resp.hasOwnProperty('Temperature_Powerstage')) {
                         var values = inverter.Data.Temperature_Powerstage.Values;
                         var keys = Object.keys(values);
                         var daten = values[keys[keys.length - 1]];
                         adapter.setState("inverter." + id + ".Temperature_Powerstage", { val: daten, ack: true });
                     }
-                    if(resp.hasOwnProperty('Voltage_DC_String_1')){
+                    if (resp.hasOwnProperty('Voltage_DC_String_1')) {
                         var values = inverter.Data.Voltage_DC_String_1.Values;
                         var keys = Object.keys(values);
                         var s1voltage = values[keys[keys.length - 1]];
@@ -310,7 +362,7 @@ function GetArchiveData(id) {
                             adapter.setState("inverter." + id + ".Power_DC_String_1", { val: s1voltage * s1current, ack: true });
                         }
                     }
-                    if(resp.hasOwnProperty('Voltage_DC_String_2')){
+                    if (resp.hasOwnProperty('Voltage_DC_String_2')) {
                         var values = inverter.Data.Voltage_DC_String_2.Values;
                         var keys = Object.keys(values);
                         var s2voltage = values[keys[keys.length - 1]];
@@ -319,8 +371,6 @@ function GetArchiveData(id) {
                             adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage * s2current, ack: true });
                         }
                     }
-                    adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage * s2current, ack: true });
-
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " archive: " + id);
                 }
@@ -333,7 +383,7 @@ function GetArchiveData(id) {
 }
 
 function getStorageRealtimeData(id) {
-    request.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
@@ -342,7 +392,7 @@ function getStorageRealtimeData(id) {
                         adapter.log.debug("Storage object is not supported: " + JSON.stringify(data));
                         return;
                     }
-                    if(!isObjectsCreated){
+                    if (!isObjectsCreated) {
                         devObjects.createStorageObjects(adapter, id);
                     }
 
@@ -370,13 +420,13 @@ function getStorageRealtimeData(id) {
 }
 
 function getMeterRealtimeData(id) {
-    request.get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     const resp = data.Body.Data;
-                    if(!isObjectsCreated){
+                    if (!isObjectsCreated) {
                         devObjects.createMeterObjects(adapter, id, resp);
                     }
                     for (var par in resp) {
@@ -401,12 +451,12 @@ function getMeterRealtimeData(id) {
 }
 
 function getSensorRealtimeDataNowSensorData(id) {
-    request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-                    if(!isObjectsCreated){
+                    if (!isObjectsCreated) {
                         devObjects.createSensorNowObjects(adapter, id);
                     }
                     const resp = data.Body.Data;
@@ -422,12 +472,12 @@ function getSensorRealtimeDataNowSensorData(id) {
 }
 
 function getSensorRealtimeDataMinMaxSensorData(id) {
-    request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-                    if(!isObjectsCreated){
+                    if (!isObjectsCreated) {
                         devObjects.createSensorMinMaxObjects(adapter, id);
                     }
                     const resp = data.Body.Data;
@@ -447,13 +497,13 @@ function getStringRealtimeData(id) {
 }
 
 function getPowerFlowRealtimeData() {
-    request.get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     var resp = data.Body.Data.Site;
-                    if(!isObjectsCreated){
+                    if (!isObjectsCreated) {
                         devObjects.createPowerFlowObjects(adapter, resp);
                     }
                     for (var par in resp) {
@@ -464,15 +514,14 @@ function getPowerFlowRealtimeData() {
                         var keys = Object.keys(data.Body.Data.Inverters);
                         for (var inv in keys) {
                             resp = data.Body.Data.Inverters[keys[inv]];
-                            if(!isObjectsCreated){
+                            if (!isObjectsCreated) {
                                 devObjects.createPowerFlowInverterObjects(adapter, keys[inv], resp);
                             }
                             for (var par in resp) {
                                 if (par.toString() == "DT") {
                                     adapter.setState("powerflow.inverter" + keys[inv].toString() + ".DT", { val: resp[par.toString()], ack: true });
                                     adapter.setState("powerflow.inverter" + keys[inv].toString() + ".DTString", { val: devStrings.getStringDeviceType(resp[par.toString()]), ack: true });
-                                }
-                                else {
+                                } else {
                                     adapter.setState("powerflow.inverter" + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()] == null ? 0 : resp[par.toString()], ack: true });
                                 }
                             }
@@ -489,7 +538,7 @@ function getPowerFlowRealtimeData() {
 }
 
 function getInverterInfo() {
-    request.get(requestType + ip + baseurl + 'GetInverterInfo.cgi', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetInverterInfo.cgi', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
@@ -497,18 +546,16 @@ function getInverterInfo() {
                     var keys = Object.keys(data.Body.Data);
                     for (var inv in keys) {
                         var resp = data.Body.Data[keys[inv]];
-                        if(!isObjectsCreated){
+                        if (!isObjectsCreated) {
                             devObjects.createInverterInfoObjects(adapter, keys[inv], resp);
                         }
                         for (var par in resp) {
                             if (par.toString() == "CustomName") {
                                 adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: devStrings.convertCustomname(resp[par.toString()]), ack: true });
-                            }
-                            else if (par.toString() == "DT") {
+                            } else if (par.toString() == "DT") {
                                 adapter.setState("inverterinfo." + keys[inv].toString() + ".DT", { val: resp[par.toString()], ack: true });
                                 adapter.setState("inverterinfo." + keys[inv].toString() + ".DTString", { val: devStrings.getStringDeviceType(resp[par.toString()]), ack: true });
-                            }
-                            else {
+                            } else {
                                 adapter.setState("inverterinfo." + keys[inv].toString() + "." + par.toString(), { val: resp[par.toString()], ack: true });
                             }
                         }
@@ -531,13 +578,20 @@ function setConnected(_isConnected) {
 }
 
 function checkStatus() {
-    ping.probe(ip, { log: adapter.log.debug }, function (err, result) {
+    if (isObjectsCreated == false && isConnected) {
+        adapter.log.debug("Object creation will be done for " + downCount + " times")
+        if (--downCount < 0) {
+            isObjectsCreated = true
+        }
+    }
+
+    ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
         if (err) {
             adapter.log.error(err);
         }
         if (result) {
             // now try if we can really read data from the API. If not do not further process
-            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function(error, response, body) {
                 var testData = null
                 try {
                     testData = JSON.parse(body);
@@ -548,29 +602,29 @@ function checkStatus() {
                     // it seems everything is working, therefore proceed with readout
                     setConnected(result.alive);
                     if (result.alive) {
-                        adapter.config.inverter.split(',').forEach(function (entry) {
+                        adapter.config.inverter.split(',').forEach(function(entry) {
                             getInverterRealtimeData(entry);
                         });
                         if (adapter.config.sensorCard) {
-                            adapter.config.sensorCard.split(',').forEach(function (entry) {
+                            adapter.config.sensorCard.split(',').forEach(function(entry) {
                                 getSensorRealtimeDataNowSensorData(entry);
                                 getSensorRealtimeDataMinMaxSensorData(entry);
                             });
                         }
                         if (adapter.config.stringControl) {
-                            adapter.config.stringControl.split(',').forEach(function (entry) {
+                            adapter.config.stringControl.split(',').forEach(function(entry) {
                                 getStringRealtimeData(entry);
                             });
                         }
 
                         if (apiver === 1) {
                             if (adapter.config.meter) {
-                                adapter.config.meter.split(',').forEach(function (entry) {
+                                adapter.config.meter.split(',').forEach(function(entry) {
                                     getMeterRealtimeData(entry);
                                 });
                             }
                             if (adapter.config.storage) {
-                                adapter.config.storage.split(',').forEach(function (entry) {
+                                adapter.config.storage.split(',').forEach(function(entry) {
                                     getStorageRealtimeData(entry);
                                 });
                             }
@@ -579,10 +633,6 @@ function checkStatus() {
                         }
 
                         adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
-                        // allow enough time to finish all the previous state creation before setting the value to true
-                        setTimeout(function () {
-                            isObjectsCreated = true
-                        }, 10000);
                     }
                 } else {
                     adapter.log.debug("Unable to read data from inverters solarAPI");
@@ -595,13 +645,19 @@ function checkStatus() {
 }
 
 function checkArchiveStatus() {
-    ping.probe(ip, { log: adapter.log.debug }, function (err, result) {
+    if (isArchiveObjectsCreated == false && isConnected) {
+        adapter.log.debug("Object creation for archive will be done for " + downCountArchive + " times")
+        if (--downCountArchive < 0) {
+            isArchiveObjectsCreated = true
+        }
+    }
+    ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
         if (err) {
             adapter.log.error(err);
         }
         if (result) {
             // now try if we can really read data from the API. If not do not further process
-            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function (error, response, body) {
+            request.get(requestType + ip + '/solar_api/GetAPIVersion.cgi', function(error, response, body) {
                 var testData = null
                 try {
                     testData = JSON.parse(body);
@@ -613,16 +669,12 @@ function checkArchiveStatus() {
                     setConnected(result.alive);
                     if (result.alive) {
                         if (apiver === 1) {
-                            adapter.config.inverter.split(',').forEach(function (entry) {
+                            adapter.config.inverter.split(',').forEach(function(entry) {
                                 GetArchiveData(entry);
                             });
                         }
 
                         adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
-                        // allow enough time to finish all the previous state creation before setting the value to true
-                        setTimeout(function () {
-                            isObjectsCreated = true
-                        }, 10000);
                     }
                 } else {
                     adapter.log.debug("Unable to read data from inverters solarAPI");
@@ -636,14 +688,14 @@ function checkArchiveStatus() {
 
 //Hardware and Software Version
 function getLoggerInfo() {
-    request.get(requestType + ip + baseurl + 'GetLoggerInfo.cgi', function (error, response, body) {
+    request.get(requestType + ip + baseurl + 'GetLoggerInfo.cgi', function(error, response, body) {
         if (!error && response.statusCode == 200) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
                     const resp = data.Body.LoggerInfo;
-                    if(!isObjectsCreated){
-                        devObjects.createInfoObjects(adapter,resp);
+                    if (!isObjectsCreated) {
+                        devObjects.createInfoObjects(adapter, resp);
                     }
                     if (resp && resp.hasOwnProperty("HWVersion")) {
                         adapter.setState("info.HWVersion", { val: resp.HWVersion, ack: true });
@@ -701,6 +753,8 @@ function main() {
     baseurl = adapter.config.baseurl;
     apiver = parseInt(adapter.config.apiversion);
     requestType = adapter.config.requestType;
+    downCount = 5; // do the objects creation 5 times after restarting the Adapter
+    downCountArchive = 5; // do the objects creation for archive data 5 times after restarting the Adapter
 
     if (ip && baseurl) {
         getLoggerInfo();
@@ -734,4 +788,4 @@ if (module && module.parent) {
 } else {
     // or start the instance directly
     startAdapter();
-} 
+}
