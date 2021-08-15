@@ -162,7 +162,7 @@ function checkIP(ipToCheck, callback) {
                 callback({ error: 1, message: {} });
             }
         } catch (e) {
-            adapter.log.error("IP is not a Fronis inverter");
+            adapter.log.error("IP is not a Fronius inverter");
             callback({ error: 1, message: {} });
         }
     });
