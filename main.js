@@ -597,6 +597,9 @@ function checkStatus() {
                     testData = JSON.parse(body);
                 } catch (e) {
                     adapter.log.debug("Exception thrown in check API: " + e);
+                    if (body != null) {
+                        adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(body));
+                    }
                 }
                 if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
                     // it seems everything is working, therefore proceed with readout
@@ -662,7 +665,10 @@ function checkArchiveStatus() {
                 try {
                     testData = JSON.parse(body);
                 } catch (e) {
-                    adapter.log.debug("Exception thrown in check API: " + e);
+                    adapter.log.debug("Exception thrown in archive check API: " + e);
+                    if (body != null) {
+                        adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(body));
+                    }
                 }
                 if (!error && response.statusCode == 200 && 'BaseURL' in testData) {
                     // it seems everything is working, therefore proceed with readout
@@ -677,7 +683,7 @@ function checkArchiveStatus() {
                         adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
                     }
                 } else {
-                    adapter.log.debug("Unable to read data from inverters solarAPI");
+                    adapter.log.debug("Unable to read archive data from inverters solarAPI");
                     setConnected(false);
                 }
 
