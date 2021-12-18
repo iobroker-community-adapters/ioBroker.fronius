@@ -1,8 +1,32 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.1.6",
+        "version": "1.2.0",
         "news": {
+            "1.2.0": {
+                "en": "Adapted storage objects to support GEN24 and improved object creation for storage objects",
+                "de": "",
+                "ru": "",
+                "pt": "",
+                "nl": "",
+                "fr": "",
+                "it": "",
+                "es": "",
+                "pl": "",
+                "zh-cn": ""
+            },
+            "1.1.6": {
+                "en": "Fixed issue #97, Add inverter  temperature readout, DC power calculation for GEN4 added, Improved object creation",
+                "de": "",
+                "ru": "",
+                "pt": "",
+                "nl": "",
+                "fr": "",
+                "it": "",
+                "es": "",
+                "pl": "",
+                "zh-cn": ""
+            },
             "1.1.3": {
                 "en": "Added DC current, voltage and power for both strings and tempreture of archive request and added device type mapping",
                 "de": "DC Stromstärke, Spannung und Leistung für beide Strings und Temperatur aus Archivanfrage sowie Gerätetypzuordnung hinzugefügt",
