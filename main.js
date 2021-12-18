@@ -397,9 +397,22 @@ function getStorageRealtimeData(id) {
                     if (!isObjectsCreated) {
                         devObjects.createStorageObjects(adapter, id,resp);
                     }
-
                     for (var par in resp) {
-                        adapter.setState("storage." + id + ".controller." + par.toString(), { val: resp[par.toString()], ack: true });
+                        if(par.toString() == "Details"){
+                            if(resp.Details.hasOwnProperty("Manufacturer")){
+                                adapter.setState("storage." + id + ".controller.Details.Manufacturer", { val: resp.Details.Manufacturer, ack: true });
+                            }
+                            if(resp.Details.hasOwnProperty("Model")){
+                                adapter.setState("storage." + id + ".controller.Details.Model", { val: resp.Details.Model, ack: true });
+                            }
+                            if(resp.Details.hasOwnProperty("Serial")){
+                                adapter.setState("storage." + id + ".controller.Details.Serial", { val: resp.Details.Serial, ack: true });
+                            }
+                        }
+                        else{
+                            adapter.setState("storage." + id + ".controller." + par.toString(), { val: resp[par.toString()], ack: true });
+                        }
+                        
                     }
 
                 } else {
