@@ -388,26 +388,19 @@ function getStorageRealtimeData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data) {
-                    if (data.Body.Data != null) {
+                    if (data.Body.Data === null) {
                         adapter.log.debug("Storage object is not supported: " + JSON.stringify(data));
                         return;
                     }
-                    if (!isObjectsCreated) {
-                        devObjects.createStorageObjects(adapter, id);
-                    }
 
                     const resp = data.Body.Data.Controller;
+                    if (!isObjectsCreated) {
+                        devObjects.createStorageObjects(adapter, id,resp);
+                    }
 
-                    adapter.setState("storage." + id + ".controller.Model", { val: resp.Details.Manufacturer + ' ' + resp.Details.Model, ack: true });
-                    adapter.setState("storage." + id + ".controller.Enable", { val: resp.Enable === '1', ack: true });
-                    adapter.setState("storage." + id + ".controller.StateOfCharge_Relative", { val: resp.StateOfCharge_Relative, ack: true });
-                    adapter.setState("storage." + id + ".controller.Voltage_DC", { val: resp.Voltage_DC, ack: true });
-                    adapter.setState("storage." + id + ".controller.Current_DC", { val: resp.Current_DC, ack: true });
-                    adapter.setState("storage." + id + ".controller.Temperature_Cell", { val: resp.Temperature_Cell, ack: true });
-                    adapter.setState("storage." + id + ".controller.Voltage_DC_Maximum_Cell", { val: resp.Voltage_DC_Maximum_Cell, ack: true });
-                    adapter.setState("storage." + id + ".controller.Voltage_DC_Minimum_Cell", { val: resp.Voltage_DC_Minimum_Cell, ack: true });
-                    adapter.setState("storage." + id + ".controller.DesignedCapacity", { val: resp.DesignedCapacity, ack: true });
-
+                    for (var par in resp) {
+                        adapter.setState("storage." + id + ".controller." + par.toString(), { val: resp[par.toString()], ack: true });
+                    }
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " storage: " + id);
