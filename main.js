@@ -312,11 +312,11 @@ function getInverterRealtimeData(id) {
     });
 }
 
-//Get Infos from Inverter
-function GetArchiveData(id) {
-    // fallback if no id set
-    if (id == "") {
-        id = 1; // ensure correct working for symoGEN24 if no ID is set
+//Get Infos from Inverters
+function GetArchiveData(ids) {
+    // fallback if no ids set
+    if (ids == "") {
+        ids = 1; // ensure correct working for symoGEN24 if no ID is set
     }
 
     var today = new Date();
@@ -326,51 +326,55 @@ function GetArchiveData(id) {
             try {
                 const data = JSON.parse(body);
                 if ("Body" in data && "Data" in data.Body) {
-                    var inverter = data.Body.Data["inverter/" + id];
-                    var s1current, s2current;
-                    if (typeof inverter === 'undefined' || inverter === null || !inverter.hasOwnProperty("Data")) { // if inverter object does not exists or does not have data property just exit
-                        return;
-                    }
-                    const resp = inverter.Data;
-                    if (!isArchiveObjectsCreated) {
-                        devObjects.createArchiveObjects(adapter, id, resp);
-                    }
-                    if (resp.hasOwnProperty('Current_DC_String_1')) {
-                        var values = inverter.Data.Current_DC_String_1.Values;
-                        var keys = Object.keys(values);
-                        s1current = values[keys[keys.length - 1]];
-                        adapter.setState("inverter." + id + ".Current_DC_String_1", { val: s1current, ack: true });
-                    }
-                    if (resp.hasOwnProperty('Current_DC_String_2')) {
-                        var values = inverter.Data.Current_DC_String_2.Values;
-                        var keys = Object.keys(values);
-                        s2current = values[keys[keys.length - 1]];
-                        adapter.setState("inverter." + id + ".Current_DC_String_2", { val: s2current, ack: true });
-                    }
-                    if (resp.hasOwnProperty('Temperature_Powerstage')) {
-                        var values = inverter.Data.Temperature_Powerstage.Values;
-                        var keys = Object.keys(values);
-                        var daten = values[keys[keys.length - 1]];
-                        adapter.setState("inverter." + id + ".Temperature_Powerstage", { val: daten, ack: true });
-                    }
-                    if (resp.hasOwnProperty('Voltage_DC_String_1')) {
-                        var values = inverter.Data.Voltage_DC_String_1.Values;
-                        var keys = Object.keys(values);
-                        var s1voltage = values[keys[keys.length - 1]];
-                        adapter.setState("inverter." + id + ".Voltage_DC_String_1", { val: s1voltage, ack: true });
-                        if (typeof s1current !== 'undefined') {
-                            adapter.setState("inverter." + id + ".Power_DC_String_1", { val: s1voltage * s1current, ack: true });
+                    ids.split(',').forEach(function(id) { // loop over all ids just to process the data. All data is read with 1 request
+                        var inverter = data.Body.Data["inverter/" + id];
+                        var s1current, s2current;
+                        if (typeof inverter === 'undefined' || inverter === null || !inverter.hasOwnProperty("Data")) { // if inverter object does not exists or does not have data property just exit
+                            return;
                         }
-                    }
-                    if (resp.hasOwnProperty('Voltage_DC_String_2')) {
-                        var values = inverter.Data.Voltage_DC_String_2.Values;
-                        var keys = Object.keys(values);
-                        var s2voltage = values[keys[keys.length - 1]];
-                        adapter.setState("inverter." + id + ".Voltage_DC_String_2", { val: s2voltage, ack: true });
-                        if (typeof s2current !== 'undefined') {
-                            adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage * s2current, ack: true });
+                        const resp = inverter.Data;
+                        if (!isArchiveObjectsCreated) {
+                            devObjects.createArchiveObjects(adapter, id, resp);
                         }
-                    }
+                        if (resp.hasOwnProperty('Current_DC_String_1')) {
+                            var values = inverter.Data.Current_DC_String_1.Values;
+                            var keys = Object.keys(values);
+                            s1current = values[keys[keys.length - 1]];
+                            adapter.setState("inverter." + id + ".Current_DC_String_1", { val: s1current, ack: true });
+                        }
+                        if (resp.hasOwnProperty('Current_DC_String_2')) {
+                            var values = inverter.Data.Current_DC_String_2.Values;
+                            var keys = Object.keys(values);
+                            s2current = values[keys[keys.length - 1]];
+                            adapter.setState("inverter." + id + ".Current_DC_String_2", { val: s2current, ack: true });
+                        }
+                        if (resp.hasOwnProperty('Temperature_Powerstage')) {
+                            var values = inverter.Data.Temperature_Powerstage.Values;
+                            var keys = Object.keys(values);
+                            var daten = values[keys[keys.length - 1]];
+                            adapter.setState("inverter." + id + ".Temperature_Powerstage", { val: daten, ack: true });
+                        }
+                        if (resp.hasOwnProperty('Voltage_DC_String_1')) {
+                            var values = inverter.Data.Voltage_DC_String_1.Values;
+                            var keys = Object.keys(values);
+                            var s1voltage = values[keys[keys.length - 1]];
+                            adapter.setState("inverter." + id + ".Voltage_DC_String_1", { val: s1voltage, ack: true });
+                            if (typeof s1current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".Power_DC_String_1", { val: s1voltage * s1current, ack: true });
+                            }
+                        }
+                        if (resp.hasOwnProperty('Voltage_DC_String_2')) {
+                            var values = inverter.Data.Voltage_DC_String_2.Values;
+                            var keys = Object.keys(values);
+                            var s2voltage = values[keys[keys.length - 1]];
+                            adapter.setState("inverter." + id + ".Voltage_DC_String_2", { val: s2voltage, ack: true });
+                            if (typeof s2current !== 'undefined') {
+                                adapter.setState("inverter." + id + ".Power_DC_String_2", { val: s2voltage * s2current, ack: true });
+                            }
+                        }
+                        
+                    });
+                    
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " archive: " + id);
                 }
@@ -681,9 +685,12 @@ function checkArchiveStatus() {
                     setConnected(result.alive);
                     if (result.alive) {
                         if (apiver === 1) {
+                            GetArchiveData(adapter.config.inverter);
+                            /*
                             adapter.config.inverter.split(',').forEach(function(entry) {
                                 GetArchiveData(entry);
                             });
+                            */
                         }
 
                         adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
