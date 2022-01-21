@@ -30,6 +30,7 @@
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 
 const request = require('request');
+const he = require('he')
 const ping = require(__dirname + '/lib/ping');
 const devStrings = require(__dirname + '/lib/devStrings');
 const devObjects = require(__dirname + '/lib/devObjects');
@@ -761,6 +762,54 @@ function getLoggerInfo() {
             adapter.log.warn("getLoggerInfo: " + error);
         }
     });
+}
+
+function fillData(adapter,data,prefix=""){
+    for (var key in data){
+        if(data[key.toString()] != null && typeof(data[key.toString()]) == "object"){ // this is a nested object to parse!
+            if(data[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
+                var val = data[key.toString()].Value;
+                if(typeof(val) == 'number'){
+                    val = Math.round((val + Number.EPSILON)*100)/100;
+                }
+                adapter.setState(prefix + key.toString(),val,true);
+            }else{ // standard nested object to parse
+                var data2 = data[key.toString()]
+                for (var subKey in data2){
+                    if(typeof(data2[subKey.toString()])== "object"){
+                        for (var subsub in data2[subKey.toString()]){
+                            var val = data2[subKey.toString()][subsub.toString()]
+                            if(typeof(val) == 'string'){
+                                val = he.unescape(data2[subKey.toString()][subsub.toString()])
+                            }else if(typeof(val) == 'number'){
+                                val = Math.round((val + Number.EPSILON)*100)/100;
+                            }
+                            adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
+                        }
+                    }else{
+                        var val = data2[subKey.toString()]
+                        if(typeof(val) == 'string'){
+                            val = he.unescape(data2[subKey.toString()])
+                        }else if(typeof(val) == 'number'){
+                            val = Math.round((val + Number.EPSILON)*100)/100;
+                        }
+                        adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
+                    }
+                }
+            }
+        }else{ // standard object to parse
+            if(data[key.toString()] != null && typeof(data[key.toString()]) != "object"){ //dont fill objects!
+                var val = data[key.toString()]
+                if(typeof(val) == 'string'){
+                    val = he.unescape(data[key.toString()])
+                }else if(typeof(val) == 'number'){
+                    val = Math.round((val + Number.EPSILON)*100)/100;
+                }
+                adapter.setState(prefix + key.toString(),val,true);
+            }
+        }
+        
+    }
 }
 
 function main() {
