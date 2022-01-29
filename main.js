@@ -764,6 +764,23 @@ function getLoggerInfo() {
     });
 }
 
+function GetArchiveValue(adapter,data,prefix,id,key){
+    if(!data.hasOwnProperty("inverter/" + id) || !data["inverter/" + id].hasOwnProperty('Data'))
+        return;
+    var invData = data["inverter/" + id].Data;
+    if(invData.hasOwnProperty(key) && invData[key].hasOwnProperty('Values')){ // key exists
+        var keys = Object.keys(invData[key].Values);
+        var val = invData[key].Values[keys[keys.length - 1]];
+        if(typeof(val) == 'number'){
+            val = Math.round((val + Number.EPSILON)*100)/100;
+        }
+        //log(prefix + key + " = " +val,"info")
+        adapter.setState(prefix + key,val,true);
+        return val;
+    }
+    return null;
+}
+
 function fillData(adapter,data,prefix=""){
     for (var key in data){
         if(data[key.toString()] != null && typeof(data[key.toString()]) == "object"){ // this is a nested object to parse!
@@ -773,6 +790,7 @@ function fillData(adapter,data,prefix=""){
                     val = Math.round((val + Number.EPSILON)*100)/100;
                 }
                 adapter.setState(prefix + key.toString(),val,true);
+                adapter.log.debug(key.toString() + ", Value=" + val);
             }else{ // standard nested object to parse
                 var data2 = data[key.toString()]
                 for (var subKey in data2){
@@ -785,6 +803,7 @@ function fillData(adapter,data,prefix=""){
                                 val = Math.round((val + Number.EPSILON)*100)/100;
                             }
                             adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
+                            adapter.log.debug(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
                         }
                     }else{
                         var val = data2[subKey.toString()]
@@ -794,6 +813,7 @@ function fillData(adapter,data,prefix=""){
                             val = Math.round((val + Number.EPSILON)*100)/100;
                         }
                         adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
+                        adapter.log.debug(key.toString() + '.' + subKey.toString() + ', Value=' + data2[subKey.toString()]);
                     }
                 }
             }
@@ -806,6 +826,7 @@ function fillData(adapter,data,prefix=""){
                     val = Math.round((val + Number.EPSILON)*100)/100;
                 }
                 adapter.setState(prefix + key.toString(),val,true);
+                adapter.log.debug(key.toString() + ', Value=' + data[key.toString()]);
             }
         }
         
