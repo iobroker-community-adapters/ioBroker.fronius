@@ -175,7 +175,8 @@ function checkIP(ipToCheck, callback) {
 function getActiveDeviceInfo(type, url, callback) {
     axios.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type)
     .then(function(response){
-        const deviceData = response.body;
+        const deviceData = response.data;
+        adapter.log.warn(JSON.stringify(deviceData));
         if (response.status == 200 && 'Body' in deviceData) {
             callback({ error: 0, message: deviceData.Body.Data });
         } else {
