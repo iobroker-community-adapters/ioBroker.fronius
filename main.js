@@ -157,7 +157,7 @@ function checkIP(ipToCheck, callback) {
     axios.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){ 
         adapter.log.warn(response.status);
-        adapter.log.warn(response.data);
+        adapter.log.warn(JSON.stringify(response.data));
         if (response.status == 200 && 'BaseURL' in response.data) {
             callback({ error: 0, message: response.data });
         } else {
