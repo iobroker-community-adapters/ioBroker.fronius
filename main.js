@@ -317,7 +317,7 @@ function GetArchiveData(ids) {
     .then(function(response){
         if (response.status == 200) {
             try {
-                const data = response.body;
+                const data = response.data;
                 if ("Body" in data && "Data" in data.Body) {
                     ids.split(',').forEach(function(id) { // loop over all ids just to process the data. All data is read with 1 request
                         var inverter = data.Body.Data["inverter/" + id];
@@ -358,7 +358,7 @@ function getStorageRealtimeData(id) {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                const data = response.body;
+                const data = response.data;
                 if ("Body" in data) {
                     if (data.Body.Data === null) {
                         adapter.log.debug("Storage object is not supported: " + JSON.stringify(data));
@@ -387,7 +387,7 @@ function getMeterRealtimeData(id) {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                const data = response.body;
+                const data = response.data;
                 if ("Body" in data) {
                     const resp = data.Body.Data;
                     if (!isObjectsCreated) {
@@ -409,7 +409,7 @@ function getSensorRealtimeDataNowSensorData(id) {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                if ("Body" in response.body) {
+                if ("Body" in response.data) {
                     if (!isObjectsCreated) {
                         devObjects.createSensorNowObjects(adapter, id);
                     }
@@ -429,14 +429,14 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                if ("Body" in response.body) {
+                if ("Body" in response.data) {
                     if (!isObjectsCreated) {
                         devObjects.createSensorMinMaxObjects(adapter, id);
                     }
                     fillData(adapter,response.data.Body.Data,"Sensors." + id);
 
                 } else {
-                    adapter.log.warn(response.body.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(response.data.Head.Status.Reason + " sensor: " + id);
                 }
             } catch (e) {
                 adapter.log.warn("getSensorRealtimeDataMinMaxSensorData: " + e);
@@ -454,15 +454,15 @@ function getPowerFlowRealtimeData() {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                if ("Body" in response.body) {
-                    var resp = response.body.Body.Data;
+                if ("Body" in response.data) {
+                    var resp = response.data.Body.Data;
                     if (!isObjectsCreated) {
                         devObjects.createPowerFlowObjects(adapter, resp);
                     }
                     fillData(adapter,resp.Inverters,"Inverters.");
                     fillData(adapter,resp.Site,"Site.");
                 } else {
-                    adapter.log.warn(response.body.Head.Status.Reason + " powerflow");
+                    adapter.log.warn(response.data.Head.Status.Reason + " powerflow");
                 }
             } catch (e) {
                 adapter.log.warn("getPowerFlowRealtimeData: " + e);
@@ -476,13 +476,13 @@ function getInverterInfo() {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                if ("Body" in response.body) {
+                if ("Body" in response.data) {
                     if (!isObjectsCreated) {
                         devObjects.createInverterInfoObjects(adapter, response.data.Body.Data);
                     }
-                    fillData(adapter,response.body.Body.Data,"Inverters.");
+                    fillData(adapter,response.data.Body.Data,"Inverters.");
                 } else {
-                    adapter.log.warn(response.body.Head.Status.Reason + " inverterinfo");
+                    adapter.log.warn(response.data.Head.Status.Reason + " inverterinfo");
                 }
             } catch (e) {
                 adapter.log.warn("getInverterInfo: " + e);
@@ -516,11 +516,11 @@ function checkStatus() {
             .then(function (response) {
                 var testData = null
                 try {
-                    testData = response.body;
+                    testData = response.data;
                 } catch (e) {
                     adapter.log.debug("Exception thrown in check API: " + e);
-                    if (response.body != null) {
-                        adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.body));
+                    if (response.data != null) {
+                        adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
                     }
                 }
                 if (response.status == 200 && 'BaseURL' in testData) {
@@ -586,10 +586,10 @@ function checkArchiveStatus() {
             .then(function (response) {
                 var testData = null
                 try {
-                    testData = response.body;
+                    testData = response.data;
                 } catch (e) {
                     adapter.log.debug("Exception thrown in archive check API: " + e);
-                    if (response.body != null) {
+                    if (response.data != null) {
                         adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(body));
                     }
                 }
@@ -619,7 +619,7 @@ function getLoggerInfo() {
     .then(function (response) {
         if (response.status == 200) {
             try {
-                const data = response.body;
+                const data = response.data;
                 if ("Body" in data) {
                     const resp = data.Body.LoggerInfo;
                     if (!isObjectsCreated) {
