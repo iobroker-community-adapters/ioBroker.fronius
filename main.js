@@ -153,9 +153,11 @@ function resetStateToZero(API_response, basePath, state) {
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    
+    adapter.log.warn(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi');
     axios.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi')
-    .then(function(response){
+    .then(function(response){ 
+        adapter.log.warn(response.status);
+        adapter.log.warn(response.data);
         if (response.status == 200 && 'BaseURL' in response.data) {
             callback({ error: 0, message: response.data });
         } else {
