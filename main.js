@@ -153,17 +153,30 @@ function resetStateToZero(API_response, basePath, state) {
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    
-    axios.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi')
+    axios.get("http://" + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
+            adapter.config.requestType = "http://"
+            callback({ error: 0, message: response.data });
+            return;
+        } else {
+            adapter.log.debug("requestType 'http://' is not working! Now trying with 'https://");
+            //callback({ error: 1, message: {} });
+        }
+    }).catch(function(error){
+        adapter.log.debug("requestType 'http://' is not working! Now trying with 'https://");
+    });
+
+    axios.get("https://" + ipToCheck + '/solar_api/GetAPIVersion.cgi')
+    .then(function(response){
+        if (response.status == 200 && 'BaseURL' in response.data) {
+            adapter.config.requestType = "https://"
             callback({ error: 0, message: response.data });
         } else {
             adapter.log.error("IP invalid");
             callback({ error: 1, message: {} });
         }
-    })
-    .catch(function(error){
+    }).catch(function(error){
         adapter.log.error("IP is not a Fronius inverter");
         callback({ error: 1, message: {} });
     });

@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.2.0",
+        "version": "1.9.0",
         "news": {
             "1.2.0": {
                 "en": "Adapted storage objects to support GEN24 and improved object creation for storage objects",
