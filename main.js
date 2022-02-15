@@ -408,7 +408,7 @@ function getSensorRealtimeDataNowSensorData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createSensorNowObjects(adapter, id);
+                        devObjects.createSensorNowObjects(adapter, id, response.data);
                     }
                     fillData(adapter,response.data.Body.Data,"Sensors." + id);
                 } else {
@@ -428,7 +428,7 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createSensorMinMaxObjects(adapter, id);
+                        devObjects.createSensorMinMaxObjects(adapter, id, response.data);
                     }
                     fillData(adapter,response.data.Body.Data,"Sensors." + id);
 
@@ -491,7 +491,7 @@ function getInverterInfo() {
 function setConnected(_isConnected) {
     if (isConnected !== _isConnected) {
         isConnected = _isConnected;
-        adapter.setState('info.connection', { val: isConnected, ack: true });
+        adapter.setState('Info.connection', { val: isConnected, ack: true });
     }
 }
 
@@ -554,7 +554,7 @@ function checkStatus() {
                             getInverterInfo();
                         }
 
-                        adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
+                        adapter.setState("Info.lastsync", { val: new Date().toISOString(), ack: true });
                     }
                 } else {
                     adapter.log.debug("Unable to read data from inverters solarAPI");
@@ -598,7 +598,7 @@ function checkArchiveStatus() {
                             GetArchiveData(adapter.config.inverter);
                         }
 
-                        adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
+                        adapter.setState("Info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
                     }
                 } else {
                     adapter.log.debug("Unable to read archive data from inverters solarAPI");
@@ -654,6 +654,9 @@ function GetArchiveValue(adapter,data,prefix,id,key){
 }
 
 function fillData(adapter,data,prefix=""){
+    if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
+        prefix = prefix + '.';
+    }
     for (var key in data){
         if(data[key.toString()] != null && typeof(data[key.toString()]) == "object"){ // this is a nested object to parse!
             if(data[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
