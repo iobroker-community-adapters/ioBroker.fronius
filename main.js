@@ -163,10 +163,10 @@ function checkIP(ipToCheck, callback) {
         if (response.status == 200 && 'BaseURL' in response.data) {
             if(requestType == secondary){
                 requestType = primary;
-                adapter.getForeignObject('system.adapter.fronius.1',function(err,obj){
+                adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
                     if(obj != null){
                         obj.native.requestType = requestType;
-                        adapter.setForeignObject('system.adapter.fronius.1',obj);
+                        adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
                     }
                 });
             }
@@ -184,10 +184,10 @@ function checkIP(ipToCheck, callback) {
         if (response.status == 200 && 'BaseURL' in response.data) {
             if(requestType == primary){
                 requestType = secondary;
-                adapter.getForeignObject('system.adapter.fronius.1',function(err,obj){
+                adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
                     if(obj != null){
                         obj.native.requestType = requestType;
-                        adapter.setForeignObject('system.adapter.fronius.1',obj);
+                        adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
                     }
                 });
             }
@@ -218,6 +218,46 @@ function getActiveDeviceInfo(type, url, callback) {
     .catch(function(error){
         callback({ error: 1, message: {} });
     });
+}
+
+// this function is used to check the existing config. If the config stored does not match
+// then the settings are updated (only if the request was successful)
+function checkExistingConfig(){
+    
+    getActiveDeviceInfo('System',ip + baseurl,function(result){
+        if(result.error == 0){
+            result = result.message;
+            adapter.log.debug("Current result of System deviceINFO: " + JSON.stringify(result));
+            var inverter = result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter).toString() : '';
+            var sensorCard = result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard).toString() : '1';
+            var stringControl = result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl).toString() : '';
+            var meter = result.hasOwnProperty('Meter') ? Object.keys(result.Meter).toString() : '';
+            var storage = result.hasOwnProperty('Storage') ? Object.keys(result.Storage).toString() : '';
+            if(adapter.config.inverter == inverter &&
+                    adapter.config.sensorCard == sensorCard &&
+                    adapter.config.stringControl == stringControl &&
+                    adapter.config.meter == meter &&
+                    adapter.config.storage == storage ){
+
+                adapter.log.debug("The current system configuration is up to date");
+            }else{
+                adapter.log.info("The current system configuration is not up to date. Settings are updated and adapter restarted!");
+                adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
+                    if(obj != null){
+                        adapter.log.debug(JSON.stringify(obj));
+                        obj.native.inverter = inverter
+                        obj.native.sensorCard = sensorCard
+                        obj.native.stringControl = stringControl
+                        obj.native.meter = meter
+                        obj.native.storage = storage
+                        adapter.log.debug(JSON.stringify(obj.native));
+                        adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
+                    }
+                });
+            }
+        }
+    });
+
 }
 
 //Get Infos from Inverter
@@ -752,6 +792,7 @@ function main() {
             secs = 10;
         }
 
+        // run cyclic requests for values
         setInterval(checkStatus, secs * 1000);
 
         let archivesecs = adapter.config.pollarchive;
@@ -759,7 +800,11 @@ function main() {
             archivesecs = 150;
         }
 
+        // run cyclic requests for archive values
         setInterval(checkArchiveStatus, archivesecs * 1000);
+
+        // check every hour if something has changed on the bus (number of devices)
+        setInterval(checkExistingConfig, 3600 * 1000);
 
     } else {
         adapter.log.error("Please configure the Fronius adapter");
