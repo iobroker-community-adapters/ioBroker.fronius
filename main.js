@@ -503,66 +503,60 @@ function checkStatus() {
         }
     }
 
-    ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
-        if (err) {
-            adapter.log.error(err);
+    // now try if we can really read data from the API. If not do not further process
+    axios.get(requestType + ip + '/solar_api/GetAPIVersion.cgi')
+    .then(function (response) {
+        var testData = null
+        try {
+            testData = response.data;
+        } catch (e) {
+            adapter.log.debug("Exception thrown in check API: " + e);
+            if (response.data != null) {
+                adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
+            }
+            setConnected(false);
+            return;
         }
-        if (result) {
-            // now try if we can really read data from the API. If not do not further process
-            axios.get(requestType + ip + '/solar_api/GetAPIVersion.cgi')
-            .then(function (response) {
-                var testData = null
-                try {
-                    testData = response.data;
-                } catch (e) {
-                    adapter.log.debug("Exception thrown in check API: " + e);
-                    if (response.data != null) {
-                        adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
-                    }
-                }
-                if (response.status == 200 && 'BaseURL' in testData) {
-                    // it seems everything is working, therefore proceed with readout
-                    setConnected(result.alive);
-                    if (result.alive) {
-                        adapter.config.inverter.split(',').forEach(function(entry) {
-                            getInverterRealtimeData(entry);
-                        });
-                        if (adapter.config.sensorCard) {
-                            adapter.config.sensorCard.split(',').forEach(function(entry) {
-                                getSensorRealtimeDataNowSensorData(entry);
-                                getSensorRealtimeDataMinMaxSensorData(entry);
-                            });
-                        }
-                        if (adapter.config.stringControl) {
-                            adapter.config.stringControl.split(',').forEach(function(entry) {
-                                getStringRealtimeData(entry);
-                            });
-                        }
-
-                        if (apiver === 1) {
-                            if (adapter.config.meter) {
-                                adapter.config.meter.split(',').forEach(function(entry) {
-                                    getMeterRealtimeData(entry);
-                                });
-                            }
-                            if (adapter.config.storage) {
-                                adapter.config.storage.split(',').forEach(function(entry) {
-                                    getStorageRealtimeData(entry);
-                                });
-                            }
-                            getPowerFlowRealtimeData();
-                            getInverterInfo();
-                        }
-
-                        adapter.setState("Info.lastsync", { val: new Date().toISOString(), ack: true });
-                    }
-                } else {
-                    adapter.log.debug("Unable to read data from inverters solarAPI");
-                    setConnected(false);
-                }
-
+        
+        if (response.status == 200 && 'BaseURL' in testData) {
+            // it seems everything is working, therefore proceed with readout
+            setConnected(true);
+            adapter.config.inverter.split(',').forEach(function(entry) {
+                getInverterRealtimeData(entry);
             });
+            if (adapter.config.sensorCard) {
+                adapter.config.sensorCard.split(',').forEach(function(entry) {
+                    getSensorRealtimeDataNowSensorData(entry);
+                    getSensorRealtimeDataMinMaxSensorData(entry);
+                });
+            }
+            if (adapter.config.stringControl) {
+                adapter.config.stringControl.split(',').forEach(function(entry) {
+                    getStringRealtimeData(entry);
+                });
+            }
+
+            if (apiver === 1) {
+                if (adapter.config.meter) {
+                    adapter.config.meter.split(',').forEach(function(entry) {
+                        getMeterRealtimeData(entry);
+                    });
+                }
+                if (adapter.config.storage) {
+                    adapter.config.storage.split(',').forEach(function(entry) {
+                        getStorageRealtimeData(entry);
+                    });
+                }
+                getPowerFlowRealtimeData();
+                getInverterInfo();
+            }
+
+            adapter.setState("Info.lastsync", { val: new Date().toISOString(), ack: true });
+        } else {
+            adapter.log.debug("Unable to read data from inverters solarAPI");
+            setConnected(false);
         }
+
     });
 }
 
@@ -573,40 +567,34 @@ function checkArchiveStatus() {
             isArchiveObjectsCreated = true
         }
     }
-    ping.probe(ip, { log: adapter.log.debug }, function(err, result) {
-        if (err) {
-            adapter.log.error(err);
-        }
-        if (result) {
-            // now try if we can really read data from the API. If not do not further process
-            axios.get(requestType + ip + '/solar_api/GetAPIVersion.cgi')
-            .then(function (response) {
-                var testData = null
-                try {
-                    testData = response.data;
-                } catch (e) {
-                    adapter.log.debug("Exception thrown in archive check API: " + e);
-                    if (response.data != null) {
-                        adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(body));
-                    }
-                }
-                if (response.statusCode == 200 && 'BaseURL' in testData) {
-                    // it seems everything is working, therefore proceed with readout
-                    setConnected(result.alive);
-                    if (result.alive) {
-                        if (apiver === 1) {
-                            GetArchiveData(adapter.config.inverter);
-                        }
 
-                        adapter.setState("Info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
-                    }
-                } else {
-                    adapter.log.debug("Unable to read archive data from inverters solarAPI");
-                    setConnected(false);
-                }
-
-            });
+    // now try if we can really read data from the API. If not do not further process
+    axios.get(requestType + ip + '/solar_api/GetAPIVersion.cgi')
+    .then(function (response) {
+        var testData = null
+        try {
+            testData = response.data;
+        } catch (e) {
+            adapter.log.debug("Exception thrown in archive check API: " + e);
+            if (response.data != null) {
+                adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
+            }
+            setConnected(false);
+            return;
         }
+        if (response.statusCode == 200 && 'BaseURL' in testData) {
+            // it seems everything is working, therefore proceed with readout
+            setConnected(true);
+            if (apiver === 1) {
+                GetArchiveData(adapter.config.inverter);
+            }
+
+            adapter.setState("Info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
+        } else {
+            adapter.log.debug("Unable to read archive data from inverters solarAPI");
+            setConnected(false);
+        }
+
     });
 }
 
