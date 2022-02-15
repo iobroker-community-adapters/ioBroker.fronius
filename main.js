@@ -153,11 +153,9 @@ function resetStateToZero(API_response, basePath, state) {
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    adapter.log.warn(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi');
+    
     axios.get(requestType + ipToCheck + '/solar_api/GetAPIVersion.cgi')
-    .then(function(response){ 
-        adapter.log.warn(response.status);
-        adapter.log.warn(JSON.stringify(response.data));
+    .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
             callback({ error: 0, message: response.data });
         } else {
@@ -176,7 +174,6 @@ function getActiveDeviceInfo(type, url, callback) {
     axios.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type)
     .then(function(response){
         const deviceData = response.data;
-        adapter.log.warn(JSON.stringify(deviceData));
         if (response.status == 200 && 'Body' in deviceData) {
             callback({ error: 0, message: deviceData.Body.Data });
         } else {
@@ -227,30 +224,30 @@ function getInverterRealtimeData(id) {
 
 
                 if(resp.hasOwnProperty("UDC") && resp.hasOwnProperty("IDC")){
-                    adapter.setState("inverter." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
+                    adapter.setState("Inverters." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
                 }
                 if(resp.hasOwnProperty("UDC_2") && resp.hasOwnProperty("IDC_2")){
-                    adapter.setState("inverter." + id + ".PDC_2", { val: resp["IDC_2"].Value * resp["UDC_2"].Value, ack: true });
+                    adapter.setState("Inverters." + id + ".PDC_2", { val: resp["IDC_2"].Value * resp["UDC_2"].Value, ack: true });
                 }
 
                 // make sure to reset the values if they are no longer reported by the API
                 // Fixes issue #87 from Adapter
                 if (!("PAC" in resp)) {
-                    resetStateToZero(resp, "inverter." + id, "FAC");
-                    resetStateToZero(resp, "inverter." + id, "IAC");
-                    resetStateToZero(resp, "inverter." + id, "IAC_L1");
-                    resetStateToZero(resp, "inverter." + id, "IAC_L2");
-                    resetStateToZero(resp, "inverter." + id, "IAC_L3");
-                    resetStateToZero(resp, "inverter." + id, "IDC");
-                    resetStateToZero(resp, "inverter." + id, "IDC_2");
-                    resetStateToZero(resp, "inverter." + id, "PAC");
-                    resetStateToZero(resp, "inverter." + id, "UAC");
-                    resetStateToZero(resp, "inverter." + id, "UAC_L1");
-                    resetStateToZero(resp, "inverter." + id, "UAC_L2");
-                    resetStateToZero(resp, "inverter." + id, "UDC");
-                    resetStateToZero(resp, "inverter." + id, "UDC_2");
-                    resetStateToZero(resp, "inverter." + id, "PDC");
-                    resetStateToZero(resp, "inverter." + id, "PDC_2");
+                    resetStateToZero(resp, "Inverters." + id, "FAC");
+                    resetStateToZero(resp, "Inverters." + id, "IAC");
+                    resetStateToZero(resp, "Inverters." + id, "IAC_L1");
+                    resetStateToZero(resp, "Inverters." + id, "IAC_L2");
+                    resetStateToZero(resp, "Inverters." + id, "IAC_L3");
+                    resetStateToZero(resp, "Inverters." + id, "IDC");
+                    resetStateToZero(resp, "Inverters." + id, "IDC_2");
+                    resetStateToZero(resp, "Inverters." + id, "PAC");
+                    resetStateToZero(resp, "Inverters." + id, "UAC");
+                    resetStateToZero(resp, "Inverters." + id, "UAC_L1");
+                    resetStateToZero(resp, "Inverters." + id, "UAC_L2");
+                    resetStateToZero(resp, "Inverters." + id, "UDC");
+                    resetStateToZero(resp, "Inverters." + id, "UDC_2");
+                    resetStateToZero(resp, "Inverters." + id, "PDC");
+                    resetStateToZero(resp, "Inverters." + id, "PDC_2");
                 }
 /*
                 const status = resp.DeviceStatus;
