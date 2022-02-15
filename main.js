@@ -151,27 +151,48 @@ function resetStateToZero(API_response, basePath, state) {
     }
 }
 
+
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    axios.get("http://" + ipToCheck + '/solar_api/GetAPIVersion.cgi')
+    var primary = "http://"
+    var secondary = "https://"
+    
+
+    axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
-            adapter.config.requestType = "http://"
-            callback({ error: 0, message: response.data });
+            if(requestType == secondary){
+                requestType = primary;
+                adapter.getForeignObject('system.adapter.fronius.1',function(err,obj){
+                    if(obj != null){
+                        obj.native.requestType = requestType;
+                        adapter.setForeignObject('system.adapter.fronius.1',obj);
+                    }
+                });
+            }
+            callback({ error: 0, message: response.data});
             return;
         } else {
             adapter.log.debug("requestType 'http://' is not working! Now trying with 'https://");
-            //callback({ error: 1, message: {} });
         }
     }).catch(function(error){
         adapter.log.debug("requestType 'http://' is not working! Now trying with 'https://");
     });
 
-    axios.get("https://" + ipToCheck + '/solar_api/GetAPIVersion.cgi')
+    axios.get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
-            adapter.config.requestType = "https://"
-            callback({ error: 0, message: response.data });
+            if(requestType == primary){
+                requestType = secondary;
+                adapter.getForeignObject('system.adapter.fronius.1',function(err,obj){
+                    if(obj != null){
+                        obj.native.requestType = requestType;
+                        adapter.setForeignObject('system.adapter.fronius.1',obj);
+                    }
+                });
+            }
+            callback({ error: 0, message: response.data});
+            return;
         } else {
             adapter.log.error("IP invalid");
             callback({ error: 1, message: {} });
@@ -666,7 +687,7 @@ function fillData(adapter,data,prefix=""){
                     val = Math.round((val + Number.EPSILON)*100)/100;
                 }
                 adapter.setState(prefix + key.toString(),val,true);
-                adapter.log.debug(key.toString() + ", Value=" + val);
+                adapter.log.silly(key.toString() + ", Value=" + val);
             }else{ // standard nested object to parse
                 var data2 = data[key.toString()]
                 for (var subKey in data2){
@@ -679,7 +700,7 @@ function fillData(adapter,data,prefix=""){
                                 val = Math.round((val + Number.EPSILON)*100)/100;
                             }
                             adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
-                            adapter.log.debug(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
+                            adapter.log.silly(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
                         }
                     }else{
                         var val = data2[subKey.toString()]
@@ -689,7 +710,7 @@ function fillData(adapter,data,prefix=""){
                             val = Math.round((val + Number.EPSILON)*100)/100;
                         }
                         adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
-                        adapter.log.debug(key.toString() + '.' + subKey.toString() + ', Value=' + data2[subKey.toString()]);
+                        adapter.log.silly(key.toString() + '.' + subKey.toString() + ', Value=' + data2[subKey.toString()]);
                     }
                 }
             }
@@ -702,7 +723,7 @@ function fillData(adapter,data,prefix=""){
                     val = Math.round((val + Number.EPSILON)*100)/100;
                 }
                 adapter.setState(prefix + key.toString(),val,true);
-                adapter.log.debug(key.toString() + ', Value=' + data[key.toString()]);
+                adapter.log.silly(key.toString() + ', Value=' + data[key.toString()]);
             }
         }
         
