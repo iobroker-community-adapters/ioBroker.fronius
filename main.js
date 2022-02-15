@@ -40,9 +40,9 @@ let isConnected = null,
     isObjectsCreated = false,
     isArchiveObjectsCreated = false,
     /* this variable is used to ensure the object creation over multiple read cycles */
-    downCount = 5,
+    downCount = 2,
     /* this variable is used to ensure the object creation over multiple read cycles for archive data */
-    downCountArchive = 5;
+    downCountArchive = 2;
 
 
 // you have to call the adapter function and pass a options object
@@ -400,17 +400,17 @@ function GetArchiveData(ids) {
                         if (!isArchiveObjectsCreated) {
                             devObjects.createArchiveObjects(adapter, id, resp);
                         }
-
-                        var c1 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Current_DC_String_1');
-                        var c2 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Current_DC_String_2');
-                        var v1 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Voltage_DC_String_1');
-                        var v2 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Voltage_DC_String_2');
-                        if(c1 != null && v1 != null)
-                        adapter.setState("Inverters." + id + '.Power_DC_String_1',Math.round((c1*v1 + Number.EPSILON)*100)/100,true);
-                        if(c2 != null && v2 != null)
-                        adapter.setState("Inverters." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
-                        GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Temperature_Powerstage');
-
+                        setTimeout(function(){
+                            var c1 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Current_DC_String_1');
+                            var c2 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Current_DC_String_2');
+                            var v1 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Voltage_DC_String_1');
+                            var v2 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Voltage_DC_String_2');
+                            if(c1 != null && v1 != null)
+                            adapter.setState("Inverters." + id + '.Power_DC_String_1',Math.round((c1*v1 + Number.EPSILON)*100)/100,true);
+                            if(c2 != null && v2 != null)
+                            adapter.setState("Inverters." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
+                            GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Temperature_Powerstage');
+                        },isArchiveObjectsCreated?1:3000);
                     });
                     
                 } else {
@@ -653,12 +653,10 @@ function checkArchiveStatus() {
             if (response.data != null) {
                 adapter.log.debug("API Response for " + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
             }
-            setConnected(false);
             return;
         }
         if (response.statusCode == 200 && 'BaseURL' in testData) {
             // it seems everything is working, therefore proceed with readout
-            setConnected(true);
             if (apiver === 1) {
                 GetArchiveData(adapter.config.inverter);
             }
@@ -666,7 +664,6 @@ function checkArchiveStatus() {
             adapter.setState("Info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
         } else {
             adapter.log.debug("Unable to read archive data from inverters solarAPI");
-            setConnected(false);
         }
 
     });
@@ -708,7 +705,6 @@ function GetArchiveValue(adapter,data,prefix,id,key){
         if(typeof(val) == 'number'){
             val = Math.round((val + Number.EPSILON)*100)/100;
         }
-        //log(prefix + key + " = " +val,"info")
         adapter.setState(prefix + key,val,true);
         return val;
     }
@@ -716,58 +712,60 @@ function GetArchiveValue(adapter,data,prefix,id,key){
 }
 
 function fillData(adapter,data,prefix=""){
-    if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
-        prefix = prefix + '.';
-    }
-    for (var key in data){
-        if(data[key.toString()] != null && typeof(data[key.toString()]) == "object"){ // this is a nested object to parse!
-            if(data[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
-                var val = data[key.toString()].Value;
-                if(typeof(val) == 'number'){
-                    val = Math.round((val + Number.EPSILON)*100)/100;
-                }
-                adapter.setState(prefix + key.toString(),val,true);
-                adapter.log.silly(key.toString() + ", Value=" + val);
-            }else{ // standard nested object to parse
-                var data2 = data[key.toString()]
-                for (var subKey in data2){
-                    if(typeof(data2[subKey.toString()])== "object"){
-                        for (var subsub in data2[subKey.toString()]){
-                            var val = data2[subKey.toString()][subsub.toString()]
+    setTimeout(function(){
+        if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
+            prefix = prefix + '.';
+        }
+        for (var key in data){
+            if(data[key.toString()] != null && typeof(data[key.toString()]) == "object"){ // this is a nested object to parse!
+                if(data[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
+                    var val = data[key.toString()].Value;
+                    if(typeof(val) == 'number'){
+                        val = Math.round((val + Number.EPSILON)*100)/100;
+                    }
+                    adapter.setState(prefix + key.toString(),val,true);
+                    adapter.log.silly(key.toString() + ", Value=" + val);
+                }else{ // standard nested object to parse
+                    var data2 = data[key.toString()]
+                    for (var subKey in data2){
+                        if(typeof(data2[subKey.toString()])== "object"){
+                            for (var subsub in data2[subKey.toString()]){
+                                var val = data2[subKey.toString()][subsub.toString()]
+                                if(typeof(val) == 'string'){
+                                    val = he.unescape(data2[subKey.toString()][subsub.toString()])
+                                }else if(typeof(val) == 'number'){
+                                    val = Math.round((val + Number.EPSILON)*100)/100;
+                                }
+                                adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
+                                adapter.log.silly(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
+                            }
+                        }else{
+                            var val = data2[subKey.toString()]
                             if(typeof(val) == 'string'){
-                                val = he.unescape(data2[subKey.toString()][subsub.toString()])
+                                val = he.unescape(data2[subKey.toString()])
                             }else if(typeof(val) == 'number'){
                                 val = Math.round((val + Number.EPSILON)*100)/100;
                             }
-                            adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
-                            adapter.log.silly(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
+                            adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
+                            adapter.log.silly(key.toString() + '.' + subKey.toString() + ', Value=' + data2[subKey.toString()]);
                         }
-                    }else{
-                        var val = data2[subKey.toString()]
-                        if(typeof(val) == 'string'){
-                            val = he.unescape(data2[subKey.toString()])
-                        }else if(typeof(val) == 'number'){
-                            val = Math.round((val + Number.EPSILON)*100)/100;
-                        }
-                        adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
-                        adapter.log.silly(key.toString() + '.' + subKey.toString() + ', Value=' + data2[subKey.toString()]);
                     }
                 }
-            }
-        }else{ // standard object to parse
-            if(data[key.toString()] != null && typeof(data[key.toString()]) != "object"){ //dont fill objects!
-                var val = data[key.toString()]
-                if(typeof(val) == 'string'){
-                    val = he.unescape(data[key.toString()])
-                }else if(typeof(val) == 'number'){
-                    val = Math.round((val + Number.EPSILON)*100)/100;
+            }else{ // standard object to parse
+                if(data[key.toString()] != null && typeof(data[key.toString()]) != "object"){ //dont fill objects!
+                    var val = data[key.toString()]
+                    if(typeof(val) == 'string'){
+                        val = he.unescape(data[key.toString()])
+                    }else if(typeof(val) == 'number'){
+                        val = Math.round((val + Number.EPSILON)*100)/100;
+                    }
+                    adapter.setState(prefix + key.toString(),val,true);
+                    adapter.log.silly(key.toString() + ', Value=' + data[key.toString()]);
                 }
-                adapter.setState(prefix + key.toString(),val,true);
-                adapter.log.silly(key.toString() + ', Value=' + data[key.toString()]);
             }
+            
         }
-        
-    }
+    },isObjectsCreated?1:3000);
 }
 
 function main() {
@@ -779,8 +777,8 @@ function main() {
     baseurl = adapter.config.baseurl;
     apiver = parseInt(adapter.config.apiversion);
     requestType = adapter.config.requestType;
-    downCount = 5; // do the objects creation 5 times after restarting the Adapter
-    downCountArchive = 5; // do the objects creation for archive data 5 times after restarting the Adapter
+    downCount = 2; // do the objects creation 2 times after restarting the Adapter
+    downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
 
     if (ip && baseurl) {
         getLoggerInfo();
