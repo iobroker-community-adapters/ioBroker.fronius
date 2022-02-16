@@ -276,7 +276,7 @@ function getInverterRealtimeData(id) {
                 if (!isObjectsCreated) {
                     devObjects.createInverterObjects(adapter, id, response.data.Body.Data);
                 }
-                fillData(adapter,response.data.Body.Data,"Inverters." + id + '.');
+                fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
             } else {
                 adapter.log.warn(response.data.Head.Status.Reason + " inverter: " + id);
             }
@@ -297,34 +297,34 @@ function getInverterRealtimeData(id) {
                     devObjects.createInverterObjects(adapter, id, resp);
                 }
 
-                fillData(adapter,response.data.Body.Data,"Inverters." + id + '.');
+                fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
 
 
                 if(resp.hasOwnProperty("UDC") && resp.hasOwnProperty("IDC")){
-                    adapter.setState("Inverters." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
+                    adapter.setState("inverter." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
                 }
                 if(resp.hasOwnProperty("UDC_2") && resp.hasOwnProperty("IDC_2")){
-                    adapter.setState("Inverters." + id + ".PDC_2", { val: resp["IDC_2"].Value * resp["UDC_2"].Value, ack: true });
+                    adapter.setState("inverter." + id + ".PDC_2", { val: resp["IDC_2"].Value * resp["UDC_2"].Value, ack: true });
                 }
 
                 // make sure to reset the values if they are no longer reported by the API
                 // Fixes issue #87 from Adapter
                 if (!("PAC" in resp)) {
-                    resetStateToZero(resp, "Inverters." + id, "FAC");
-                    resetStateToZero(resp, "Inverters." + id, "IAC");
-                    resetStateToZero(resp, "Inverters." + id, "IAC_L1");
-                    resetStateToZero(resp, "Inverters." + id, "IAC_L2");
-                    resetStateToZero(resp, "Inverters." + id, "IAC_L3");
-                    resetStateToZero(resp, "Inverters." + id, "IDC");
-                    resetStateToZero(resp, "Inverters." + id, "IDC_2");
-                    resetStateToZero(resp, "Inverters." + id, "PAC");
-                    resetStateToZero(resp, "Inverters." + id, "UAC");
-                    resetStateToZero(resp, "Inverters." + id, "UAC_L1");
-                    resetStateToZero(resp, "Inverters." + id, "UAC_L2");
-                    resetStateToZero(resp, "Inverters." + id, "UDC");
-                    resetStateToZero(resp, "Inverters." + id, "UDC_2");
-                    resetStateToZero(resp, "Inverters." + id, "PDC");
-                    resetStateToZero(resp, "Inverters." + id, "PDC_2");
+                    resetStateToZero(resp, "inverter." + id, "FAC");
+                    resetStateToZero(resp, "inverter." + id, "IAC");
+                    resetStateToZero(resp, "inverter." + id, "IAC_L1");
+                    resetStateToZero(resp, "inverter." + id, "IAC_L2");
+                    resetStateToZero(resp, "inverter." + id, "IAC_L3");
+                    resetStateToZero(resp, "inverter." + id, "IDC");
+                    resetStateToZero(resp, "inverter." + id, "IDC_2");
+                    resetStateToZero(resp, "inverter." + id, "PAC");
+                    resetStateToZero(resp, "inverter." + id, "UAC");
+                    resetStateToZero(resp, "inverter." + id, "UAC_L1");
+                    resetStateToZero(resp, "inverter." + id, "UAC_L2");
+                    resetStateToZero(resp, "inverter." + id, "UDC");
+                    resetStateToZero(resp, "inverter." + id, "UDC_2");
+                    resetStateToZero(resp, "inverter." + id, "PDC");
+                    resetStateToZero(resp, "inverter." + id, "PDC_2");
                 }
 /*
                 const status = resp.DeviceStatus;
@@ -404,15 +404,15 @@ function GetArchiveData(ids) {
                             devObjects.createArchiveObjects(adapter, id, resp);
                         }
                         setTimeout(function(){
-                            var c1 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Current_DC_String_1');
-                            var c2 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Current_DC_String_2');
-                            var v1 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Voltage_DC_String_1');
-                            var v2 = GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Voltage_DC_String_2');
+                            var c1 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Current_DC_String_1');
+                            var c2 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Current_DC_String_2');
+                            var v1 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Voltage_DC_String_1');
+                            var v2 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Voltage_DC_String_2');
                             if(c1 != null && v1 != null)
-                            adapter.setState("Inverters." + id + '.Power_DC_String_1',Math.round((c1*v1 + Number.EPSILON)*100)/100,true);
+                            adapter.setState("inverter." + id + '.Power_DC_String_1',Math.round((c1*v1 + Number.EPSILON)*100)/100,true);
                             if(c2 != null && v2 != null)
-                            adapter.setState("Inverters." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
-                            GetArchiveValue(adapter,response.data.Body.Data,"Inverters." + id + '.',id,'Temperature_Powerstage');
+                            adapter.setState("inverter." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
+                            GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Temperature_Powerstage');
                         },isArchiveObjectsCreated?1:3000);
                     });
                     
@@ -445,8 +445,8 @@ function getStorageRealtimeData(id) {
                         devObjects.createStorageObjects(adapter, id,response.data.Body.Data.Controller);
                         devObjects.createStorageObjects(adapter, id,response.data.Body.Data.Modules);
                     }
-                    fillData(adapter,response.data.Body.Data.Controller,'Storage.' + id);
-                    fillData(adapter,response.data.Body.Data.Modules,'Storage.' + id);
+                    fillData(adapter,response.data.Body.Data.Controller,'storage.' + id);
+                    fillData(adapter,response.data.Body.Data.Modules,'storage.' + id);
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " storage: " + id);
@@ -471,7 +471,7 @@ function getMeterRealtimeData(id) {
                     if (!isObjectsCreated) {
                         devObjects.createMeterObjects(adapter, id, resp);
                     }
-                    fillData(adapter,response.data.Body.Data, "Meter." + id);
+                    fillData(adapter,response.data.Body.Data, "meter." + id);
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
@@ -493,7 +493,7 @@ function getSensorRealtimeDataNowSensorData(id) {
                     if (!isObjectsCreated) {
                         devObjects.createSensorNowObjects(adapter, id, response.data);
                     }
-                    fillData(adapter,response.data.Body.Data,"Sensors." + id);
+                    fillData(adapter,response.data.Body.Data,"sensor." + id);
                 } else {
                     adapter.log.warn(response.data.Head.Status.Reason + " sensor: " + id);
                 }
@@ -515,7 +515,7 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
                     if (!isObjectsCreated) {
                         devObjects.createSensorMinMaxObjects(adapter, id, response.data);
                     }
-                    fillData(adapter,response.data.Body.Data,"Sensors." + id);
+                    fillData(adapter,response.data.Body.Data,"sensor." + id);
 
                 } else {
                     adapter.log.warn(response.data.Head.Status.Reason + " sensor: " + id);
@@ -543,8 +543,8 @@ function getPowerFlowRealtimeData() {
                     if (!isObjectsCreated) {
                         devObjects.createPowerFlowObjects(adapter, resp);
                     }
-                    fillData(adapter,resp.Inverters,"Inverters.");
-                    fillData(adapter,resp.Site,"Site.");
+                    fillData(adapter,resp.Inverters,"inverter.");
+                    fillData(adapter,resp.Site,"site.");
                 } else {
                     adapter.log.warn(response.data.Head.Status.Reason + " powerflow");
                 }
@@ -566,7 +566,7 @@ function getInverterInfo() {
                     if (!isObjectsCreated) {
                         devObjects.createInverterInfoObjects(adapter, response.data.Body.Data);
                     }
-                    fillData(adapter,response.data.Body.Data,"Inverters.");
+                    fillData(adapter,response.data.Body.Data,"inverter.");
                 } else {
                     adapter.log.warn(response.data.Head.Status.Reason + " inverterinfo");
                 }
@@ -582,7 +582,7 @@ function getInverterInfo() {
 function setConnected(_isConnected) {
     if (isConnected !== _isConnected) {
         isConnected = _isConnected;
-        adapter.setState('Info.connection', { val: isConnected, ack: true });
+        adapter.setState('info.connection', { val: isConnected, ack: true });
     }
 }
 
@@ -642,7 +642,7 @@ function checkStatus() {
                 getInverterInfo();
             }
 
-            adapter.setState("Info.lastsync", { val: new Date().toISOString(), ack: true });
+            adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
         } else {
             adapter.log.debug("Unable to read data from inverters solarAPI");
             setConnected(false);
@@ -680,7 +680,7 @@ function checkArchiveStatus() {
                 GetArchiveData(adapter.config.inverter);
             }
 
-            adapter.setState("Info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
+            adapter.setState("info.lastsyncarchive", { val: new Date().toISOString(), ack: true });
         } else {
             adapter.log.debug("Unable to read archive data from inverters solarAPI");
         }
@@ -702,7 +702,7 @@ function getLoggerInfo() {
                     if (!isObjectsCreated) {
                         devObjects.createInfoObjects(adapter, resp);
                     }
-                    fillData(adapter,resp,"Site.");
+                    fillData(adapter,resp,"site.");
                 } else {
                     adapter.log.warn(data.Head.Status.Reason);
                 }
