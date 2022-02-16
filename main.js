@@ -133,6 +133,7 @@ function startAdapter(options) {
         ready: main
     });
     adapter = new utils.Adapter(options);
+    checkIP(adapter.config.ip)
     return adapter;
 }
 
@@ -163,6 +164,7 @@ function checkIP(ipToCheck, callback) {
         if (response.status == 200 && 'BaseURL' in response.data) {
             if(requestType == secondary){
                 requestType = primary;
+                adapter.log.warn("Adapter requestType was not matching, fixed the isssue and trigger restart.")
                 adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
                     if(obj != null){
                         obj.native.requestType = requestType;
@@ -184,6 +186,7 @@ function checkIP(ipToCheck, callback) {
         if (response.status == 200 && 'BaseURL' in response.data) {
             if(requestType == primary){
                 requestType = secondary;
+                adapter.log.warn("Adapter requestType was not matching, fixed the isssue and trigger restart.")
                 adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
                     if(obj != null){
                         obj.native.requestType = requestType;
@@ -421,6 +424,8 @@ function GetArchiveData(ids) {
                 adapter.log.warn("GetArchiveData: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("GetArchiveData has thrown following error: " + error);
     });
 }
 
@@ -450,6 +455,8 @@ function getStorageRealtimeData(id) {
                 adapter.log.warn("getStorageRealtimeData: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("GetStorageRealtimeData has thrown following error: " + error);
     });
 }
 
@@ -472,6 +479,8 @@ function getMeterRealtimeData(id) {
                 adapter.log.warn("getMeterRealtimeData: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("GetMeterRealtimeData has thrown following error: " + error);
     });
 }
 
@@ -492,6 +501,8 @@ function getSensorRealtimeDataNowSensorData(id) {
                 adapter.log.warn("getSensorRealtimeDataNowSensorData: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("getSensorRealtimeDataNowSensorData has thrown following error: " + error);
     });
 }
 
@@ -513,6 +524,8 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
                 adapter.log.warn("getSensorRealtimeDataMinMaxSensorData: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("getSensorRealtimeDataMinMaxSensorData has thrown following error: " + error);
     });
 }
 
@@ -539,6 +552,8 @@ function getPowerFlowRealtimeData() {
                 adapter.log.warn("getPowerFlowRealtimeData: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("getPowerFlowRealtimeData has thrown following error: " + error);
     });
 }
 
@@ -559,6 +574,8 @@ function getInverterInfo() {
                 adapter.log.warn("getInverterInfo: " + e);
             }
         }
+    }).catch(function(error){
+        adapter.log.debug("getInverterInfo has thrown following error: " + error);
     });
 }
 
@@ -631,6 +648,8 @@ function checkStatus() {
             setConnected(false);
         }
 
+    }).catch(function(error){
+        adapter.log.debug("checkStatus has thrown following error: " + error);
     });
 }
 
@@ -666,6 +685,8 @@ function checkArchiveStatus() {
             adapter.log.debug("Unable to read archive data from inverters solarAPI");
         }
 
+    }).catch(function(error){
+        adapter.log.debug("checkArchiveStatus has thrown following error: " + error);
     });
 }
 
@@ -689,9 +710,8 @@ function getLoggerInfo() {
                 adapter.log.warn("getLoggerInfo: " + e);
             }
         }
-    })
-    .catch(function(error){
-        adapter.log.warn("getLoggerInfo: " + error);
+    }).catch(function(error){
+        adapter.log.debug("getLoggerInfo has thrown following error: " + error);
     });
 }
 
@@ -781,6 +801,7 @@ function main() {
     downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
 
     if (ip && baseurl) {
+        checkIP(ip,function(res){});
         getLoggerInfo();
         checkStatus();
         checkArchiveStatus();
