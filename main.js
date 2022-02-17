@@ -161,7 +161,7 @@ function checkIP(ipToCheck, callback) {
     axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
-            if(requestType == secondary){
+            if(requestType != primary){
                 requestType = primary;
                 adapter.log.warn("Adapter requestType was not matching, fixed the isssue and trigger restart.")
                 adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
@@ -183,7 +183,7 @@ function checkIP(ipToCheck, callback) {
     axios.get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
-            if(requestType == primary){
+            if(requestType != secondary){
                 requestType = secondary;
                 adapter.log.warn("Adapter requestType was not matching, fixed the isssue and trigger restart.")
                 adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
@@ -300,36 +300,38 @@ function getInverterRealtimeData(id) {
                 if (!isObjectsCreated) {
                     devObjects.createInverterObjects(adapter, id, resp);
                 }
-
+                
                 fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
 
+                setTimeout(() => {
 
-                if(resp.hasOwnProperty("UDC") && resp.hasOwnProperty("IDC")){
-                    adapter.setState("inverter." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
-                }
-                if(resp.hasOwnProperty("UDC_2") && resp.hasOwnProperty("IDC_2")){
-                    adapter.setState("inverter." + id + ".PDC_2", { val: resp["IDC_2"].Value * resp["UDC_2"].Value, ack: true });
-                }
+                    if(resp.hasOwnProperty("UDC") && resp.hasOwnProperty("IDC")){
+                        adapter.setState("inverter." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
+                    }
+                    if(resp.hasOwnProperty("UDC_2") && resp.hasOwnProperty("IDC_2")){
+                        adapter.setState("inverter." + id + ".PDC_2", { val: resp["IDC_2"].Value * resp["UDC_2"].Value, ack: true });
+                    }
 
-                // make sure to reset the values if they are no longer reported by the API
-                // Fixes issue #87 from Adapter
-                if (!("PAC" in resp)) {
-                    resetStateToZero(resp, "inverter." + id, "FAC");
-                    resetStateToZero(resp, "inverter." + id, "IAC");
-                    resetStateToZero(resp, "inverter." + id, "IAC_L1");
-                    resetStateToZero(resp, "inverter." + id, "IAC_L2");
-                    resetStateToZero(resp, "inverter." + id, "IAC_L3");
-                    resetStateToZero(resp, "inverter." + id, "IDC");
-                    resetStateToZero(resp, "inverter." + id, "IDC_2");
-                    resetStateToZero(resp, "inverter." + id, "PAC");
-                    resetStateToZero(resp, "inverter." + id, "UAC");
-                    resetStateToZero(resp, "inverter." + id, "UAC_L1");
-                    resetStateToZero(resp, "inverter." + id, "UAC_L2");
-                    resetStateToZero(resp, "inverter." + id, "UDC");
-                    resetStateToZero(resp, "inverter." + id, "UDC_2");
-                    resetStateToZero(resp, "inverter." + id, "PDC");
-                    resetStateToZero(resp, "inverter." + id, "PDC_2");
-                }
+                    // make sure to reset the values if they are no longer reported by the API
+                    // Fixes issue #87 from Adapter
+                    if (!("PAC" in resp)) {
+                        resetStateToZero(resp, "inverter." + id, "FAC");
+                        resetStateToZero(resp, "inverter." + id, "IAC");
+                        resetStateToZero(resp, "inverter." + id, "IAC_L1");
+                        resetStateToZero(resp, "inverter." + id, "IAC_L2");
+                        resetStateToZero(resp, "inverter." + id, "IAC_L3");
+                        resetStateToZero(resp, "inverter." + id, "IDC");
+                        resetStateToZero(resp, "inverter." + id, "IDC_2");
+                        resetStateToZero(resp, "inverter." + id, "PAC");
+                        resetStateToZero(resp, "inverter." + id, "UAC");
+                        resetStateToZero(resp, "inverter." + id, "UAC_L1");
+                        resetStateToZero(resp, "inverter." + id, "UAC_L2");
+                        resetStateToZero(resp, "inverter." + id, "UDC");
+                        resetStateToZero(resp, "inverter." + id, "UDC_2");
+                        resetStateToZero(resp, "inverter." + id, "PDC");
+                        resetStateToZero(resp, "inverter." + id, "PDC_2");
+                    }
+                },isObjectsCreated?1:3000);
 /*
                 const status = resp.DeviceStatus;
                 if (status) {
@@ -897,8 +899,10 @@ function fillData(adapter,data,prefix=""){
                     if(typeof(val) == 'number'){
                         val = Math.round((val + Number.EPSILON)*100)/100;
                     }
-                    adapter.setState(prefix + key.toString(),val,true);
-                    adapter.log.silly(key.toString() + ", Value=" + val);
+                    if(val !== null){
+                        adapter.setState(prefix + key.toString(),val,true);
+                        adapter.log.silly(key.toString() + ", Value=" + val);
+                    }
                 }else{ // standard nested object to parse
                     var data2 = data[key.toString()]
                     for (var subKey in data2){
@@ -955,29 +959,34 @@ function main() {
     downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
 
     if (ip && baseurl) {
-        checkIP(ip,function(res){});
-        getLoggerInfo();
-        checkStatus();
-        checkArchiveStatus();
+        checkIP(ip,function(res){
+            adapter.log.debug("checkIP is executed with result error=" + res.error + ", message=" + JSON.stringify(res.message));
+        });
+        // delay the further execution
+        setTimeout(() => { 
+            getLoggerInfo();
+            checkStatus();
+            checkArchiveStatus();
 
-        let secs = adapter.config.poll;
-        if (isNaN(secs) || secs < 1) {
-            secs = 10;
-        }
+            let secs = adapter.config.poll;
+            if (isNaN(secs) || secs < 1) {
+                secs = 10;
+            }
 
-        // run cyclic requests for values
-        setInterval(checkStatus, secs * 1000);
+            // run cyclic requests for values
+            setInterval(checkStatus, secs * 1000);
 
-        let archivesecs = adapter.config.pollarchive;
-        if (isNaN(archivesecs) || archivesecs < 1) {
-            archivesecs = 150;
-        }
+            let archivesecs = adapter.config.pollarchive;
+            if (isNaN(archivesecs) || archivesecs < 1) {
+                archivesecs = 150;
+            }
 
-        // run cyclic requests for archive values
-        setInterval(checkArchiveStatus, archivesecs * 1000);
+            // run cyclic requests for archive values
+            setInterval(checkArchiveStatus, archivesecs * 1000);
 
-        // check every hour if something has changed on the bus (number of devices)
-        setInterval(checkExistingConfig, 3600 * 1000);
+            // check every hour if something has changed on the bus (number of devices)
+            setInterval(checkExistingConfig, 3600 * 1000);
+        }, 3000);
 
     } else {
         adapter.log.error("Please configure the Fronius adapter");
