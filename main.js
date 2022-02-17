@@ -258,6 +258,11 @@ function checkExistingConfig(){
                     }
                 });
             }
+            // Restart the creation of objects. This is usefull in case that some data was not availlable during start
+            downCountArchive = 1;
+            isArchiveObjectsCreated = false;
+            downCount = 1;
+            isObjectsCreated = false;
         }
     });
 
