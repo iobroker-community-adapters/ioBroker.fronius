@@ -133,7 +133,6 @@ function startAdapter(options) {
         ready: main
     });
     adapter = new utils.Adapter(options);
-    checkIP(adapter.config.ip)
     return adapter;
 }
 
