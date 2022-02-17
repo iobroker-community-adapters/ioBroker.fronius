@@ -154,55 +154,56 @@ function resetStateToZero(API_response, basePath, state) {
 
 //Check if IP is a Fronius inverter
 function checkIP(ipToCheck, callback) {
-    var primary = "http://"
-    var secondary = "https://"
+    var primary = "https://"
+    var secondary = "http://"
     
 
     axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
             if(requestType != primary){
+                adapter.log.warn("Adapter requestType " + requestType + " was not matching, changed to " + primary + " and trigger restart.")
                 requestType = primary;
-                adapter.log.warn("Adapter requestType was not matching, fixed the isssue and trigger restart.")
                 adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
                     if(obj != null){
                         obj.native.requestType = requestType;
                         adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
                     }
                 });
+                adapter.log.debug("Passed with " + requestType);
+                callback({ error: 0, message: response.data});
             }
-            callback({ error: 0, message: response.data});
             return;
         } else {
-            adapter.log.debug("requestType 'http://' is not working! Now trying with 'https://");
+            adapter.log.debug("requestType " + primary + " is not working! Now trying with " + secondary);
+            axios.get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
+            .then(function(response){
+                if (response.status == 200 && 'BaseURL' in response.data) {
+                    if(requestType != secondary){
+                        adapter.log.warn("Adapter requestType " + requestType + " was not matching, changed to " + secondary + " and trigger restart.")
+                        requestType = secondary;
+                        adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
+                            if(obj != null){
+                                obj.native.requestType = requestType;
+                                adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
+                            }
+                        });
+                        callback({ error: 0, message: response.data});
+                    }
+                } else {
+                    adapter.log.error("IP invalid");
+                    callback({ error: 1, message: {} });
+                }
+            }).catch(function(error){
+                adapter.log.error("IP is not a Fronius inverter");
+                callback({ error: 1, message: {} });
+            });
         }
     }).catch(function(error){
-        adapter.log.debug("requestType 'http://' is not working! Now trying with 'https://");
+        adapter.log.debug("Unable to communicate with Device! Error: " + error);
     });
 
-    axios.get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
-    .then(function(response){
-        if (response.status == 200 && 'BaseURL' in response.data) {
-            if(requestType != secondary){
-                requestType = secondary;
-                adapter.log.warn("Adapter requestType was not matching, fixed the isssue and trigger restart.")
-                adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
-                    if(obj != null){
-                        obj.native.requestType = requestType;
-                        adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
-                    }
-                });
-            }
-            callback({ error: 0, message: response.data});
-            return;
-        } else {
-            adapter.log.error("IP invalid");
-            callback({ error: 1, message: {} });
-        }
-    }).catch(function(error){
-        adapter.log.error("IP is not a Fronius inverter");
-        callback({ error: 1, message: {} });
-    });
+    
 }
 
 //Check Fronius devices v1
