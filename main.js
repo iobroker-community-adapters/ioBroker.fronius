@@ -283,12 +283,12 @@ function getInverterRealtimeData(id) {
                 }
                 fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
             } else {
-                adapter.log.warn(response.data.Head.Status.Reason + " inverter: " + id);
+                adapter.log.warn(response.data.Head.Status.Reason + " 3PInverterData inverter: " + id);
             }
         }
     })
     .catch(function(error){
-        adapter.log.warn("getInverterRealtimeData (3PInverterData): " + error);
+        adapter.log.debug("getInverterRealtimeData (3PInverterData) raised following error: " + error);
     });
 
     axios.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData')
@@ -374,12 +374,29 @@ function getInverterRealtimeData(id) {
                 }
                 */
             } else {
-                adapter.log.warn(data.Head.Status.Reason + " inverter: " + id);
+                adapter.log.warn(data.Head.Status.Reason + " CommonInverterData inverter: " + id);
             }
         }
     })
     .catch(function(error){
-        //adapter.log.warn("getInverterRealtimeData (CommonInverterData): " + error);
+        adapter.log.debug("getInverterRealtimeData (CommonInverterData) raised following error: " + error);
+    });
+
+    axios.get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData')
+    .then(function(response){
+        if (response.status == 200) {
+            if ("Body" in response.data) {
+                if (!isObjectsCreated) {
+                    devObjects.createInverterObjects(adapter, id, response.data.Body.Data);
+                }
+                fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
+            } else {
+                adapter.log.warn(response.data.Head.Status.Reason + " MinMaxInverterData inverter: " + id);
+            }
+        }
+    })
+    .catch(function(error){
+        adapter.log.debug("getInverterRealtimeData (MinMaxInverterData) raised following error: " + error);
     });
 }
 
@@ -431,6 +448,34 @@ function GetArchiveData(ids) {
         }
     }).catch(function(error){
         adapter.log.debug("GetArchiveData has thrown following error: " + error);
+    });
+}
+function getOhmPilotRealtimeData(id) {
+    axios.get(requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System')
+    .then(function (response) {
+        if (response.status == 200) {
+            try {
+                const data = response.data;
+                if ("Body" in data) {
+                    if (data.Body.Data === null) {
+                        adapter.log.debug("GetOhmPilotRealtimeData is not supported: " + JSON.stringify(data));
+                        return;
+                    }
+
+                    if (!isObjectsCreated) {
+                        devObjects.createOhmPilotObjects(adapter,response.data.Body.Data);
+                    }
+                    fillData(adapter,response.data.Body.Data,'ohmpilot');
+
+                } else {
+                    adapter.log.warn(data.Head.Status.Reason + " ohmpilot");
+                }
+            } catch (e) {
+                adapter.log.warn("GetOhmPilotRealtimeData: " + e);
+            }
+        }
+    }).catch(function(error){
+        adapter.log.debug("GetOhmPilotRealtimeData has thrown following error: " + error);
     });
 }
 
@@ -535,7 +580,112 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
 }
 
 function getStringRealtimeData(id) {
+    axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData')
+    .then(function (response) {
+        if (response.status == 200) {
+            try {
+                if ("Body" in response.data) {
+                    if (!isObjectsCreated) {
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                    }
+                    fillData(adapter,response.data.Body.Data,"string." + id);
 
+                } else {
+                    adapter.log.warn(response.data.Head.Status.Reason + " NowStringControlData: " + id);
+                }
+            } catch (e) {
+                adapter.log.warn("GetStringRealtimeData for NowStringControlData raised following error: " + e);
+            }
+        }
+    }).catch(function(error){
+        adapter.log.debug("GetStringRealtimeData for NowStringControlData has thrown following error: " + error);
+    });
+
+    axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData')
+    .then(function (response) {
+        if (response.status == 200) {
+            try {
+                if ("Body" in response.data) {
+                    if (!isObjectsCreated) {
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                    }
+                    fillData(adapter,response.data.Body.Data,"string." + id);
+
+                } else {
+                    adapter.log.warn(response.data.Head.Status.Reason + " LastErrorStringControlData: " + id);
+                }
+            } catch (e) {
+                adapter.log.warn("GetStringRealtimeData for LastErrorStringControlData raised following error: " + e);
+            }
+        }
+    }).catch(function(error){
+        adapter.log.debug("GetStringRealtimeData for LastErrorStringControlData has thrown following error: " + error);
+    });
+
+    axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day')
+    .then(function (response) {
+        if (response.status == 200) {
+            try {
+                if ("Body" in response.data) {
+                    if (!isObjectsCreated) {
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                    }
+                    fillData(adapter,response.data.Body.Data,"string." + id);
+
+                } else {
+                    adapter.log.warn(response.data.Head.Status.Reason + " CurrentSumStringControlData&TimePeriod=Day: " + id);
+                }
+            } catch (e) {
+                adapter.log.warn("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Day raised following error: " + e);
+            }
+        }
+    }).catch(function(error){
+        adapter.log.debug("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Day has thrown following error: " + error);
+    });
+
+    axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year')
+    .then(function (response) {
+        if (response.status == 200) {
+            try {
+                if ("Body" in response.data) {
+                    if (!isObjectsCreated) {
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                    }
+                    fillData(adapter,response.data.Body.Data,"string." + id);
+
+                } else {
+                    adapter.log.warn(response.data.Head.Status.Reason + " CurrentSumStringControlData&TimePeriod=Year: " + id);
+                }
+            } catch (e) {
+                adapter.log.warn("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Year raised following error: " + e);
+            }
+        }
+    }).catch(function(error){
+        adapter.log.debug("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Year has thrown following error: " + error);
+    });
+
+    axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total')
+    .then(function (response) {
+        if (response.status == 200) {
+            try {
+                if ("Body" in response.data) {
+                    if (!isObjectsCreated) {
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                    }
+                    fillData(adapter,response.data.Body.Data,"string." + id);
+
+                } else {
+                    adapter.log.warn(response.data.Head.Status.Reason + " CurrentSumStringControlData&TimePeriod=Total: " + id);
+                }
+            } catch (e) {
+                adapter.log.warn("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total raised following error: " + e);
+            }
+        }
+    }).catch(function(error){
+        adapter.log.debug("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total has thrown following error: " + error);
+    });
+
+    
 }
 
 function getPowerFlowRealtimeData() {
@@ -548,8 +698,8 @@ function getPowerFlowRealtimeData() {
                     if (!isObjectsCreated) {
                         devObjects.createPowerFlowObjects(adapter, resp);
                     }
-                    fillData(adapter,resp.Inverters,"inverter.");
-                    fillData(adapter,resp.Site,"site.");
+                    fillData(adapter,resp.Inverters,"inverter");
+                    fillData(adapter,resp.Site,"site");
                 } else {
                     adapter.log.warn(response.data.Head.Status.Reason + " powerflow");
                 }
