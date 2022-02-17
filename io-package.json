@@ -224,7 +224,7 @@
             "native": {}
         },
         {
-            "_id": "Info.lastsyncarchive",
+            "_id": "info.lastsyncarchive",
             "type": "state",
             "common": {
                 "name": "Last successful sync of archive data",
@@ -237,7 +237,7 @@
             "native": {}
         },
         {
-            "_id": "Info.connection",
+            "_id": "info.connection",
             "type": "state",
             "common": {
                 "name": "Fronius connected",
