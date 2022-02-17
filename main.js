@@ -721,7 +721,7 @@ function getInverterInfo() {
                     if (!isObjectsCreated) {
                         devObjects.createInverterInfoObjects(adapter, response.data.Body.Data);
                     }
-                    fillData(adapter,response.data.Body.Data,"inverter.");
+                    fillData(adapter,response.data.Body.Data,"inverter");
                 } else {
                     adapter.log.warn(response.data.Head.Status.Reason + " inverterinfo");
                 }
@@ -857,7 +857,7 @@ function getLoggerInfo() {
                     if (!isObjectsCreated) {
                         devObjects.createInfoObjects(adapter, resp);
                     }
-                    fillData(adapter,resp,"site.");
+                    fillData(adapter,resp,"site");
                 } else {
                     adapter.log.warn(data.Head.Status.Reason);
                 }
