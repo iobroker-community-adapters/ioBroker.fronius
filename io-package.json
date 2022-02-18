@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fronius",
-        "version": "1.2.0",
+        "version": "1.9.0",
         "news": {
             "1.2.0": {
                 "en": "Adapted storage objects to support GEN24 and improved object creation for storage objects",
@@ -203,7 +203,7 @@
     "objects": [],
     "instanceObjects": [
         {
-            "_id": "info",
+            "_id": "Info",
             "type": "channel",
             "common": {
                 "name": "Information"
@@ -211,7 +211,7 @@
             "native": {}
         },
         {
-            "_id": "info.lastsync",
+            "_id": "Info.lastsync",
             "type": "state",
             "common": {
                 "name": "Last successful sync",
@@ -220,6 +220,19 @@
                 "read": true,
                 "write": false,
                 "desc": "Last successful synchronization"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastsyncarchive",
+            "type": "state",
+            "common": {
+                "name": "Last successful sync of archive data",
+                "type": "string",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "desc": "Last successful synchronization of archive data"
             },
             "native": {}
         },
@@ -234,15 +247,6 @@
                 "write": false,
                 "def": false,
                 "desc": "Is Fronius inverter connected?"
-            },
-            "native": {}
-        },
-        {
-            "_id": "inverter",
-            "type": "channel",
-            "common": {
-                "name": "inverter realtime data",
-                "role": "info"
             },
             "native": {}
         }
