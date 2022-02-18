@@ -142,7 +142,7 @@ function resetStateToZero(API_response, basePath, state) {
     } else {
         adapter.getState(basePath + "." + state, (err, stat) => {
             if (stat) {
-                adapter.log.debug("State is found in objects but not on API: " + JSON.stringify(stat));
+                adapter.log.debug("State " + state + " is found in objects but not on API: " + JSON.stringify(API_response));
                 if (stat.val != 0) {
                     adapter.setState(basePath + "." + state, 0, true);
                 }
@@ -304,7 +304,7 @@ function getInverterRealtimeData(id) {
                 
                 fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
 
-                setTimeout(() => {
+                setTimeout((id,resp) => {
 
                     if(resp.hasOwnProperty("UDC") && resp.hasOwnProperty("IDC")){
                         adapter.setState("inverter." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
@@ -332,7 +332,7 @@ function getInverterRealtimeData(id) {
                         resetStateToZero(resp, "inverter." + id, "PDC");
                         resetStateToZero(resp, "inverter." + id, "PDC_2");
                     }
-                },isObjectsCreated?1:3000);
+                },isObjectsCreated?1:3000,id,resp);
 
                 const status = resp.DeviceStatus;
                 if (status) {
@@ -364,8 +364,12 @@ function getInverterRealtimeData(id) {
                         statusCodeString = devStrings.getStringErrorCode400(statusCode);
                     } else if (statusCode >= 300) {
                         statusCodeString = devStrings.getStringErrorCode300(statusCode);
-                    } else {
+                    } else if (statusCode >= 100) {
                         statusCodeString = devStrings.getStringErrorCode100(statusCode);
+                    } else if (statusCode > 0){
+                        statusCodeString = "Unknown error with id " + statusCode.toString()
+                    }else{
+                        statusCodeString = "No error"
                     }
                     adapter.setState("inverter." + id + ".DeviceStatus.InverterErrorState", { val: statusCodeString, ack: true });
                 }
@@ -421,17 +425,20 @@ function GetArchiveData(ids) {
                         if (!isArchiveObjectsCreated) {
                             devObjects.createArchiveObjects(adapter, id, resp);
                         }
-                        setTimeout(function(){
-                            var c1 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Current_DC_String_1');
-                            var c2 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Current_DC_String_2');
-                            var v1 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Voltage_DC_String_1');
-                            var v2 = GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Voltage_DC_String_2');
-                            if(c1 != null && v1 != null)
-                            adapter.setState("inverter." + id + '.Power_DC_String_1',Math.round((c1*v1 + Number.EPSILON)*100)/100,true);
-                            if(c2 != null && v2 != null)
-                            adapter.setState("inverter." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
-                            GetArchiveValue(adapter,response.data.Body.Data,"inverter." + id + '.',id,'Temperature_Powerstage');
-                        },isArchiveObjectsCreated?1:3000);
+
+                        setTimeout(function(id,rsp){
+                            var c1 = GetArchiveValue(adapter,rsp,"inverter." + id + '.',id,'Current_DC_String_1');
+                            var c2 = GetArchiveValue(adapter,rsp,"inverter." + id + '.',id,'Current_DC_String_2');
+                            var v1 = GetArchiveValue(adapter,rsp,"inverter." + id + '.',id,'Voltage_DC_String_1');
+                            var v2 = GetArchiveValue(adapter,rsp,"inverter." + id + '.',id,'Voltage_DC_String_2');
+                            if(c1 != null && v1 != null){
+                                adapter.setState("inverter." + id + '.Power_DC_String_1',Math.round((c1*v1 + Number.EPSILON)*100)/100,true);
+                            }
+                            if(c2 != null && v2 != null){
+                                adapter.setState("inverter." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
+                            }
+                            GetArchiveValue(adapter,resp,"inverter." + id + '.',id,'Temperature_Powerstage');
+                        },isArchiveObjectsCreated?1:3000,id,response.data.Body.Data);
                     });
                     
                 } else {
@@ -446,7 +453,7 @@ function GetArchiveData(ids) {
         adapter.log.debug("GetArchiveData has thrown following error: " + error);
     });
 }
-function getOhmPilotRealtimeData(id) {
+function getOhmPilotRealtimeData() {
     axios.get(requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System')
     .then(function (response) {
         if (response.status == 200) {
@@ -533,11 +540,11 @@ function getMeterRealtimeData(id) {
 function getSensorRealtimeDataNowSensorData(id) {
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
     .then(function (response) {
-        if (response.status == 200) {
+        if (response.status == 200 && response.data.Head.Status.Code == 0) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createSensorNowObjects(adapter, id, response.data);
+                        devObjects.createSensorNowObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"sensor." + id);
                 } else {
@@ -555,11 +562,11 @@ function getSensorRealtimeDataNowSensorData(id) {
 function getSensorRealtimeDataMinMaxSensorData(id) {
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
     .then(function (response) {
-        if (response.status == 200) {
+        if (response.status == 200 && response.data.Head.Status.Code == 0) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createSensorMinMaxObjects(adapter, id, response.data);
+                        devObjects.createSensorMinMaxObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"sensor." + id);
 
@@ -582,7 +589,7 @@ function getStringRealtimeData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"string." + id);
 
@@ -603,7 +610,7 @@ function getStringRealtimeData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"string." + id);
 
@@ -624,7 +631,7 @@ function getStringRealtimeData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"string." + id);
 
@@ -645,7 +652,7 @@ function getStringRealtimeData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"string." + id);
 
@@ -666,7 +673,7 @@ function getStringRealtimeData(id) {
             try {
                 if ("Body" in response.data) {
                     if (!isObjectsCreated) {
-                        devObjects.createStringRealtimeObjects(adapter, id, response.data);
+                        devObjects.createStringRealtimeObjects(adapter, id, response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data,"string." + id);
 
@@ -692,7 +699,7 @@ function getPowerFlowRealtimeData() {
                 if ("Body" in response.data) {
                     var resp = response.data.Body.Data;
                     if (!isObjectsCreated) {
-                        devObjects.createPowerFlowObjects(adapter, resp);
+                        devObjects.createPowerFlowObjects(adapter,resp);
                     }
                     fillData(adapter,resp.Inverters,"inverter");
                     fillData(adapter,resp.Site,"site");
@@ -791,6 +798,7 @@ function checkStatus() {
                 }
                 getPowerFlowRealtimeData();
                 getInverterInfo();
+                getOhmPilotRealtimeData();
             }
 
             adapter.setState("info.lastsync", { val: new Date().toISOString(), ack: true });
@@ -848,14 +856,14 @@ function getLoggerInfo() {
         if (response.status == 200) {
             try {
                 const data = response.data;
-                if ("Body" in data) {
+                if ("Body" in data && Object.keys(data.Body).length > 0) {
                     const resp = data.Body.LoggerInfo;
                     if (!isObjectsCreated) {
                         devObjects.createInfoObjects(adapter, resp);
                     }
                     fillData(adapter,resp,"site");
                 } else {
-                    adapter.log.warn(data.Head.Status.Reason);
+                    adapter.log.debug("getLoggerInfo: " + data.Head.Status.Reason);
                 }
             } catch (e) {
                 adapter.log.warn("getLoggerInfo: " + e);
@@ -883,7 +891,7 @@ function GetArchiveValue(adapter,data,prefix,id,key){
 }
 
 function fillData(adapter,data,prefix=""){
-    setTimeout(function(){
+    setTimeout(function(data,prefix){
         if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
             prefix = prefix + '.';
         }
@@ -938,7 +946,7 @@ function fillData(adapter,data,prefix=""){
             }
             
         }
-    },isObjectsCreated?1:3000);
+    },isObjectsCreated?1:3000,data,prefix);
 }
 
 function main() {
