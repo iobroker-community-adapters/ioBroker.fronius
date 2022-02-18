@@ -333,13 +333,10 @@ function getInverterRealtimeData(id) {
                         resetStateToZero(resp, "inverter." + id, "PDC_2");
                     }
                 },isObjectsCreated?1:3000);
-/*
+
                 const status = resp.DeviceStatus;
                 if (status) {
                     let statusCode = parseInt(status.StatusCode);
-                    adapter.setState("inverter." + id + ".DeviceStatus", { val: JSON.stringify(status), ack: true });
-                    adapter.log.debug("inverter." + id + ".StatusCode=" + statusCode)
-                    adapter.setState("inverter." + id + ".StatusCode", { val: statusCode, ack: true });
 
                     let statusCodeString = "Startup";
                     if (statusCode === 7) {
@@ -351,13 +348,11 @@ function getInverterRealtimeData(id) {
                     } else if (statusCode === 10) {
                         statusCodeString = "Error";
                     }
-                    if (status.hasOwnProperty("InverterState")) {
-                        statusCodeString = status.InverterState;
+                    if (!status.hasOwnProperty("InverterState")) { // only needed if not delivered from the API
+                        adapter.setState("inverter." + id + ".DeviceStatus.InverterState", { val: statusCodeString, ack: true });
                     }
-                    adapter.setState("inverter." + id + ".StatusCodeString", { val: statusCodeString, ack: true });
 
                     statusCode = parseInt(status.ErrorCode);
-                    adapter.setState("inverter." + id + ".ErrorCode", { val: statusCode, ack: true });
 
                     if (statusCode >= 700) {
                         statusCodeString = devStrings.getStringErrorCode700(statusCode);
@@ -372,9 +367,8 @@ function getInverterRealtimeData(id) {
                     } else {
                         statusCodeString = devStrings.getStringErrorCode100(statusCode);
                     }
-                    adapter.setState("inverter." + id + ".ErrorCodeString", { val: statusCodeString, ack: true });
+                    adapter.setState("inverter." + id + ".DeviceStatus.InverterErrorState", { val: statusCodeString, ack: true });
                 }
-                */
             } else {
                 adapter.log.warn(data.Head.Status.Reason + " CommonInverterData inverter: " + id);
             }
