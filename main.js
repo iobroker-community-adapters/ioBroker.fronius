@@ -25,13 +25,13 @@
 /* jshint -W097 */ // jshint strict:false
 /*jslint node: true */
 "use strict";
+const testMode = true; // defines that the testmode is activated. In this mode only objects are created and filled from the solarApiJson.js
 
 // you have to require the utils module and call adapter function
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
-
+const apiTest = require(__dirname + '/test/solarApiJson.js')
 const axios = require('axios');
 const he = require('he')
-const ping = require(__dirname + '/lib/ping');
 const devStrings = require(__dirname + '/lib/devStrings');
 const devObjects = require(__dirname + '/lib/devObjects');
 
@@ -156,7 +156,11 @@ function resetStateToZero(API_response, basePath, state) {
 function checkIP(ipToCheck, callback) {
     var primary = "https://"
     var secondary = "http://"
-    
+    if(testMode){
+        callback({ error: 0, message: apiTest.getApiVersion});
+        return;
+    }
+
     axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
@@ -201,12 +205,16 @@ function checkIP(ipToCheck, callback) {
     }).catch(function(error){
         adapter.log.debug("Unable to communicate with Device! Error: " + error);
     });
-
-    
 }
 
 //Check Fronius devices v1
 function getActiveDeviceInfo(type, url, callback) {
+    if(testMode){
+        var info = apiTest.getActiveDeviceInfo;
+        adapter.log.debug("getActiveDeviceInfoTest:" + info)
+        callback({ error: 0, message: info.Body.Data});
+        return;
+    }
     axios.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type)
     .then(function(response){
         const deviceData = response.data;
@@ -453,6 +461,14 @@ function GetArchiveData(ids) {
     });
 }
 function getOhmPilotRealtimeData() {
+    if(testMode){
+        adapter.log.debug("Ohmpilot: " + apiTest.getOhmpilotRealtimeDataSystem);
+        var data = apiTest.getOhmpilotRealtimeDataSystem;
+        adapter.log.debug(data);
+        devObjects.createOhmPilotObjects(adapter,data.Body.Data);
+        fillData(adapter,data.Body.Data,'ohmpilot');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System')
     .then(function (response) {
         if (response.status == 200) {
@@ -482,6 +498,14 @@ function getOhmPilotRealtimeData() {
 }
 
 function getStorageRealtimeData(id) {
+    if(testMode){
+        var data = JSON.parse(apiTest.getStorageRealtimeDataSolarBattery);
+        adapter.log.debug("getStorageRealtimeDataTest:" + apiTest.getStorageRealtimeDataSolarBattery)
+        devObjects.createStorageObjects(adapter, 0 ,data.Body.Data['0']);
+        fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '0');
+        fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '0' + '.module');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id)
     .then(function (response) {
         if (response.status == 200) {
