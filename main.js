@@ -303,7 +303,7 @@ function getInverterRealtimeData(id) {
                 
                 fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
 
-                setTimeout((id,resp) => {
+                setTimeout(function(id,resp) {
 
                     if(resp.hasOwnProperty("UDC") && resp.hasOwnProperty("IDC")){
                         adapter.setState("inverter." + id + ".PDC", { val: resp["IDC"].Value * resp["UDC"].Value, ack: true });
@@ -331,47 +331,47 @@ function getInverterRealtimeData(id) {
                         resetStateToZero(resp, "inverter." + id, "PDC");
                         resetStateToZero(resp, "inverter." + id, "PDC_2");
                     }
+
+                    const status = resp.DeviceStatus;
+                    if (status) {
+                        let statusCode = parseInt(status.StatusCode);
+
+                        let statusCodeString = "Startup";
+                        if (statusCode === 7) {
+                            statusCodeString = "Running";
+                        } else if (statusCode === 8) {
+                            statusCodeString = "Standby";
+                        } else if (statusCode === 9) {
+                            statusCodeString = "Bootloading";
+                        } else if (statusCode === 10) {
+                            statusCodeString = "Error";
+                        }
+                        if (!status.hasOwnProperty("InverterState")) { // only needed if not delivered from the API
+                            adapter.setState("inverter." + id + ".DeviceStatus.InverterState", { val: statusCodeString, ack: true });
+                        }
+
+                        statusCode = parseInt(status.ErrorCode);
+
+                        if (statusCode >= 700) {
+                            statusCodeString = devStrings.getStringErrorCode700(statusCode);
+                        } else if (statusCode >= 600) {
+                            statusCodeString = devStrings.getStringErrorCode600(statusCode);
+                        } else if (statusCode >= 500) {
+                            statusCodeString = devStrings.getStringErrorCode500(statusCode);
+                        } else if (statusCode >= 400) {
+                            statusCodeString = devStrings.getStringErrorCode400(statusCode);
+                        } else if (statusCode >= 300) {
+                            statusCodeString = devStrings.getStringErrorCode300(statusCode);
+                        } else if (statusCode >= 100) {
+                            statusCodeString = devStrings.getStringErrorCode100(statusCode);
+                        } else if (statusCode > 0){
+                            statusCodeString = "Unknown error with id " + statusCode.toString()
+                        }else{
+                            statusCodeString = "No error"
+                        }
+                        adapter.setState("inverter." + id + ".DeviceStatus.InverterErrorState", { val: statusCodeString, ack: true });
+                    }
                 },isObjectsCreated?1:3000,id,resp);
-
-                const status = resp.DeviceStatus;
-                if (status) {
-                    let statusCode = parseInt(status.StatusCode);
-
-                    let statusCodeString = "Startup";
-                    if (statusCode === 7) {
-                        statusCodeString = "Running";
-                    } else if (statusCode === 8) {
-                        statusCodeString = "Standby";
-                    } else if (statusCode === 9) {
-                        statusCodeString = "Bootloading";
-                    } else if (statusCode === 10) {
-                        statusCodeString = "Error";
-                    }
-                    if (!status.hasOwnProperty("InverterState")) { // only needed if not delivered from the API
-                        adapter.setState("inverter." + id + ".DeviceStatus.InverterState", { val: statusCodeString, ack: true });
-                    }
-
-                    statusCode = parseInt(status.ErrorCode);
-
-                    if (statusCode >= 700) {
-                        statusCodeString = devStrings.getStringErrorCode700(statusCode);
-                    } else if (statusCode >= 600) {
-                        statusCodeString = devStrings.getStringErrorCode600(statusCode);
-                    } else if (statusCode >= 500) {
-                        statusCodeString = devStrings.getStringErrorCode500(statusCode);
-                    } else if (statusCode >= 400) {
-                        statusCodeString = devStrings.getStringErrorCode400(statusCode);
-                    } else if (statusCode >= 300) {
-                        statusCodeString = devStrings.getStringErrorCode300(statusCode);
-                    } else if (statusCode >= 100) {
-                        statusCodeString = devStrings.getStringErrorCode100(statusCode);
-                    } else if (statusCode > 0){
-                        statusCodeString = "Unknown error with id " + statusCode.toString()
-                    }else{
-                        statusCodeString = "No error"
-                    }
-                    adapter.setState("inverter." + id + ".DeviceStatus.InverterErrorState", { val: statusCodeString, ack: true });
-                }
             } else {
                 adapter.log.warn(data.Head.Status.Reason + " CommonInverterData inverter: " + id);
             }
@@ -494,11 +494,10 @@ function getStorageRealtimeData(id) {
                     }
 
                     if (!isObjectsCreated) {
-                        devObjects.createStorageObjects(adapter, id,response.data.Body.Data.Controller);
-                        devObjects.createStorageObjects(adapter, id,response.data.Body.Data.Modules);
+                        devObjects.createStorageObjects(adapter, id,response.data.Body.Data);
                     }
                     fillData(adapter,response.data.Body.Data.Controller,'storage.' + id);
-                    fillData(adapter,response.data.Body.Data.Modules,'storage.' + id);
+                    fillData(adapter,response.data.Body.Data.Modules,'storage.' + id + '.module');
 
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " storage: " + id);
