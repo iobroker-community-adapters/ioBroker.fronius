@@ -157,7 +157,7 @@ function checkIP(ipToCheck, callback) {
     var primary = "https://"
     var secondary = "http://"
     if(testMode){
-        callback({ error: 0, message: apiTest.getApiVersion});
+        callback({ error: 0, message: apiTest.testApiVersion});
         return;
     }
 
@@ -210,8 +210,8 @@ function checkIP(ipToCheck, callback) {
 //Check Fronius devices v1
 function getActiveDeviceInfo(type, url, callback) {
     if(testMode){
-        var info = apiTest.getActiveDeviceInfo;
-        adapter.log.debug("getActiveDeviceInfoTest:" + info)
+        var info = apiTest.testActiveDeviceInfo;
+        adapter.log.debug("getActiveDeviceInfoTest:" + JSON.stringify(info))
         callback({ error: 0, message: info.Body.Data});
         return;
     }
@@ -233,7 +233,9 @@ function getActiveDeviceInfo(type, url, callback) {
 // this function is used to check the existing config. If the config stored does not match
 // then the settings are updated (only if the request was successful)
 function checkExistingConfig(){
-    
+    if(testMode){
+        return;
+    }
     getActiveDeviceInfo('System',ip + baseurl,function(result){
         if(result.error == 0){
             result = result.message;
@@ -277,6 +279,14 @@ function checkExistingConfig(){
 
 //Get Infos from Inverter
 function getInverterRealtimeData(id) {
+    Hier muss weitergemacht werden!
+    if(testMode){
+        var data = apiTest.testInverterRealtimeData3Phase;
+        adapter.log.debug("Ohmpilot: " + JSON.stringify(data));
+        devObjects.createOhmPilotObjects(adapter,data.Body.Data);
+        fillData(adapter,data.Body.Data,'ohmpilot'); 
+        return;
+    }
     // fallback if no id set
     if (id == "") {
         id = 1; // ensure that it is correct working for symoGEN24
@@ -462,9 +472,8 @@ function GetArchiveData(ids) {
 }
 function getOhmPilotRealtimeData() {
     if(testMode){
-        adapter.log.debug("Ohmpilot: " + apiTest.getOhmpilotRealtimeDataSystem);
-        var data = apiTest.getOhmpilotRealtimeDataSystem;
-        adapter.log.debug(data);
+        var data = apiTest.testOhmpilotRealtimeDataSystem;
+        adapter.log.debug("Ohmpilot: " + JSON.stringify(data));
         devObjects.createOhmPilotObjects(adapter,data.Body.Data);
         fillData(adapter,data.Body.Data,'ohmpilot');
         return;
@@ -499,11 +508,23 @@ function getOhmPilotRealtimeData() {
 
 function getStorageRealtimeData(id) {
     if(testMode){
-        var data = JSON.parse(apiTest.getStorageRealtimeDataSolarBattery);
-        adapter.log.debug("getStorageRealtimeDataTest:" + apiTest.getStorageRealtimeDataSolarBattery)
+        var data = apiTest.testStorageRealtimeDataSolarBattery;
+        adapter.log.warn("getStorageRealtimeDataTest Solar Battery -> storage.0:" + JSON.stringify(data))
         devObjects.createStorageObjects(adapter, 0 ,data.Body.Data['0']);
         fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '0');
         fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '0' + '.module');
+
+        data = apiTest.testStorageRealtimeDataLgChem;
+        adapter.log.warn("getStorageRealtimeDataTest LG CHEM -> storage.1:" + JSON.stringify(data))
+        devObjects.createStorageObjects(adapter, 1 ,data.Body.Data['0']);
+        fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '1');
+        fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '1' + '.module');
+
+        data = apiTest.testStorageRealtimeDataBydBbox;
+        adapter.log.warn("getStorageRealtimeDataTest BYD B-Box -> storage.2:" + JSON.stringify(data))
+        devObjects.createStorageObjects(adapter, 2 ,data.Body.Data['0']);
+        fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '2');
+        fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '2' + '.module');
         return;
     }
     axios.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id)
@@ -536,6 +557,13 @@ function getStorageRealtimeData(id) {
 }
 
 function getMeterRealtimeData(id) {
+    if(testMode){
+        var data = apiTest.testMeterRealtimeDataDevice;
+        adapter.log.warn("getMeterRealtimeDataTest:" + JSON.stringify(data))
+        devObjects.createMeterObjects(adapter, 0 ,data.Body.Data);
+        fillData(adapter,data.Body.Data,'meter.' + '0');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id)
     .then(function (response) {
         if (response.status == 200) {
@@ -546,7 +574,7 @@ function getMeterRealtimeData(id) {
                     if (!isObjectsCreated) {
                         devObjects.createMeterObjects(adapter, id, resp);
                     }
-                    fillData(adapter,response.data.Body.Data, "meter." + id);
+                    fillData(adapter,resp, "meter." + id);
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + " meter: " + id);
                 }
@@ -559,7 +587,14 @@ function getMeterRealtimeData(id) {
     });
 }
 
-function getSensorRealtimeDataNowSensorData(id) {
+function getSensorRealtimeDataNow(id) {
+    if(testMode){
+        var data = apiTest.testSensorRealtimeDataNow;
+        adapter.log.warn("getSensorRealtimeDataNowTest:" + JSON.stringify(data))
+        devObjects.createSensorNowObjects(adapter, 0 ,data.Body.Data['0']);
+        fillData(adapter,data.Body.Data['0'],'sensor.' + '0');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
     .then(function (response) {
         if (response.status == 200 && response.data.Head.Status.Code == 0) {
@@ -581,7 +616,14 @@ function getSensorRealtimeDataNowSensorData(id) {
     });
 }
 
-function getSensorRealtimeDataMinMaxSensorData(id) {
+function getSensorRealtimeDataMinMax(id) {
+    if(testMode){
+        var data = apiTest.testSensorRealtimeDataMinMax;
+        adapter.log.warn("getSensorRealtimeDataMinMaxTest:" + JSON.stringify(data))
+        devObjects.createSensorMinMaxObjects(adapter, 0 ,data.Body.Data['0']);
+        fillData(adapter,data.Body.Data['0'],'sensor.' + '0');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
     .then(function (response) {
         if (response.status == 200 && response.data.Head.Status.Code == 0) {
@@ -605,6 +647,28 @@ function getSensorRealtimeDataMinMaxSensorData(id) {
 }
 
 function getStringRealtimeData(id) {
+    if(testMode){
+        var data = apiTest.testStringRealtimeDataNow;
+        adapter.log.warn("getStringRealtimeDataTest Now -> string.1:" + JSON.stringify(data))
+        devObjects.createStringRealtimeObjects(adapter, 1 ,data.Body.Data['1']);
+        fillData(adapter,data.Body.Data['1'],'string.' + '1');
+
+        var data = apiTest.testStringRealtimeDataNowGen24;
+        adapter.log.warn("getStringRealtimeDataTest Now Gen24 -> string.2:" + JSON.stringify(data))
+        devObjects.createStringRealtimeObjects(adapter, 2 ,data.Body.Data['1']);
+        fillData(adapter,data.Body.Data['1'],'string.' + '2');
+
+        data = apiTest.testStringRealtimeDataNow;
+        adapter.log.warn("getStringRealtimeDataTest Last error -> string.3:" + JSON.stringify(data))
+        devObjects.createStringRealtimeObjects(adapter, 3 ,data.Body.Data.Channels['1']);
+        fillData(adapter,data.Body.Data.Channels['1'],'string.' + '3');
+
+        data = apiTest.testStringRealtimeDataCurrentSumDay;
+        adapter.log.warn("getStringRealtimeDataTest Current sum day -> string.4:" + JSON.stringify(data))
+        devObjects.createStringRealtimeObjects(adapter, 4 ,data.Body.Data['1']);
+        fillData(adapter,data.Body.Data['1'],'string.' + '4');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData')
     .then(function (response) {
         if (response.status == 200) {
@@ -709,11 +773,29 @@ function getStringRealtimeData(id) {
     }).catch(function(error){
         adapter.log.debug("GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total has thrown following error: " + error);
     });
-
-    
 }
 
 function getPowerFlowRealtimeData() {
+    if (testMode){
+        var data = apiTest.testPowerflowRealtimeData;
+        adapter.log.warn("getPowerFlowRealtimeDataTest -> Standard:" + JSON.stringify(data))
+        devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"standard.");
+        fillData(adapter,data.Body.Data.Inverters,'inverter.standard');
+        fillData(adapter,data.Body.Data.Site,'site.standard');
+
+        data = apiTest.testPowerflowRealtimeDataHybrid;
+        adapter.log.warn("getPowerFlowRealtimeDataTest -> Hybrid:" + JSON.stringify(data))
+        devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"hybrid.");
+        fillData(adapter,data.Body.Data.Inverters,'inverter.hybrid');
+        fillData(adapter,data.Body.Data.Site,'site.hybrid');
+
+        data = apiTest.testPowerflowRealtimeDataGen24;
+        adapter.log.warn("getPowerFlowRealtimeDataTest -> GEN24:" + JSON.stringify(data))
+        devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"gen24.");
+        fillData(adapter,data.Body.Data.Inverters,'inverter.gen24');
+        fillData(adapter,data.Body.Data.Site,'site.gen24');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi')
     .then(function (response) {
         if (response.status == 200) {
@@ -738,6 +820,18 @@ function getPowerFlowRealtimeData() {
 }
 
 function getInverterInfo() {
+    if(testMode){
+        var data = apiTest.testInverterInfo;
+        adapter.log.warn("getInverterInfoTest -> Standard:" + JSON.stringify(data))
+        devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"standard.");
+        fillData(adapter,data.Body.Data.Inverters,'inverter.standard');
+
+        data = apiTest.testInverterInfoGen24;
+        adapter.log.warn("getInverterInfoTest -> GEN24:" + JSON.stringify(data))
+        devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"gen24.");
+        fillData(adapter,data.Body.Data.Inverters,'inverter.gen24');
+        return;
+    }
     axios.get(requestType + ip + baseurl + 'GetInverterInfo.cgi')
     .then(function (response) {
         if (response.status == 200) {
@@ -798,8 +892,8 @@ function checkStatus() {
 
             if (adapter.config.sensorCard) {
                 adapter.config.sensorCard.split(',').forEach(function(entry) {
-                    getSensorRealtimeDataNowSensorData(entry);
-                    getSensorRealtimeDataMinMaxSensorData(entry);
+                    getSensorRealtimeDataNow(entry);
+                    getSensorRealtimeDataMinMax(entry);
                 });
             }
             
