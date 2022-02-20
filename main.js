@@ -157,7 +157,6 @@ function checkIP(ipToCheck, callback) {
     var primary = "https://"
     var secondary = "http://"
     
-
     axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
     .then(function(response){
         if (response.status == 200 && 'BaseURL' in response.data) {
@@ -170,9 +169,9 @@ function checkIP(ipToCheck, callback) {
                         adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
                     }
                 });
-                adapter.log.debug("Passed with " + requestType);
-                callback({ error: 0, message: response.data});
             }
+            adapter.log.debug("Passed with " + requestType);
+            callback({ error: 0, message: response.data});
             return;
         } else {
             adapter.log.debug("requestType " + primary + " is not working! Now trying with " + secondary);
@@ -188,8 +187,8 @@ function checkIP(ipToCheck, callback) {
                                 adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
                             }
                         });
-                        callback({ error: 0, message: response.data});
                     }
+                    callback({ error: 0, message: response.data});
                 } else {
                     adapter.log.error("IP invalid");
                     callback({ error: 1, message: {} });
@@ -773,12 +772,14 @@ function checkStatus() {
             adapter.config.inverter.split(',').forEach(function(entry) {
                 getInverterRealtimeData(entry);
             });
+
             if (adapter.config.sensorCard) {
                 adapter.config.sensorCard.split(',').forEach(function(entry) {
                     getSensorRealtimeDataNowSensorData(entry);
                     getSensorRealtimeDataMinMaxSensorData(entry);
                 });
             }
+            
             if (adapter.config.stringControl) {
                 adapter.config.stringControl.split(',').forEach(function(entry) {
                     getStringRealtimeData(entry);
@@ -809,6 +810,7 @@ function checkStatus() {
 
     }).catch(function(error){
         adapter.log.debug("checkStatus has thrown following error: " + error);
+        setConnected(false);
     });
 }
 
@@ -962,11 +964,9 @@ function main() {
     downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
 
     if (ip && baseurl) {
+
         checkIP(ip,function(res){
             adapter.log.debug("checkIP is executed with result error=" + res.error + ", message=" + JSON.stringify(res.message));
-        });
-        // delay the further execution
-        setTimeout(() => { 
             getLoggerInfo();
             checkStatus();
             checkArchiveStatus();
@@ -989,13 +989,11 @@ function main() {
 
             // check every hour if something has changed on the bus (number of devices)
             setInterval(checkExistingConfig, 3600 * 1000);
-        }, 3000);
+        });
 
     } else {
         adapter.log.error("Please configure the Fronius adapter");
     }
-
-
 }
 
 // If started as allInOne/compact mode => return function to create instance
