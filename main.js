@@ -211,7 +211,7 @@ function checkIP(ipToCheck, callback) {
 function getActiveDeviceInfo(type, url, callback) {
     if(testMode){
         var info = apiTest.testActiveDeviceInfo;
-        adapter.log.debug("getActiveDeviceInfoTest:" + JSON.stringify(info))
+        adapter.log.warn("getActiveDeviceInfoTest:" + JSON.stringify(info))
         callback({ error: 0, message: info.Body.Data});
         return;
     }
@@ -279,12 +279,31 @@ function checkExistingConfig(){
 
 //Get Infos from Inverter
 function getInverterRealtimeData(id) {
-    Hier muss weitergemacht werden!
     if(testMode){
         var data = apiTest.testInverterRealtimeData3Phase;
-        adapter.log.debug("Ohmpilot: " + JSON.stringify(data));
-        devObjects.createOhmPilotObjects(adapter,data.Body.Data);
-        fillData(adapter,data.Body.Data,'ohmpilot'); 
+        adapter.log.warn("getInverterRealtimeData 3Phase -> inverter.0:  " + JSON.stringify(data));
+        devObjects.createInverterObjects(adapter,0,data.Body.Data);
+        fillData(adapter,data.Body.Data,'inverter.0');
+
+        data = apiTest.testInverterRealtimeDataCommon;
+        adapter.log.warn("getInverterRealtimeData Common -> inverter.0:  " + JSON.stringify(data));
+        devObjects.createInverterObjects(adapter,0,data.Body.Data);
+        fillData(adapter,data.Body.Data,'inverter.0');
+
+        data = apiTest.testInverterRealtimeData3PhaseGen24;
+        adapter.log.warn("getInverterRealtimeData 3Phase Gen24 -> inverter.1:  " + JSON.stringify(data));
+        devObjects.createInverterObjects(adapter,1,data.Body.Data);
+        fillData(adapter,data.Body.Data,'inverter.1'); 
+
+        data = apiTest.testInverterRealtimeDataCommonGen24;
+        adapter.log.warn("getInverterRealtimeData Common Gen24 -> inverter.1:  " + JSON.stringify(data));
+        devObjects.createInverterObjects(adapter,1,data.Body.Data);
+        fillData(adapter,data.Body.Data,'inverter.1');
+
+        data = apiTest.testInverterRealtimeDataCumGen24;
+        adapter.log.warn("getInverterRealtimeData Cummulative Gen24 -> inverter.1:  " + JSON.stringify(data));
+        devObjects.createInverterObjects(adapter,1,data.Body.Data);
+        fillData(adapter,data.Body.Data,'inverter.1');
         return;
     }
     // fallback if no id set
@@ -473,7 +492,7 @@ function GetArchiveData(ids) {
 function getOhmPilotRealtimeData() {
     if(testMode){
         var data = apiTest.testOhmpilotRealtimeDataSystem;
-        adapter.log.debug("Ohmpilot: " + JSON.stringify(data));
+        adapter.log.warn("Ohmpilot: " + JSON.stringify(data));
         devObjects.createOhmPilotObjects(adapter,data.Body.Data);
         fillData(adapter,data.Body.Data,'ohmpilot');
         return;
@@ -516,9 +535,9 @@ function getStorageRealtimeData(id) {
 
         data = apiTest.testStorageRealtimeDataLgChem;
         adapter.log.warn("getStorageRealtimeDataTest LG CHEM -> storage.1:" + JSON.stringify(data))
-        devObjects.createStorageObjects(adapter, 1 ,data.Body.Data['0']);
-        fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '1');
-        fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '1' + '.module');
+        devObjects.createStorageObjects(adapter, 1 ,data.Body.Data);
+        fillData(adapter,data.Body.Data.Controller,'storage.' + '1');
+        fillData(adapter,data.Body.Data.Modules,'storage.' + '1' + '.module');
 
         data = apiTest.testStorageRealtimeDataBydBbox;
         adapter.log.warn("getStorageRealtimeDataTest BYD B-Box -> storage.2:" + JSON.stringify(data))
@@ -1029,15 +1048,26 @@ function fillData(adapter,data,prefix=""){
                     var data2 = data[key.toString()]
                     for (var subKey in data2){
                         if(typeof(data2[subKey.toString()])== "object"){
-                            for (var subsub in data2[subKey.toString()]){
-                                var val = data2[subKey.toString()][subsub.toString()]
-                                if(typeof(val) == 'string'){
-                                    val = he.unescape(data2[subKey.toString()][subsub.toString()])
-                                }else if(typeof(val) == 'number'){
+                            if(data2[subKey.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
+                                var val = data2[subKey.toString()].Value;
+                                if(typeof(val) == 'number'){
                                     val = Math.round((val + Number.EPSILON)*100)/100;
                                 }
-                                adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
-                                adapter.log.silly(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
+                                if(val !== null){
+                                    adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
+                                    adapter.log.silly(prefix + key.toString() + '.' + subKey.toString() + ", Value=" + val);
+                                }                            
+                            }else{
+                                for (var subsub in data2[subKey.toString()]){
+                                    var val = data2[subKey.toString()][subsub.toString()]
+                                    if(typeof(val) == 'string'){
+                                        val = he.unescape(data2[subKey.toString()][subsub.toString()])
+                                    }else if(typeof(val) == 'number'){
+                                        val = Math.round((val + Number.EPSILON)*100)/100;
+                                    }
+                                    adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
+                                    adapter.log.silly(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
+                                }
                             }
                         }else{
                             var val = data2[subKey.toString()]
