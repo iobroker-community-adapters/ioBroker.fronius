@@ -610,8 +610,8 @@ function getSensorRealtimeDataNow(id) {
     if(testMode){
         var data = apiTest.testSensorRealtimeDataNow;
         adapter.log.warn("getSensorRealtimeDataNowTest:" + JSON.stringify(data))
-        devObjects.createSensorNowObjects(adapter, 0 ,data.Body.Data['0']);
-        fillData(adapter,data.Body.Data['0'],'sensor.' + '0');
+        devObjects.createSensorNowObjects(adapter, 1 ,data.Body.Data);
+        fillData(adapter,data.Body.Data,'sensor.1');
         return;
     }
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
@@ -639,8 +639,8 @@ function getSensorRealtimeDataMinMax(id) {
     if(testMode){
         var data = apiTest.testSensorRealtimeDataMinMax;
         adapter.log.warn("getSensorRealtimeDataMinMaxTest:" + JSON.stringify(data))
-        devObjects.createSensorMinMaxObjects(adapter, 0 ,data.Body.Data['0']);
-        fillData(adapter,data.Body.Data['0'],'sensor.' + '0');
+        devObjects.createSensorMinMaxObjects(adapter, 1 ,data.Body.Data);
+        fillData(adapter,data.Body.Data,'sensor.1');
         return;
     }
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
@@ -843,12 +843,12 @@ function getInverterInfo() {
         var data = apiTest.testInverterInfo;
         adapter.log.warn("getInverterInfoTest -> Standard:" + JSON.stringify(data))
         devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"standard.");
-        fillData(adapter,data.Body.Data.Inverters,'inverter.standard');
+        fillData(adapter,data.Body.Data,'inverter.standard');
 
         data = apiTest.testInverterInfoGen24;
         adapter.log.warn("getInverterInfoTest -> GEN24:" + JSON.stringify(data))
         devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"gen24.");
-        fillData(adapter,data.Body.Data.Inverters,'inverter.gen24');
+        fillData(adapter,data.Body.Data,'inverter.gen24');
         return;
     }
     axios.get(requestType + ip + baseurl + 'GetInverterInfo.cgi')
@@ -994,7 +994,7 @@ function getLoggerInfo() {
         if (response.status == 200) {
             try {
                 const data = response.data;
-                if ("Body" in data && Object.keys(data.Body).length > 0) {
+                if ("Body" in data && Object.keys(data.Body.Data).length > 0) {
                     const resp = data.Body.LoggerInfo;
                     if (!isObjectsCreated) {
                         devObjects.createInfoObjects(adapter, resp);
@@ -1045,7 +1045,7 @@ function fillDataObject(adapter,apiObject,prefix=""){
     }
     for (var key in apiObject){
         if(apiObject[key.toString()] === null){
-            adapter.log("API Objekt " + key.toString() + " is null, no object filled!",'debug');
+            adapter.log.debug("API Objekt " + key.toString() + " is null, no object filled!");
         }else if(typeof(apiObject[key.toString()]) == "object"){ // this is a nested object to fill!
             if(apiObject[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
                 var val = apiObject[key.toString()].Value;
