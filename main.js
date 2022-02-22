@@ -1028,74 +1028,49 @@ function GetArchiveValue(adapter,data,prefix,id,key){
     return null;
 }
 
-function fillData(adapter,data,prefix=""){
-    setTimeout(function(data,prefix){
-        if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
-            prefix = prefix + '.';
+// this function should not be called directly, better is to call through fillData function as this includes a timeout handling
+function fillDataObject(adapter,apiObject,prefix=""){
+    if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
+        prefix = prefix + '.';
+    }
+    if(apiObject.hasOwnProperty('Value') && apiObject.hasOwnProperty('Unit')){ // value + unit on first level -> special handling
+        var val = apiObject.Value;
+        if(typeof(val) == 'number'){
+            val = Math.round((val + Number.EPSILON)*100)/100;
         }
-        for (var key in data){
-            if(data[key.toString()] != null && typeof(data[key.toString()]) == "object"){ // this is a nested object to parse!
-                if(data[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
-                    var val = data[key.toString()].Value;
-                    if(typeof(val) == 'number'){
-                        val = Math.round((val + Number.EPSILON)*100)/100;
-                    }
-                    if(val !== null){
-                        adapter.setState(prefix + key.toString(),val,true);
-                        adapter.log.silly(key.toString() + ", Value=" + val);
-                    }
-                }else{ // standard nested object to parse
-                    var data2 = data[key.toString()]
-                    for (var subKey in data2){
-                        if(typeof(data2[subKey.toString()])== "object"){
-                            if(data2[subKey.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
-                                var val = data2[subKey.toString()].Value;
-                                if(typeof(val) == 'number'){
-                                    val = Math.round((val + Number.EPSILON)*100)/100;
-                                }
-                                if(val !== null){
-                                    adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
-                                    adapter.log.silly(prefix + key.toString() + '.' + subKey.toString() + ", Value=" + val);
-                                }                            
-                            }else{
-                                for (var subsub in data2[subKey.toString()]){
-                                    var val = data2[subKey.toString()][subsub.toString()]
-                                    if(typeof(val) == 'string'){
-                                        val = he.unescape(data2[subKey.toString()][subsub.toString()])
-                                    }else if(typeof(val) == 'number'){
-                                        val = Math.round((val + Number.EPSILON)*100)/100;
-                                    }
-                                    adapter.setState(prefix + key.toString() + '.' + subKey.toString() + '.' + subsub.toString(),val,true);
-                                    adapter.log.silly(subsub.toString() + ', Value= ' + data2[subKey.toString()][subsub.toString()]);
-                                }
-                            }
-                        }else{
-                            var val = data2[subKey.toString()]
-                            if(typeof(val) == 'string'){
-                                val = he.unescape(data2[subKey.toString()])
-                            }else if(typeof(val) == 'number'){
-                                val = Math.round((val + Number.EPSILON)*100)/100;
-                            }
-                            adapter.setState(prefix + key.toString() + '.' + subKey.toString(),val,true);
-                            adapter.log.silly(key.toString() + '.' + subKey.toString() + ', Value=' + data2[subKey.toString()]);
-                        }
-                    }
+        adapter.setState(prefix + "Value",val,true);
+        apiObject = Object.assign({},apiObject) // create a copy for further processing to not delete it from source object
+        delete apiObject.Value;
+        delete apiObject.Unit;
+    }
+    for (var key in apiObject){
+        if(apiObject[key.toString()] === null){
+            adapter.log("API Objekt " + key.toString() + " is null, no object filled!",'debug');
+        }else if(typeof(apiObject[key.toString()]) == "object"){ // this is a nested object to fill!
+            if(apiObject[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
+                var val = apiObject[key.toString()].Value;
+                if(typeof(val) == 'number'){
+                    val = Math.round((val + Number.EPSILON)*100)/100;
                 }
-            }else{ // standard object to parse
-                if(data[key.toString()] != null && typeof(data[key.toString()]) != "object"){ //dont fill objects!
-                    var val = data[key.toString()]
-                    if(typeof(val) == 'string'){
-                        val = he.unescape(data[key.toString()])
-                    }else if(typeof(val) == 'number'){
-                        val = Math.round((val + Number.EPSILON)*100)/100;
-                    }
-                    adapter.setState(prefix + key.toString(),val,true);
-                    adapter.log.silly(key.toString() + ', Value=' + data[key.toString()]);
-                }
+                adapter.setState(prefix + key.toString(),val,true);
+            }else{ // nested object to fill -> recurse
+                fillDataObject(adapter,apiObject[key.toString()],prefix + key.toString())
             }
-            
+        }else{ // standard object to fill
+            var val = apiObject[key.toString()];
+            if(typeof(val) == 'number'){
+                val = Math.round((val + Number.EPSILON)*100)/100;
+            }
+            adapter.setState(prefix + key.toString(),val,true);
         }
-    },isObjectsCreated?1:3000,data,prefix);
+    }
+}
+
+// function to be called to fill the data 
+function fillData(adapter,apiObject,prefix=""){
+    setTimeout(function(adapt,data,pref){
+        fillDataObject(adapt,data,pref);
+    },isObjectsCreated?1:3000,adapter,apiObject,prefix);
 }
 
 function main() {
