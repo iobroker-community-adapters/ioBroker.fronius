@@ -210,10 +210,14 @@ function checkIP(ipToCheck, callback) {
 //Check Fronius devices v1
 function getActiveDeviceInfo(type, url, callback) {
     if(testMode){
-        var info = apiTest.testActiveDeviceInfo;
-        adapter.log.warn("getActiveDeviceInfoTest:" + JSON.stringify(info))
-        callback({ error: 0, message: info.Body.Data});
-        return;
+        try{
+            var info = apiTest.testActiveDeviceInfo;
+            adapter.log.warn("getActiveDeviceInfoTest:" + JSON.stringify(info))
+            callback({ error: 0, message: info.Body.Data});
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getActiveDeviceInfoTest: " + ex);
+        }
     }
     axios.get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type)
     .then(function(response){
@@ -236,75 +240,83 @@ function checkExistingConfig(){
     if(testMode){
         return;
     }
-    getActiveDeviceInfo('System',ip + baseurl,function(result){
-        if(result.error == 0){
-            result = result.message;
-            adapter.log.debug("Current result of System deviceINFO: " + JSON.stringify(result));
-            var inverter = result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter).toString() : '';
-            var sensorCard = result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard).toString() : '1';
-            var stringControl = result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl).toString() : '';
-            var meter = result.hasOwnProperty('Meter') ? Object.keys(result.Meter).toString() : '';
-            var storage = result.hasOwnProperty('Storage') ? Object.keys(result.Storage).toString() : '';
-            if(adapter.config.inverter == inverter &&
-                    adapter.config.sensorCard == sensorCard &&
-                    adapter.config.stringControl == stringControl &&
-                    adapter.config.meter == meter &&
-                    adapter.config.storage == storage ){
+    try {
+        getActiveDeviceInfo('System',ip + baseurl,function(result){
+            if(result.error == 0){
+                result = result.message;
+                adapter.log.debug("Current result of System deviceINFO: " + JSON.stringify(result));
+                var inverter = result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter).toString() : '';
+                var sensorCard = result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard).toString() : '1';
+                var stringControl = result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl).toString() : '';
+                var meter = result.hasOwnProperty('Meter') ? Object.keys(result.Meter).toString() : '';
+                var storage = result.hasOwnProperty('Storage') ? Object.keys(result.Storage).toString() : '';
+                if(adapter.config.inverter == inverter &&
+                        adapter.config.sensorCard == sensorCard &&
+                        adapter.config.stringControl == stringControl &&
+                        adapter.config.meter == meter &&
+                        adapter.config.storage == storage ){
 
-                adapter.log.debug("The current system configuration is up to date");
-            }else{
-                adapter.log.info("The current system configuration is not up to date. Settings are updated and adapter restarted!");
-                adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
-                    if(obj != null){
-                        adapter.log.debug(JSON.stringify(obj));
-                        obj.native.inverter = inverter
-                        obj.native.sensorCard = sensorCard
-                        obj.native.stringControl = stringControl
-                        obj.native.meter = meter
-                        obj.native.storage = storage
-                        adapter.log.debug(JSON.stringify(obj.native));
-                        adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
-                    }
-                });
+                    adapter.log.debug("The current system configuration is up to date");
+                }else{
+                    adapter.log.info("The current system configuration is not up to date. Settings are updated and adapter restarted!");
+                    adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
+                        if(obj != null){
+                            adapter.log.debug(JSON.stringify(obj));
+                            obj.native.inverter = inverter
+                            obj.native.sensorCard = sensorCard
+                            obj.native.stringControl = stringControl
+                            obj.native.meter = meter
+                            obj.native.storage = storage
+                            adapter.log.debug(JSON.stringify(obj.native));
+                            adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
+                        }
+                    });
+                }
+                // Restart the creation of objects. This is usefull in case that some data was not availlable during start
+                downCountArchive = 1;
+                isArchiveObjectsCreated = false;
+                downCount = 1;
+                isObjectsCreated = false;
             }
-            // Restart the creation of objects. This is usefull in case that some data was not availlable during start
-            downCountArchive = 1;
-            isArchiveObjectsCreated = false;
-            downCount = 1;
-            isObjectsCreated = false;
-        }
-    });
+        });
+    }catch(ex){
+        adapter.log.error("Error on checkExistingConfig: " + ex);
+    }
 
 }
 
 //Get Infos from Inverter
 function getInverterRealtimeData(id) {
     if(testMode){
-        var data = apiTest.testInverterRealtimeData3Phase;
-        adapter.log.warn("getInverterRealtimeData 3Phase -> inverter.0:  " + JSON.stringify(data));
-        devObjects.createInverterObjects(adapter,0,data.Body.Data);
-        fillData(adapter,data.Body.Data,'inverter.0');
+        try{
+            var data = apiTest.testInverterRealtimeData3Phase;
+            adapter.log.warn("getInverterRealtimeData 3Phase -> inverter.0:  " + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter,0,data.Body.Data);
+            fillData(adapter,data.Body.Data,'inverter.0');
 
-        data = apiTest.testInverterRealtimeDataCommon;
-        adapter.log.warn("getInverterRealtimeData Common -> inverter.0:  " + JSON.stringify(data));
-        devObjects.createInverterObjects(adapter,0,data.Body.Data);
-        fillData(adapter,data.Body.Data,'inverter.0');
+            data = apiTest.testInverterRealtimeDataCommon;
+            adapter.log.warn("getInverterRealtimeData Common -> inverter.0:  " + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter,0,data.Body.Data);
+            fillData(adapter,data.Body.Data,'inverter.0');
 
-        data = apiTest.testInverterRealtimeData3PhaseGen24;
-        adapter.log.warn("getInverterRealtimeData 3Phase Gen24 -> inverter.1:  " + JSON.stringify(data));
-        devObjects.createInverterObjects(adapter,1,data.Body.Data);
-        fillData(adapter,data.Body.Data,'inverter.1'); 
+            data = apiTest.testInverterRealtimeData3PhaseGen24;
+            adapter.log.warn("getInverterRealtimeData 3Phase Gen24 -> inverter.1:  " + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter,1,data.Body.Data);
+            fillData(adapter,data.Body.Data,'inverter.1'); 
 
-        data = apiTest.testInverterRealtimeDataCommonGen24;
-        adapter.log.warn("getInverterRealtimeData Common Gen24 -> inverter.1:  " + JSON.stringify(data));
-        devObjects.createInverterObjects(adapter,1,data.Body.Data);
-        fillData(adapter,data.Body.Data,'inverter.1');
+            data = apiTest.testInverterRealtimeDataCommonGen24;
+            adapter.log.warn("getInverterRealtimeData Common Gen24 -> inverter.1:  " + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter,1,data.Body.Data);
+            fillData(adapter,data.Body.Data,'inverter.1');
 
-        data = apiTest.testInverterRealtimeDataCumGen24;
-        adapter.log.warn("getInverterRealtimeData Cummulative Gen24 -> inverter.1:  " + JSON.stringify(data));
-        devObjects.createInverterObjects(adapter,1,data.Body.Data);
-        fillData(adapter,data.Body.Data,'inverter.1');
-        return;
+            data = apiTest.testInverterRealtimeDataCumGen24;
+            adapter.log.warn("getInverterRealtimeData Cummulative Gen24 -> inverter.1:  " + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter,1,data.Body.Data);
+            fillData(adapter,data.Body.Data,'inverter.1');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getInverterRealtimeDataTest: " + ex);
+        }
     }
     // fallback if no id set
     if (id == "") {
@@ -491,11 +503,15 @@ function GetArchiveData(ids) {
 }
 function getOhmPilotRealtimeData() {
     if(testMode){
-        var data = apiTest.testOhmpilotRealtimeDataSystem;
-        adapter.log.warn("Ohmpilot: " + JSON.stringify(data));
-        devObjects.createOhmPilotObjects(adapter,data.Body.Data);
-        fillData(adapter,data.Body.Data,'ohmpilot');
-        return;
+        try{
+            var data = apiTest.testOhmpilotRealtimeDataSystem;
+            adapter.log.warn("Ohmpilot: " + JSON.stringify(data));
+            devObjects.createOhmPilotObjects(adapter,data.Body.Data);
+            fillData(adapter,data.Body.Data,'ohmpilot');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getOhmPilotRealtimeDataTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System')
     .then(function (response) {
@@ -527,24 +543,28 @@ function getOhmPilotRealtimeData() {
 
 function getStorageRealtimeData(id) {
     if(testMode){
-        var data = apiTest.testStorageRealtimeDataSolarBattery;
-        adapter.log.warn("getStorageRealtimeDataTest Solar Battery -> storage.0:" + JSON.stringify(data))
-        devObjects.createStorageObjects(adapter, 0 ,data.Body.Data['0']);
-        fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '0');
-        fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '0' + '.module');
+        try{
+            var data = apiTest.testStorageRealtimeDataSolarBattery;
+            adapter.log.warn("getStorageRealtimeDataTest Solar Battery -> storage.0:" + JSON.stringify(data))
+            devObjects.createStorageObjects(adapter, 0 ,data.Body.Data['0']);
+            fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '0');
+            fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '0' + '.module');
 
-        data = apiTest.testStorageRealtimeDataLgChem;
-        adapter.log.warn("getStorageRealtimeDataTest LG CHEM -> storage.1:" + JSON.stringify(data))
-        devObjects.createStorageObjects(adapter, 1 ,data.Body.Data);
-        fillData(adapter,data.Body.Data.Controller,'storage.' + '1');
-        fillData(adapter,data.Body.Data.Modules,'storage.' + '1' + '.module');
+            data = apiTest.testStorageRealtimeDataLgChem;
+            adapter.log.warn("getStorageRealtimeDataTest LG CHEM -> storage.1:" + JSON.stringify(data))
+            devObjects.createStorageObjects(adapter, 1 ,data.Body.Data);
+            fillData(adapter,data.Body.Data.Controller,'storage.' + '1');
+            fillData(adapter,data.Body.Data.Modules,'storage.' + '1' + '.module');
 
-        data = apiTest.testStorageRealtimeDataBydBbox;
-        adapter.log.warn("getStorageRealtimeDataTest BYD B-Box -> storage.2:" + JSON.stringify(data))
-        devObjects.createStorageObjects(adapter, 2 ,data.Body.Data['0']);
-        fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '2');
-        fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '2' + '.module');
-        return;
+            data = apiTest.testStorageRealtimeDataBydBbox;
+            adapter.log.warn("getStorageRealtimeDataTest BYD B-Box -> storage.2:" + JSON.stringify(data))
+            devObjects.createStorageObjects(adapter, 2 ,data.Body.Data['0']);
+            fillData(adapter,data.Body.Data['0'].Controller,'storage.' + '2');
+            fillData(adapter,data.Body.Data['0'].Modules,'storage.' + '2' + '.module');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getStorageRealtimeDataTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id)
     .then(function (response) {
@@ -577,11 +597,15 @@ function getStorageRealtimeData(id) {
 
 function getMeterRealtimeData(id) {
     if(testMode){
-        var data = apiTest.testMeterRealtimeDataDevice;
-        adapter.log.warn("getMeterRealtimeDataTest:" + JSON.stringify(data))
-        devObjects.createMeterObjects(adapter, 0 ,data.Body.Data);
-        fillData(adapter,data.Body.Data,'meter.' + '0');
-        return;
+        try{
+            var data = apiTest.testMeterRealtimeDataDevice;
+            adapter.log.warn("getMeterRealtimeDataTest:" + JSON.stringify(data))
+            devObjects.createMeterObjects(adapter, 0 ,data.Body.Data);
+            fillData(adapter,data.Body.Data,'meter.' + '0');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getMeterRealtimeDataTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id)
     .then(function (response) {
@@ -608,11 +632,15 @@ function getMeterRealtimeData(id) {
 
 function getSensorRealtimeDataNow(id) {
     if(testMode){
-        var data = apiTest.testSensorRealtimeDataNow;
-        adapter.log.warn("getSensorRealtimeDataNowTest:" + JSON.stringify(data))
-        devObjects.createSensorNowObjects(adapter, 1 ,data.Body.Data);
-        fillData(adapter,data.Body.Data,'sensor.1');
-        return;
+        try{
+            var data = apiTest.testSensorRealtimeDataNow;
+            adapter.log.warn("getSensorRealtimeDataNowTest:" + JSON.stringify(data))
+            devObjects.createSensorNowObjects(adapter, 1 ,data.Body.Data);
+            fillData(adapter,data.Body.Data,'sensor.1');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getSensorRealtimeDataNowTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
     .then(function (response) {
@@ -637,11 +665,15 @@ function getSensorRealtimeDataNow(id) {
 
 function getSensorRealtimeDataMinMax(id) {
     if(testMode){
-        var data = apiTest.testSensorRealtimeDataMinMax;
-        adapter.log.warn("getSensorRealtimeDataMinMaxTest:" + JSON.stringify(data))
-        devObjects.createSensorMinMaxObjects(adapter, 1 ,data.Body.Data);
-        fillData(adapter,data.Body.Data,'sensor.1');
-        return;
+        try{
+            var data = apiTest.testSensorRealtimeDataMinMax;
+            adapter.log.warn("getSensorRealtimeDataMinMaxTest:" + JSON.stringify(data))
+            devObjects.createSensorMinMaxObjects(adapter, 1 ,data.Body.Data);
+            fillData(adapter,data.Body.Data,'sensor.1');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getSensorRealtimeDataMinMaxTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
     .then(function (response) {
@@ -667,26 +699,30 @@ function getSensorRealtimeDataMinMax(id) {
 
 function getStringRealtimeData(id) {
     if(testMode){
-        var data = apiTest.testStringRealtimeDataNow;
-        adapter.log.warn("getStringRealtimeDataTest Now -> string.1:" + JSON.stringify(data))
-        devObjects.createStringRealtimeObjects(adapter, 1 ,data.Body.Data['1']);
-        fillData(adapter,data.Body.Data['1'],'string.' + '1');
+        try{
+            var data = apiTest.testStringRealtimeDataNow;
+            adapter.log.warn("getStringRealtimeDataTest Now -> string.1:" + JSON.stringify(data))
+            devObjects.createStringRealtimeObjects(adapter, 1 ,data.Body.Data['1']);
+            fillData(adapter,data.Body.Data['1'],'string.' + '1');
 
-        var data = apiTest.testStringRealtimeDataNowGen24;
-        adapter.log.warn("getStringRealtimeDataTest Now Gen24 -> string.2:" + JSON.stringify(data))
-        devObjects.createStringRealtimeObjects(adapter, 2 ,data.Body.Data['1']);
-        fillData(adapter,data.Body.Data['1'],'string.' + '2');
+            data = apiTest.testStringRealtimeDataNowGen24;
+            adapter.log.warn("getStringRealtimeDataTest Now Gen24 -> string.2:" + JSON.stringify(data))
+            devObjects.createStringRealtimeObjects(adapter, 2 ,data.Body.Data['1']);
+            fillData(adapter,data.Body.Data['1'],'string.' + '2');
 
-        data = apiTest.testStringRealtimeDataNow;
-        adapter.log.warn("getStringRealtimeDataTest Last error -> string.3:" + JSON.stringify(data))
-        devObjects.createStringRealtimeObjects(adapter, 3 ,data.Body.Data.Channels['1']);
-        fillData(adapter,data.Body.Data.Channels['1'],'string.' + '3');
+            data = apiTest.testStringRealtimeDataNow;
+            adapter.log.warn("getStringRealtimeDataTest Last error -> string.3:" + JSON.stringify(data))
+            devObjects.createStringRealtimeObjects(adapter, 3 ,data.Body.Data.Channels['1']);
+            fillData(adapter,data.Body.Data.Channels['1'],'string.' + '3');
 
-        data = apiTest.testStringRealtimeDataCurrentSumDay;
-        adapter.log.warn("getStringRealtimeDataTest Current sum day -> string.4:" + JSON.stringify(data))
-        devObjects.createStringRealtimeObjects(adapter, 4 ,data.Body.Data['1']);
-        fillData(adapter,data.Body.Data['1'],'string.' + '4');
-        return;
+            data = apiTest.testStringRealtimeDataCurrentSumDay;
+            adapter.log.warn("getStringRealtimeDataTest Current sum day -> string.4:" + JSON.stringify(data))
+            devObjects.createStringRealtimeObjects(adapter, 4 ,data.Body.Data['1']);
+            fillData(adapter,data.Body.Data['1'],'string.' + '4');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getStringRealtimeDataTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData')
     .then(function (response) {
@@ -796,24 +832,28 @@ function getStringRealtimeData(id) {
 
 function getPowerFlowRealtimeData() {
     if (testMode){
-        var data = apiTest.testPowerflowRealtimeData;
-        adapter.log.warn("getPowerFlowRealtimeDataTest -> Standard:" + JSON.stringify(data))
-        devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"standard.");
-        fillData(adapter,data.Body.Data.Inverters,'inverter.standard');
-        fillData(adapter,data.Body.Data.Site,'site.standard');
+        try{
+            var data = apiTest.testPowerflowRealtimeData;
+            adapter.log.warn("getPowerFlowRealtimeDataTest -> Standard:" + JSON.stringify(data))
+            devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"standard.");
+            fillData(adapter,data.Body.Data.Inverters,'inverter.standard');
+            fillData(adapter,data.Body.Data.Site,'site.standard');
 
-        data = apiTest.testPowerflowRealtimeDataHybrid;
-        adapter.log.warn("getPowerFlowRealtimeDataTest -> Hybrid:" + JSON.stringify(data))
-        devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"hybrid.");
-        fillData(adapter,data.Body.Data.Inverters,'inverter.hybrid');
-        fillData(adapter,data.Body.Data.Site,'site.hybrid');
+            data = apiTest.testPowerflowRealtimeDataHybrid;
+            adapter.log.warn("getPowerFlowRealtimeDataTest -> Hybrid:" + JSON.stringify(data))
+            devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"hybrid.");
+            fillData(adapter,data.Body.Data.Inverters,'inverter.hybrid');
+            fillData(adapter,data.Body.Data.Site,'site.hybrid');
 
-        data = apiTest.testPowerflowRealtimeDataGen24;
-        adapter.log.warn("getPowerFlowRealtimeDataTest -> GEN24:" + JSON.stringify(data))
-        devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"gen24.");
-        fillData(adapter,data.Body.Data.Inverters,'inverter.gen24');
-        fillData(adapter,data.Body.Data.Site,'site.gen24');
-        return;
+            data = apiTest.testPowerflowRealtimeDataGen24;
+            adapter.log.warn("getPowerFlowRealtimeDataTest -> GEN24:" + JSON.stringify(data))
+            devObjects.createPowerFlowObjects(adapter ,data.Body.Data,"gen24.");
+            fillData(adapter,data.Body.Data.Inverters,'inverter.gen24');
+            fillData(adapter,data.Body.Data.Site,'site.gen24');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getPowerFlowRealtimeDataTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi')
     .then(function (response) {
@@ -840,16 +880,20 @@ function getPowerFlowRealtimeData() {
 
 function getInverterInfo() {
     if(testMode){
-        var data = apiTest.testInverterInfo;
-        adapter.log.warn("getInverterInfoTest -> Standard:" + JSON.stringify(data))
-        devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"standard.");
-        fillData(adapter,data.Body.Data,'inverter.standard');
+        try{
+            var data = apiTest.testInverterInfo;
+            adapter.log.warn("getInverterInfoTest -> Standard:" + JSON.stringify(data))
+            devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"standard.");
+            fillData(adapter,data.Body.Data,'inverter.standard');
 
-        data = apiTest.testInverterInfoGen24;
-        adapter.log.warn("getInverterInfoTest -> GEN24:" + JSON.stringify(data))
-        devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"gen24.");
-        fillData(adapter,data.Body.Data,'inverter.gen24');
-        return;
+            data = apiTest.testInverterInfoGen24;
+            adapter.log.warn("getInverterInfoTest -> GEN24:" + JSON.stringify(data))
+            devObjects.createInverterInfoObjects(adapter ,data.Body.Data,"gen24.");
+            fillData(adapter,data.Body.Data,'inverter.gen24');
+            return;
+        }catch(ex){
+            adapter.log.error("Error on getInverterInfoTest: " + ex);
+        }
     }
     axios.get(requestType + ip + baseurl + 'GetInverterInfo.cgi')
     .then(function (response) {
