@@ -25,7 +25,7 @@
 /* jshint -W097 */ // jshint strict:false
 /*jslint node: true */
 "use strict";
-const testMode = true; // defines that the testmode is activated. In this mode only objects are created and filled from the solarApiJson.js
+const testMode = false; // defines that the testmode is activated. In this mode only objects are created and filled from the solarApiJson.js
 
 // you have to require the utils module and call adapter function
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
@@ -161,8 +161,9 @@ function checkIP(ipToCheck, callback) {
         return;
     }
 
-    axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
+    axios.get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi', {timeout: 1000})
     .then(function(response){
+        adapter.log.debug("Response on GetAPIVersion for IP " + ipToCheck + " = " + JSON.stringify(response.data));
         if (response.status == 200 && 'BaseURL' in response.data) {
             if(requestType != primary){
                 adapter.log.warn("Adapter requestType " + requestType + " was not matching, changed to " + primary + " and trigger restart.")
@@ -203,7 +204,29 @@ function checkIP(ipToCheck, callback) {
             });
         }
     }).catch(function(error){
-        adapter.log.debug("Unable to communicate with Device! Error: " + error);
+        adapter.log.debug("requestType " + primary + " is not working! Now trying with " + secondary);
+        axios.get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi', {timeout: 1000})
+        .then(function(response){
+            if (response.status == 200 && 'BaseURL' in response.data) {
+                if(requestType != secondary){
+                    adapter.log.warn("Adapter requestType " + requestType + " was not matching, changed to " + secondary + " and trigger restart.")
+                    requestType = secondary;
+                    adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
+                        if(obj != null){
+                            obj.native.requestType = requestType;
+                            adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
+                        }
+                    });
+                }
+                callback({ error: 0, message: response.data});
+            } else {
+                adapter.log.error("IP invalid");
+                callback({ error: 1, message: {} });
+            }
+        }).catch(function(error){
+            adapter.log.error("IP is not a Fronius inverter");
+            callback({ error: 1, message: {} });
+        });
     });
 }
 
@@ -350,7 +373,7 @@ function getInverterRealtimeData(id) {
                     devObjects.createInverterObjects(adapter, id, resp);
                 }
                 
-                fillData(adapter,response.data.Body.Data,"inverter." + id + '.');
+                fillData(adapter,resp,"inverter." + id + '.');
 
                 setTimeout(function(id,resp) {
 
@@ -485,7 +508,7 @@ function GetArchiveData(ids) {
                             if(c2 != null && v2 != null){
                                 adapter.setState("inverter." + id + '.Power_DC_String_2',Math.round((c2*v2 + Number.EPSILON)*100)/100,true);
                             }
-                            GetArchiveValue(adapter,resp,"inverter." + id + '.',id,'Temperature_Powerstage');
+                            GetArchiveValue(adapter,rsp,"inverter." + id + '.',id,'Temperature_Powerstage');
                         },isArchiveObjectsCreated?1:3000,id,response.data.Body.Data);
                     });
                     
@@ -1015,7 +1038,7 @@ function checkArchiveStatus() {
             }
             return;
         }
-        if (response.statusCode == 200 && 'BaseURL' in testData) {
+        if (response.status == 200 && 'BaseURL' in testData) {
             // it seems everything is working, therefore proceed with readout
             if (apiver === 1) {
                 GetArchiveData(adapter.config.inverter);
@@ -1038,7 +1061,7 @@ function getLoggerInfo() {
         if (response.status == 200) {
             try {
                 const data = response.data;
-                if ("Body" in data && Object.keys(data.Body.Data).length > 0) {
+                if ("Body" in data && "LoggerInfo" in data.Body) {
                     const resp = data.Body.LoggerInfo;
                     if (!isObjectsCreated) {
                         devObjects.createInfoObjects(adapter, resp);
@@ -1049,6 +1072,7 @@ function getLoggerInfo() {
                 }
             } catch (e) {
                 adapter.log.warn("getLoggerInfo: " + e);
+                adapter.log.warn("Received data for logger info: " + JSON.stringify(response.data))
             }
         }
     }).catch(function(error){
@@ -1073,39 +1097,47 @@ function GetArchiveValue(adapter,data,prefix,id,key){
 }
 
 // this function should not be called directly, better is to call through fillData function as this includes a timeout handling
-function fillDataObject(adapter,apiObject,prefix=""){
+function fillDataObject(adapt,apiObject,prefix=""){
     if(prefix != "" && prefix.endsWith('.') == false){ // make sure the path ends with a . if set
         prefix = prefix + '.';
     }
     if(apiObject.hasOwnProperty('Value') && apiObject.hasOwnProperty('Unit')){ // value + unit on first level -> special handling
         var val = apiObject.Value;
-        if(typeof(val) == 'number'){
+        if(typeof(val) == 'string'){
+            val = he.unescape(val)
+        }else if(typeof(val) == 'number'){
             val = Math.round((val + Number.EPSILON)*100)/100;
         }
-        adapter.setState(prefix + "Value",val,true);
+        adapt.setState(prefix + "Value",val,true);
         apiObject = Object.assign({},apiObject) // create a copy for further processing to not delete it from source object
         delete apiObject.Value;
         delete apiObject.Unit;
     }
     for (var key in apiObject){
         if(apiObject[key.toString()] === null){
-            adapter.log.debug("API Objekt " + key.toString() + " is null, no object filled!");
+            adapt.log.debug("API Objekt " + key.toString() + " is null, no object filled!");
         }else if(typeof(apiObject[key.toString()]) == "object"){ // this is a nested object to fill!
             if(apiObject[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
                 var val = apiObject[key.toString()].Value;
-                if(typeof(val) == 'number'){
+                if(typeof(val) == 'string'){
+                    val = he.unescape(val)
+                }else if(typeof(val) == 'number'){
                     val = Math.round((val + Number.EPSILON)*100)/100;
                 }
-                adapter.setState(prefix + key.toString(),val,true);
+                if(val !== null){
+                    adapt.setState(prefix + key.toString(),val,true);
+                }
             }else{ // nested object to fill -> recurse
-                fillDataObject(adapter,apiObject[key.toString()],prefix + key.toString())
+                fillDataObject(adapt,apiObject[key.toString()],prefix + key.toString())
             }
         }else{ // standard object to fill
             var val = apiObject[key.toString()];
-            if(typeof(val) == 'number'){
+            if(typeof(val) == 'string'){
+                val = he.unescape(val)
+            }else if(typeof(val) == 'number'){
                 val = Math.round((val + Number.EPSILON)*100)/100;
             }
-            adapter.setState(prefix + key.toString(),val,true);
+            adapt.setState(prefix + key.toString(),val,true);
         }
     }
 }
