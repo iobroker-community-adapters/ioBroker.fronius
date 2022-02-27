@@ -659,7 +659,7 @@ function getSensorRealtimeDataNow(id) {
             var data = apiTest.testSensorRealtimeDataNow;
             adapter.log.warn("getSensorRealtimeDataNowTest:" + JSON.stringify(data))
             devObjects.createSensorNowObjects(adapter, 1 ,data.Body.Data);
-            fillData(adapter,data.Body.Data,'sensor.1');
+            fillData(adapter,data.Body.Data,'sensorcard.1');
             return;
         }catch(ex){
             adapter.log.error("Error on getSensorRealtimeDataNowTest: " + ex);
@@ -673,9 +673,9 @@ function getSensorRealtimeDataNow(id) {
                     if (!isObjectsCreated) {
                         devObjects.createSensorNowObjects(adapter, id, response.data.Body.Data);
                     }
-                    fillData(adapter,response.data.Body.Data,"sensor." + id);
+                    fillData(adapter,response.data.Body.Data,"sensorcard." + id);
                 } else {
-                    adapter.log.warn(response.data.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(response.data.Head.Status.Reason + " sensorcard: " + id);
                 }
             } catch (e) {
                 adapter.log.warn("getSensorRealtimeDataNowSensorData: " + e);
@@ -692,7 +692,7 @@ function getSensorRealtimeDataMinMax(id) {
             var data = apiTest.testSensorRealtimeDataMinMax;
             adapter.log.warn("getSensorRealtimeDataMinMaxTest:" + JSON.stringify(data))
             devObjects.createSensorMinMaxObjects(adapter, 1 ,data.Body.Data);
-            fillData(adapter,data.Body.Data,'sensor.1');
+            fillData(adapter,data.Body.Data,'sensorcard.1');
             return;
         }catch(ex){
             adapter.log.error("Error on getSensorRealtimeDataMinMaxTest: " + ex);
@@ -706,10 +706,10 @@ function getSensorRealtimeDataMinMax(id) {
                     if (!isObjectsCreated) {
                         devObjects.createSensorMinMaxObjects(adapter, id, response.data.Body.Data);
                     }
-                    fillData(adapter,response.data.Body.Data,"sensor." + id);
+                    fillData(adapter,response.data.Body.Data,"sensorcard." + id);
 
                 } else {
-                    adapter.log.warn(response.data.Head.Status.Reason + " sensor: " + id);
+                    adapter.log.warn(response.data.Head.Status.Reason + " sensorcard: " + id);
                 }
             } catch (e) {
                 adapter.log.warn("getSensorRealtimeDataMinMaxSensorData: " + e);
