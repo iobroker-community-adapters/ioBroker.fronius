@@ -142,7 +142,7 @@ function resetStateToZero(API_response, basePath, state) {
     } else {
         adapter.getState(basePath + "." + state, (err, stat) => {
             if (stat) {
-                adapter.log.debug("State " + state + " is found in objects but not on API: " + JSON.stringify(API_response));
+                adapter.log.silly("State " + basePath + "." + state + " is found in objects but not on API: " + JSON.stringify(API_response));
                 if (stat.val != 0) {
                     adapter.setState(basePath + "." + state, 0, true);
                 }
@@ -284,13 +284,13 @@ function checkExistingConfig(){
                     adapter.log.info("The current system configuration is not up to date. Settings are updated and adapter restarted!");
                     adapter.getForeignObject('system.adapter.'+ adapter.namespace,function(err,obj){
                         if(obj != null){
-                            adapter.log.debug(JSON.stringify(obj));
+                            adapter.log.silly(JSON.stringify(obj));
                             obj.native.inverter = inverter
                             obj.native.sensorCard = sensorCard
                             obj.native.stringControl = stringControl
                             obj.native.meter = meter
                             obj.native.storage = storage
-                            adapter.log.debug(JSON.stringify(obj.native));
+                            adapter.log.silly(JSON.stringify(obj.native));
                             adapter.setForeignObject('system.adapter.'+ adapter.namespace,obj);
                         }
                     });
@@ -1115,7 +1115,7 @@ function fillDataObject(adapt,apiObject,prefix=""){
     }
     for (var key in apiObject){
         if(apiObject[key.toString()] === null){
-            adapt.log.debug("API Objekt " + key.toString() + " is null, no object filled!");
+            adapt.log.silly("API Objekt " + key.toString() + " is null, no object filled!");
         }else if(typeof(apiObject[key.toString()]) == "object"){ // this is a nested object to fill!
             if(apiObject[key.toString()].hasOwnProperty('Value')){ // handling object with value and Unit below
                 var val = apiObject[key.toString()].Value;
@@ -1164,7 +1164,7 @@ function main() {
     if (ip && baseurl) {
 
         checkIP(ip,function(res){
-            adapter.log.debug("checkIP is executed with result error=" + res.error + ", message=" + JSON.stringify(res.message));
+            adapter.log.silly("checkIP is executed with result error=" + res.error + ", message=" + JSON.stringify(res.message));
             getLoggerInfo();
             checkStatus();
             checkArchiveStatus();
