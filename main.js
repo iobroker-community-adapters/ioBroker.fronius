@@ -271,7 +271,7 @@ function checkExistingConfig(){
                 result = result.message;
                 adapter.log.debug("Current result of System deviceINFO: " + JSON.stringify(result));
                 var inverter = result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter).toString() : '';
-                var sensorCard = result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard).toString() : '1';
+                var sensorCard = result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard).toString() : '';
                 var stringControl = result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl).toString() : '';
                 var meter = result.hasOwnProperty('Meter') ? Object.keys(result.Meter).toString() : '';
                 var storage = result.hasOwnProperty('Storage') ? Object.keys(result.Storage).toString() : '';
@@ -477,7 +477,7 @@ function getInverterRealtimeData(id) {
 function GetArchiveData(ids) {
     // fallback if no ids set
     if (ids == "") {
-        ids = 1; // ensure correct working for symoGEN24 if no ID is set
+        ids = "1"; // ensure correct working for symoGEN24 if no ID is set
     }
 
     var today = new Date();
