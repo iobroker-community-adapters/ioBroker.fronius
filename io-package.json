@@ -1,204 +1,211 @@
 {
-  "common": {
-    "name": "fronius",
-    "version": "2.0.0-alpha.1",
-    "news": {
-      "2.0.0-alpha.1": {
-        "en": "This is an intermediate test release only.",
-        "de": "Dies ist nur eine Zwischenablösung.",
-        "ru": "Это только промежуточный тестовый релиз.",
-        "pt": "Este é apenas um teste intermediário.",
-        "nl": "Dit is een intermediate testuitgave.",
-        "fr": "Il s'agit d'un essai intermédiaire seulement.",
-        "it": "Questo è solo un rilascio di prova intermedio.",
-        "es": "Esto es sólo una liberación de prueba intermedia.",
-        "pl": "Jest to pośrednia wersja testowa.",
-        "uk": "Це проміжний тестовий реліз тільки.",
-        "zh-cn": "这是一次中间试验。."
-      },
-      "2.0.0-alpha.0": {
-        "en": "Dependencies and toolset have been updated. This is an intermediate test release.",
-        "de": "Abhängigkeiten und Toolset wurden aktualisiert. Dies ist eine Zwischenversion.",
-        "ru": "Обновлены зависимости и инструменты. Это промежуточный тестовый релиз.",
-        "pt": "As dependências e o conjunto de ferramentas foram atualizados. Este é um teste intermediário.",
-        "nl": "Afhankelijkheid en gereedschap zijn geüpdateerd. Dit is een tussentijdse testuitgave.",
-        "fr": "Les dépendances et les outils ont été mis à jour. Il s'agit d'un essai intermédiaire.",
-        "it": "Dipendenze e strumenti sono stati aggiornati. Si tratta di un rilascio intermedio di prova.",
-        "es": "Se han actualizado dependencias e instrumentos. Este es un lanzamiento de prueba intermedio.",
-        "pl": "Zależności i narzędzia zostały zaktualizowane. Jest to pośrednia wersja testowa.",
-        "uk": "Оновлено залежності та інструменти. Це проміжний тестовий реліз.",
-        "zh-cn": "已更新了附属和工具。 这是一次中间试验。."
-      },
-      "1.1.3": {
-        "en": "Added DC current, voltage and power for both strings and tempreture of archive request and added device type mapping",
-        "de": "DC Stromstärke, Spannung und Leistung für beide Strings und Temperatur aus Archivanfrage sowie Gerätetypzuordnung hinzugefügt",
-        "ru": "Добавлен постоянный ток, напряжение и мощность как для строк, так и для времени запроса архива, а также добавлено сопоставление типов устройств",
-        "pt": "Adicionada corrente DC, tensão e energia para strings e temperatura de solicitação de arquivo e mapeamento de tipo de dispositivo adicionado",
-        "nl": "Toegevoegde gelijkstroom, spanning en vermogen voor beide strings en tempreture van archiefverzoek en toegevoegde apparaattypetoewijzing",
-        "fr": "Ajout du courant continu, de la tension et de l'alimentation pour les chaînes et la température de la demande d'archive et ajout du mappage du type de périphérique",
-        "it": "Aggiunta corrente continua, tensione e potenza per entrambe le stringhe e la temperatura della richiesta di archivio e aggiunta la mappatura del tipo di dispositivo",
-        "es": "Se agregó corriente, voltaje y potencia de CC para ambas cadenas y la temperatura de la solicitud de archivo y se agregó el mapeo del tipo de dispositivo",
-        "pl": "Dodano prąd stały, napięcie i moc dla obu stringów oraz temperaturę żądania archiwum i dodano mapowanie typu urządzenia",
-        "zh-cn": "为归档请求的字符串和温度添加了直流电流，电压和功率，并添加了设备类型映射"
-      },
-      "1.1.1": {
-        "en": "Added inverterinfo, missing loggerinfo and missing units",
-        "de": "Inverterinfo, fehlende LoggerInfos und fehlende Einheiten hinzugefügt",
-        "ru": "Добавлена ​​информация о инверторе, отсутствующая информация о журнале и отсутствующие блоки",
-        "pt": "Adicionado inverterinfo, ausente loggerinfo e unidades ausentes",
-        "nl": "Omvormerinfo, ontbrekende loggerinfo en ontbrekende eenheden toegevoegd",
-        "fr": "Ajout de l'inverterinfo, du journal manquant et des unités manquantes",
-        "it": "Aggiunto inverterinfo, loggerinfo mancante e unità mancanti",
-        "es": "Se agregó información de inversor, información de registro faltante y unidades faltantes",
-        "pl": "Dodano informacje o inwerterze, brakujące informacje o logowaniu i brakujące jednostki",
-        "zh-cn": "添加了反相器信息，缺少的loggerinfo和缺少的单位"
-      },
-      "1.1.0": {
-        "en": "Implementation change for support of SYMO GEN24",
-        "de": "Implementierungsänderung zur Unterstützung von SYMO GEN24",
-        "ru": "Изменение реализации для поддержки SYMO GEN24",
-        "pt": "Mudança de implementação para suporte de SYMO GEN24",
-        "nl": "Implementatiewijziging voor ondersteuning van SYMO GEN24",
-        "fr": "Changement d'implémentation pour le support de SYMO GEN24",
-        "it": "Modifica dell'implementazione per il supporto di SYMO GEN24",
-        "es": "Cambio de implementación para el soporte de SYMO GEN24",
-        "pl": "Zmiana wdrożeniowa dla obsługi SYMO GEN24",
-        "zh-cn": "支持SYMO GEN24的实现更改"
-      },
-      "1.0.5": {
-        "en": "compact mode compatibility added",
-        "de": "Kompaktmodus-Kompatibilität hinzugefügt",
-        "ru": "добавлена ​​совместимость с компактным режимом",
-        "pt": "compatibilidade de modo compacto adicionada",
-        "nl": "compatibiliteit met compacte modus toegevoegd",
-        "fr": "Compatibilité en mode compact ajoutée",
-        "it": "aggiunta la compatibilità in modalità compatta",
-        "es": "compatibilidad de modo compacto agregado",
-        "pl": "Dodano kompatybilność w trybie kompaktowym",
-        "zh-cn": "增加了紧凑模式兼容性"
-      },
-      "1.0.4": {
-        "en": "Fix assignment to constant variable error",
-        "de": "Zuordnung zu konstantem Variablenfehler korrigieren",
-        "ru": "Исправить присвоение постоянной переменной",
-        "pt": "Corrigir atribuição a erro variável constante",
-        "nl": "Fix toewijzing aan constante variabele fout",
-        "fr": "Correction de l'affectation à l'erreur de variable constante",
-        "it": "Correzione dell'assegnazione all'errore di variabile costante",
-        "es": "Corregir asignación a error variable constante",
-        "pl": "Napraw przypisanie do stałego błędu zmiennej",
-        "zh-cn": "修复对常量变量错误的分配"
-      }
+    "common": {
+        "name": "fronius",
+        "version": "2.0.0-alpha.1",
+        "news": {
+            "2.0.0-alpha.1": {
+                "en": "This is an intermediate test release only.",
+                "de": "Dies ist nur eine Zwischenablösung.",
+                "ru": "Это только промежуточный тестовый релиз.",
+                "pt": "Este é apenas um teste intermediário.",
+                "nl": "Dit is een intermediate testuitgave.",
+                "fr": "Il s'agit d'un essai intermédiaire seulement.",
+                "it": "Questo è solo un rilascio di prova intermedio.",
+                "es": "Esto es sólo una liberación de prueba intermedia.",
+                "pl": "Jest to pośrednia wersja testowa.",
+                "uk": "Це проміжний тестовий реліз тільки.",
+                "zh-cn": "这是一次中间试验。."
+            },
+            "2.0.0-alpha.0": {
+                "en": "Dependencies and toolset have been updated. This is an intermediate test release.",
+                "de": "Abhängigkeiten und Toolset wurden aktualisiert. Dies ist eine Zwischenversion.",
+                "ru": "Обновлены зависимости и инструменты. Это промежуточный тестовый релиз.",
+                "pt": "As dependências e o conjunto de ferramentas foram atualizados. Este é um teste intermediário.",
+                "nl": "Afhankelijkheid en gereedschap zijn geüpdateerd. Dit is een tussentijdse testuitgave.",
+                "fr": "Les dépendances et les outils ont été mis à jour. Il s'agit d'un essai intermédiaire.",
+                "it": "Dipendenze e strumenti sono stati aggiornati. Si tratta di un rilascio intermedio di prova.",
+                "es": "Se han actualizado dependencias e instrumentos. Este es un lanzamiento de prueba intermedio.",
+                "pl": "Zależności i narzędzia zostały zaktualizowane. Jest to pośrednia wersja testowa.",
+                "uk": "Оновлено залежності та інструменти. Це проміжний тестовий реліз.",
+                "zh-cn": "已更新了附属和工具。 这是一次中间试验。."
+            },
+            "1.1.3": {
+                "en": "Added DC current, voltage and power for both strings and tempreture of archive request and added device type mapping",
+                "de": "DC Stromstärke, Spannung und Leistung für beide Strings und Temperatur aus Archivanfrage sowie Gerätetypzuordnung hinzugefügt",
+                "ru": "Добавлен постоянный ток, напряжение и мощность как для строк, так и для времени запроса архива, а также добавлено сопоставление типов устройств",
+                "pt": "Adicionada corrente DC, tensão e energia para strings e temperatura de solicitação de arquivo e mapeamento de tipo de dispositivo adicionado",
+                "nl": "Toegevoegde gelijkstroom, spanning en vermogen voor beide strings en tempreture van archiefverzoek en toegevoegde apparaattypetoewijzing",
+                "fr": "Ajout du courant continu, de la tension et de l'alimentation pour les chaînes et la température de la demande d'archive et ajout du mappage du type de périphérique",
+                "it": "Aggiunta corrente continua, tensione e potenza per entrambe le stringhe e la temperatura della richiesta di archivio e aggiunta la mappatura del tipo di dispositivo",
+                "es": "Se agregó corriente, voltaje y potencia de CC para ambas cadenas y la temperatura de la solicitud de archivo y se agregó el mapeo del tipo de dispositivo",
+                "pl": "Dodano prąd stały, napięcie i moc dla obu stringów oraz temperaturę żądania archiwum i dodano mapowanie typu urządzenia",
+                "zh-cn": "为归档请求的字符串和温度添加了直流电流，电压和功率，并添加了设备类型映射",
+                "uk": "Додано постійний струм, напругу та потужність для рядків і температури архівного запиту, а також додано відображення типу пристрою"
+            },
+            "1.1.1": {
+                "en": "Added inverterinfo, missing loggerinfo and missing units",
+                "de": "Inverterinfo, fehlende LoggerInfos und fehlende Einheiten hinzugefügt",
+                "ru": "Добавлена ​​информация о инверторе, отсутствующая информация о журнале и отсутствующие блоки",
+                "pt": "Adicionado inverterinfo, ausente loggerinfo e unidades ausentes",
+                "nl": "Omvormerinfo, ontbrekende loggerinfo en ontbrekende eenheden toegevoegd",
+                "fr": "Ajout de l'inverterinfo, du journal manquant et des unités manquantes",
+                "it": "Aggiunto inverterinfo, loggerinfo mancante e unità mancanti",
+                "es": "Se agregó información de inversor, información de registro faltante y unidades faltantes",
+                "pl": "Dodano informacje o inwerterze, brakujące informacje o logowaniu i brakujące jednostki",
+                "zh-cn": "添加了反相器信息，缺少的loggerinfo和缺少的单位",
+                "uk": "Додано інформацію про інвертор, відсутню інформацію про журнал і відсутні одиниці"
+            },
+            "1.1.0": {
+                "en": "Implementation change for support of SYMO GEN24",
+                "de": "Implementierungsänderung zur Unterstützung von SYMO GEN24",
+                "ru": "Изменение реализации для поддержки SYMO GEN24",
+                "pt": "Mudança de implementação para suporte de SYMO GEN24",
+                "nl": "Implementatiewijziging voor ondersteuning van SYMO GEN24",
+                "fr": "Changement d'implémentation pour le support de SYMO GEN24",
+                "it": "Modifica dell'implementazione per il supporto di SYMO GEN24",
+                "es": "Cambio de implementación para el soporte de SYMO GEN24",
+                "pl": "Zmiana wdrożeniowa dla obsługi SYMO GEN24",
+                "zh-cn": "支持SYMO GEN24的实现更改",
+                "uk": "Зміна реалізації для підтримки SYMO GEN24"
+            },
+            "1.0.5": {
+                "en": "compact mode compatibility added",
+                "de": "Kompaktmodus-Kompatibilität hinzugefügt",
+                "ru": "добавлена ​​совместимость с компактным режимом",
+                "pt": "compatibilidade de modo compacto adicionada",
+                "nl": "compatibiliteit met compacte modus toegevoegd",
+                "fr": "Compatibilité en mode compact ajoutée",
+                "it": "aggiunta la compatibilità in modalità compatta",
+                "es": "compatibilidad de modo compacto agregado",
+                "pl": "Dodano kompatybilność w trybie kompaktowym",
+                "zh-cn": "增加了紧凑模式兼容性",
+                "uk": "додано сумісність із компактним режимом"
+            },
+            "1.0.4": {
+                "en": "Fix assignment to constant variable error",
+                "de": "Zuordnung zu konstantem Variablenfehler korrigieren",
+                "ru": "Исправить присвоение постоянной переменной",
+                "pt": "Corrigir atribuição a erro variável constante",
+                "nl": "Fix toewijzing aan constante variabele fout",
+                "fr": "Correction de l'affectation à l'erreur de variable constante",
+                "it": "Correzione dell'assegnazione all'errore di variabile costante",
+                "es": "Corregir asignación a error variable constante",
+                "pl": "Napraw przypisanie do stałego błędu zmiennej",
+                "zh-cn": "修复对常量变量错误的分配",
+                "uk": "Виправлено помилку призначення постійної змінної"
+            }
+        },
+        "title": "Fronius inverter",
+        "titleLang": {
+            "en": "Fronius inverter",
+            "de": "Fronius Wechselrichter",
+            "ru": "Fronius инвертор",
+            "pt": "Inversor Fronius",
+            "nl": "Fronius-omvormer",
+            "fr": "Onduleur Fronius",
+            "it": "Inverter Fronius",
+            "es": "Inversor Fronius",
+            "pl": "Falownik Fronius",
+            "zh-cn": "Fronius逆變器",
+            "uk": "Інвертор Fronius"
+        },
+        "desc": {
+            "en": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.",
+            "de": "Dies ist ein ioBroker-Adapter für Ihren Fronius PV-Wechselrichter mit Fronius Datalogger Web ab Version 2.0.4-1, Fronius Datamanager ab Version 3.0.3-1 und Symo Gen24.",
+            "ru": "Это адаптер ioBroker для вашего фотоэлектрического инвертора Fronius с Fronius Datalogger Web начиная с версии 2.0.4-1, Fronius Datamanager начиная с версии 3.0.3-1 и Symo Gen24.",
+            "pt": "Este é um adaptador ioBroker para seu inversor Fronius PV com Fronius Datalogger Web da versão 2.0.4-1 em diante, Fronius Datamanager da versão 3.0.3-1 em diante e Symo Gen24.",
+            "nl": "Dit is een ioBroker-adapter voor uw Fronius PV-omvormer met Fronius Datalogger Web vanaf versie 2.0.4-1, Fronius Datamanager vanaf versie 3.0.3-1 en Symo Gen24.",
+            "fr": "Il s'agit d'un adaptateur ioBroker pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1, Fronius Datamanager à partir de la version 3.0.3-1 et Symo Gen24.",
+            "it": "Questo è un adattatore ioBroker per il tuo inverter FV Fronius con Fronius Datalogger Web dalla versione 2.0.4-1 in poi, Fronius Datamanager dalla versione 3.0.3-1 in poi e Symo Gen24.",
+            "es": "Se trata de un adaptador ioBroker para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1, Fronius Datamanager a partir de la versión 3.0.3-1 y Symo Gen24.",
+            "pl": "Jest to adapter ioBroker do falownika Fronius PV z Fronius Datalogger Web od wersji 2.0.4-1, Fronius Datamanager od wersji 3.0.3-1 i Symo Gen24.",
+            "zh-cn": "这是适用于Fronius PV逆变器的ioBroker适配器，具有版本2.0.4-1起的Fronius Datalogger Web，版本3.0.3-1起的Fronius Datamanager和Symo Gen24。",
+            "uk": "Це адаптер ioBroker для фотоелектричного інвертора Fronius із Fronius Datalogger Web, починаючи з версії 2.0.4-1, Fronius Datamanager, починаючи з версії 3.0.3-1, і Symo Gen24."
+        },
+        "license": "MIT",
+        "authors": [
+            "ldittmar <iobroker@lmdsoft.de>",
+            "nkleber78",
+            "schweigel"
+        ],
+        "compact": true,
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "fronius.png",
+        "materialize": true,
+        "enabled": true,
+        "messagebox": true,
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
+        "keywords": [
+            "Fronius",
+            "inverter",
+            "Wechselrichter",
+            "hybrid",
+            "Symo"
+        ],
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
+        "loglevel": "info",
+        "type": "energy",
+        "connectionType": "local",
+        "dataSource": "poll"
     },
-    "title": "Fronius inverter",
-    "titleLang": {
-      "en": "Fronius inverter",
-      "de": "Fronius Wechselrichter",
-      "ru": "Fronius инвертор",
-      "pt": "Inversor Fronius",
-      "nl": "Fronius-omvormer",
-      "fr": "Onduleur Fronius",
-      "it": "Inverter Fronius",
-      "es": "Inversor Fronius",
-      "pl": "Falownik Fronius",
-      "zh-cn": "Fronius逆變器"
+    "native": {
+        "ip": "",
+        "apiversion": "",
+        "baseurl": "",
+        "inverter": "",
+        "sensorCard": "",
+        "stringControl": "",
+        "meter": "",
+        "storage": "",
+        "poll": "30",
+        "requestType": "http://"
     },
-    "desc": {
-      "en": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.",
-      "de": "Dies ist ein ioBroker-Adapter für Ihren Fronius PV-Wechselrichter mit Fronius Datalogger Web ab Version 2.0.4-1, Fronius Datamanager ab Version 3.0.3-1 und Symo Gen24.",
-      "ru": "Это адаптер ioBroker для вашего фотоэлектрического инвертора Fronius с Fronius Datalogger Web начиная с версии 2.0.4-1, Fronius Datamanager начиная с версии 3.0.3-1 и Symo Gen24.",
-      "pt": "Este é um adaptador ioBroker para seu inversor Fronius PV com Fronius Datalogger Web da versão 2.0.4-1 em diante, Fronius Datamanager da versão 3.0.3-1 em diante e Symo Gen24.",
-      "nl": "Dit is een ioBroker-adapter voor uw Fronius PV-omvormer met Fronius Datalogger Web vanaf versie 2.0.4-1, Fronius Datamanager vanaf versie 3.0.3-1 en Symo Gen24.",
-      "fr": "Il s'agit d'un adaptateur ioBroker pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1, Fronius Datamanager à partir de la version 3.0.3-1 et Symo Gen24.",
-      "it": "Questo è un adattatore ioBroker per il tuo inverter FV Fronius con Fronius Datalogger Web dalla versione 2.0.4-1 in poi, Fronius Datamanager dalla versione 3.0.3-1 in poi e Symo Gen24.",
-      "es": "Se trata de un adaptador ioBroker para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1, Fronius Datamanager a partir de la versión 3.0.3-1 y Symo Gen24.",
-      "pl": "Jest to adapter ioBroker do falownika Fronius PV z Fronius Datalogger Web od wersji 2.0.4-1, Fronius Datamanager od wersji 3.0.3-1 i Symo Gen24.",
-      "zh-cn": "这是适用于Fronius PV逆变器的ioBroker适配器，具有版本2.0.4-1起的Fronius Datalogger Web，版本3.0.3-1起的Fronius Datamanager和Symo Gen24。"
-    },
-    "license": "MIT",
-    "authors": [
-      "ldittmar <iobroker@lmdsoft.de>",
-      "nkleber78",
-      "schweigel"
-    ],
-    "compact": true,
-    "platform": "Javascript/Node.js",
-    "mode": "daemon",
-    "icon": "fronius.png",
-    "materialize": true,
-    "enabled": true,
-    "messagebox": true,
-    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
-    "keywords": [
-      "Fronius",
-      "inverter",
-      "Wechselrichter",
-      "hybrid",
-      "Symo"
-    ],
-    "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
-    "loglevel": "info",
-    "type": "energy",
-    "connectionType": "local",
-    "dataSource": "poll"
-  },
-  "native": {
-    "ip": "",
-    "apiversion": "",
-    "baseurl": "",
-    "inverter": "",
-    "sensorCard": "",
-    "stringControl": "",
-    "meter": "",
-    "storage": "",
-    "poll": "30",
-    "requestType": "http://"
-  },
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastsync",
-      "type": "state",
-      "common": {
-        "name": "Last successful sync",
-        "type": "string",
-        "role": "value.datetime",
-        "read": true,
-        "write": false,
-        "desc": "Last successful synchronization"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "name": "Fronius connected",
-        "type": "boolean",
-        "role": "indicator.connected",
-        "read": true,
-        "write": false,
-        "def": false,
-        "desc": "Is Fronius inverter connected?"
-      },
-      "native": {}
-    },
-    {
-      "_id": "inverter",
-      "type": "channel",
-      "common": {
-        "name": "inverter realtime data",
-        "role": "info"
-      },
-      "native": {}
-    }
-  ]
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastsync",
+            "type": "state",
+            "common": {
+                "name": "Last successful sync",
+                "type": "string",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "desc": "Last successful synchronization"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "name": "Fronius connected",
+                "type": "boolean",
+                "role": "indicator.connected",
+                "read": true,
+                "write": false,
+                "def": false,
+                "desc": "Is Fronius inverter connected?"
+            },
+            "native": {}
+        },
+        {
+            "_id": "inverter",
+            "type": "channel",
+            "common": {
+                "name": "inverter realtime data",
+                "role": "info"
+            },
+            "native": {}
+        }
+    ]
 }
