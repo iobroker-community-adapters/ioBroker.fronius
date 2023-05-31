@@ -8,8 +8,8 @@
   },
   "contributors": [
     {
-      "name": "tobintax",
-      "email": ""
+      "name": "mcm1957",
+      "email": "mcm57@gmx.at"
     },
     {
       "name": "nkleber78",
@@ -17,6 +17,10 @@
     },
     {
       "name": "schweigel",
+      "email": ""
+    },
+    {
+      "name": "tobintax",
       "email": ""
     }
   ],
@@ -38,10 +42,15 @@
     "url": "https://github.com/iobroker-community-adapters/ioBroker.fronius"
   },
   "dependencies": {
-    "request": "^2.88.2",
-    "@iobroker/adapter-core": "^2.6.8"
+    "@iobroker/adapter-core": "^2.6.8",
+    "request": "^2.88.2"
   },
   "devDependencies": {
+    "@alcalzone/release-script": "^3.5.9",
+    "@alcalzone/release-script-plugin-iobroker": "^3.5.9",
+    "@alcalzone/release-script-plugin-license": "^3.5.9",
+    "@alcalzone/release-script-plugin-manual-review": "^3.5.9",
+    "@iobroker/adapter-dev": "^1.2.0",
     "@iobroker/testing": "^4.1.0",
     "@types/chai": "^4.3.5",
     "@types/chai-as-promised": "^7.1.5",
@@ -70,7 +79,9 @@
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:js && npm run test:package",
     "check": "tsc --noEmit -p tsconfig.check.json",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "translate": "translate-adapter",
+    "release": "release-script"
   },
   "bugs": {
     "url": "https://github.com/iobroker-community-adapters/ioBroker.fronius/issues"

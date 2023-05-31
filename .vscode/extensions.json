@@ -1,6 +1,3 @@
 {
-	"recommendations": [
-		"dbaeumer.vscode-eslint",
-		"hookyqr.beautify"
-	]
+    "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
 }
