@@ -36,6 +36,11 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+- (mcm1957) This is an intermediate test release only.
+
 ### 2.0.0-alpha.0 (2023-05-31)
 
 - (mcm1957) Dependencies and toolset have been updated. This is an intermediate test release.
