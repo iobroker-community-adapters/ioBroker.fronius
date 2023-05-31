@@ -1,0 +1,6 @@
+**/.eslintrc.js
+admin/words.js
+
+# to be removed after cleanup
+main.js
+lib/*
