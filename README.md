@@ -39,8 +39,7 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
 
 ### **WORK IN PROGRESS**
 
-- (nkleber78) This release delivers a major rewrite of the adapter code. Incompatibilities may exist. Please ensure to have a working backup.
-- (mcm1957) Dependencies and toolset has been updated
+- (mcm1957) Dependencies and toolset have been updated. This is an intermediate test release.
 
 ### 1.1.6 (2021-03-xx)
 
