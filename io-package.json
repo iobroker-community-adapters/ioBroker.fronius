@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fronius",
-    "version": "2.0.0-alpha.0",
+    "version": "2.0.0-alpha.1",
     "news": {
+      "2.0.0-alpha.1": {
+        "en": "This is an intermediate test release only.",
+        "de": "Dies ist nur eine Zwischenablösung.",
+        "ru": "Это только промежуточный тестовый релиз.",
+        "pt": "Este é apenas um teste intermediário.",
+        "nl": "Dit is een intermediate testuitgave.",
+        "fr": "Il s'agit d'un essai intermédiaire seulement.",
+        "it": "Questo è solo un rilascio di prova intermedio.",
+        "es": "Esto es sólo una liberación de prueba intermedia.",
+        "pl": "Jest to pośrednia wersja testowa.",
+        "uk": "Це проміжний тестовий реліз тільки.",
+        "zh-cn": "这是一次中间试验。."
+      },
       "2.0.0-alpha.0": {
         "en": "Dependencies and toolset have been updated. This is an intermediate test release.",
         "de": "Abhängigkeiten und Toolset wurden aktualisiert. Dies ist eine Zwischenversion.",
@@ -75,18 +88,6 @@
         "es": "Corregir asignación a error variable constante",
         "pl": "Napraw przypisanie do stałego błędu zmiennej",
         "zh-cn": "修复对常量变量错误的分配"
-      },
-      "1.0.3": {
-        "en": "Support of admin3",
-        "de": "Unterstützung von admin3",
-        "ru": "Поддержка admin3",
-        "pt": "Suporte de admin3",
-        "nl": "Ondersteuning van admin3",
-        "fr": "Support de admin3",
-        "it": "Supporto di admin3",
-        "es": "Soporte de admin3",
-        "pl": "Wsparcie dla administratora3",
-        "zh-cn": "支持管理员3"
       }
     },
     "title": "Fronius inverter",
@@ -115,7 +116,11 @@
       "zh-cn": "这是适用于Fronius PV逆变器的ioBroker适配器，具有版本2.0.4-1起的Fronius Datalogger Web，版本3.0.3-1起的Fronius Datamanager和Symo Gen24。"
     },
     "license": "MIT",
-    "authors": ["ldittmar <iobroker@lmdsoft.de>", "nkleber78", "schweigel"],
+    "authors": [
+      "ldittmar <iobroker@lmdsoft.de>",
+      "nkleber78",
+      "schweigel"
+    ],
     "compact": true,
     "platform": "Javascript/Node.js",
     "mode": "daemon",
@@ -124,7 +129,13 @@
     "enabled": true,
     "messagebox": true,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
-    "keywords": ["Fronius", "inverter", "Wechselrichter", "hybrid", "Symo"],
+    "keywords": [
+      "Fronius",
+      "inverter",
+      "Wechselrichter",
+      "hybrid",
+      "Symo"
+    ],
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
     "loglevel": "info",
     "type": "energy",
