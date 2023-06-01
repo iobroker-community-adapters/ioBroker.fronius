@@ -293,11 +293,7 @@ function getActiveDeviceInfo(type, url, callback) {
         })
         .catch(function (error) {
             callback({ error: 1, message: {} });
-        }
-    })
-    .catch(function(){
-        callback({ error: 1, message: {} });
-    });
+        })
 }
 
 // this function is used to check the existing config. If the config stored does not match
