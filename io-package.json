@@ -29,6 +29,30 @@
                 "uk": "Оновлено залежності та інструменти. Це проміжний тестовий реліз.",
                 "zh-cn": "已更新了附属和工具。 这是一次中间试验。."
             },
+            "1.2.0": {
+              "en": "Adapted storage objects to support GEN24 and improved object creation for storage objects",
+              "de": "",
+              "ru": "",
+              "pt": "",
+              "nl": "",
+              "fr": "",
+              "it": "",
+              "es": "",
+              "pl": "",
+              "zh-cn": ""
+            },
+            "1.1.6": {
+              "en": "Fixed issue #97, Add inverter  temperature readout, DC power calculation for GEN4 added, Improved object creation",
+              "de": "",
+              "ru": "",
+              "pt": "",
+              "nl": "",
+              "fr": "",
+              "it": "",
+              "es": "",
+              "pl": "",
+              "zh-cn": ""
+            },
             "1.1.3": {
                 "en": "Added DC current, voltage and power for both strings and tempreture of archive request and added device type mapping",
                 "de": "DC Stromstärke, Spannung und Leistung für beide Strings und Temperatur aus Archivanfrage sowie Gerätetypzuordnung hinzugefügt",
@@ -149,63 +173,119 @@
         "connectionType": "local",
         "dataSource": "poll"
     },
-    "native": {
-        "ip": "",
-        "apiversion": "",
-        "baseurl": "",
-        "inverter": "",
-        "sensorCard": "",
-        "stringControl": "",
-        "meter": "",
-        "storage": "",
-        "poll": "30",
-        "requestType": "http://"
+    "title": "Fronius inverter",
+    "titleLang": {
+      "en": "Fronius inverter",
+      "de": "Fronius Wechselrichter",
+      "ru": "Fronius инвертор",
+      "pt": "Inversor Fronius",
+      "nl": "Fronius-omvormer",
+      "fr": "Onduleur Fronius",
+      "it": "Inverter Fronius",
+      "es": "Inversor Fronius",
+      "pl": "Falownik Fronius",
+      "zh-cn": "Fronius逆變器"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.lastsync",
-            "type": "state",
-            "common": {
-                "name": "Last successful sync",
-                "type": "string",
-                "role": "value.datetime",
-                "read": true,
-                "write": false,
-                "desc": "Last successful synchronization"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "name": "Fronius connected",
-                "type": "boolean",
-                "role": "indicator.connected",
-                "read": true,
-                "write": false,
-                "def": false,
-                "desc": "Is Fronius inverter connected?"
-            },
-            "native": {}
-        },
-        {
-            "_id": "inverter",
-            "type": "channel",
-            "common": {
-                "name": "inverter realtime data",
-                "role": "info"
-            },
-            "native": {}
-        }
-    ]
+    "desc": {
+      "en": "This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.",
+      "de": "Dies ist ein ioBroker-Adapter für Ihren Fronius PV-Wechselrichter mit Fronius Datalogger Web ab Version 2.0.4-1, Fronius Datamanager ab Version 3.0.3-1 und Symo Gen24.",
+      "ru": "Это адаптер ioBroker для вашего фотоэлектрического инвертора Fronius с Fronius Datalogger Web начиная с версии 2.0.4-1, Fronius Datamanager начиная с версии 3.0.3-1 и Symo Gen24.",
+      "pt": "Este é um adaptador ioBroker para seu inversor Fronius PV com Fronius Datalogger Web da versão 2.0.4-1 em diante, Fronius Datamanager da versão 3.0.3-1 em diante e Symo Gen24.",
+      "nl": "Dit is een ioBroker-adapter voor uw Fronius PV-omvormer met Fronius Datalogger Web vanaf versie 2.0.4-1, Fronius Datamanager vanaf versie 3.0.3-1 en Symo Gen24.",
+      "fr": "Il s'agit d'un adaptateur ioBroker pour votre onduleur photovoltaïque Fronius avec Fronius Datalogger Web à partir de la version 2.0.4-1, Fronius Datamanager à partir de la version 3.0.3-1 et Symo Gen24.",
+      "it": "Questo è un adattatore ioBroker per il tuo inverter FV Fronius con Fronius Datalogger Web dalla versione 2.0.4-1 in poi, Fronius Datamanager dalla versione 3.0.3-1 in poi e Symo Gen24.",
+      "es": "Se trata de un adaptador ioBroker para su inversor fotovoltaico Fronius con Fronius Datalogger Web a partir de la versión 2.0.4-1, Fronius Datamanager a partir de la versión 3.0.3-1 y Symo Gen24.",
+      "pl": "Jest to adapter ioBroker do falownika Fronius PV z Fronius Datalogger Web od wersji 2.0.4-1, Fronius Datamanager od wersji 3.0.3-1 i Symo Gen24.",
+      "zh-cn": "这是适用于Fronius PV逆变器的ioBroker适配器，具有版本2.0.4-1起的Fronius Datalogger Web，版本3.0.3-1起的Fronius Datamanager和Symo Gen24。"
+    },
+    "license": "MIT",
+    "authors": [
+      "ldittmar <iobroker@lmdsoft.de>",
+      "nkleber78",
+      "schweigel"
+    ],
+    "compact": true,
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "icon": "fronius.png",
+    "materialize": true,
+    "enabled": true,
+    "messagebox": true,
+    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
+    "keywords": [
+      "Fronius",
+      "inverter",
+      "Wechselrichter",
+      "hybrid",
+      "Symo"
+    ],
+    "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
+    "loglevel": "info",
+    "type": "energy",
+    "connectionType": "local",
+    "dataSource": "poll"
+  },
+  "native": {
+    "ip": "",
+    "apiversion": "",
+    "baseurl": "",
+    "inverter": "",
+    "sensorCard": "",
+    "stringControl": "",
+    "meter": "",
+    "storage": "",
+    "poll": "30",
+    "requestType": "http://"
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastsync",
+      "type": "state",
+      "common": {
+        "name": "Last successful sync",
+        "type": "string",
+        "role": "value.datetime",
+        "read": true,
+        "write": false,
+        "desc": "Last successful synchronization"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastsyncarchive",
+      "type": "state",
+      "common": {
+          "name": "Last successful sync of archive data",
+          "type": "string",
+          "role": "value.datetime",
+          "read": true,
+          "write": false,
+          "desc": "Last successful synchronization of archive data"
+      },
+      "native": {}
+  },
+  {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": "Fronius connected",
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false,
+        "desc": "Is Fronius inverter connected?"
+      },
+      "native": {}
+    }
+  ]
 }

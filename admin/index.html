@@ -152,11 +152,11 @@
                                 var data = JSON.parse(res);
                                 if (data.error === 0) {
                                     var result = data.message;
-                                    $('#inverter').val(result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter) : '');
-                                    $('#sensorCard').val(result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard) : '');
-                                    $('#stringControl').val(result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl) : '');
-                                    $('#meter').val(result.hasOwnProperty('Meter') ? Object.keys(result.Meter) : '');
-                                    $('#storage').val(result.hasOwnProperty('Storage') ? Object.keys(result.Storage) : '');
+                                    $('#inverter').val(result.hasOwnProperty('Inverter') ? Object.keys(result.Inverter).toString() : '');
+                                    $('#sensorCard').val(result.hasOwnProperty('SensorCard') ? Object.keys(result.SensorCard).toString() : '');
+                                    $('#stringControl').val(result.hasOwnProperty('StringControl') ? Object.keys(result.StringControl).toString() : '');
+                                    $('#meter').val(result.hasOwnProperty('Meter') ? Object.keys(result.Meter).toString() : '');
+                                    $('#storage').val(result.hasOwnProperty('Storage') ? Object.keys(result.Storage).toString() : '');
                                     $('#poll').prop('disabled', false);
                                     $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').attr("src", "img/ok.png");
@@ -172,7 +172,7 @@
                                 var data = JSON.parse(res);
                                 if (data.error === 0) {
                                     var result = data.message;
-                                    $('#inverter').val(Object.keys(result));
+                                    $('#inverter').val(Object.keys(result).toString());
                                 } else {
                                     setError();
                                 }
@@ -186,7 +186,7 @@
                                 var data = JSON.parse(res);
                                 if (data.error === 0) {
                                     var result = data.message;
-                                    $('#inverter').val(Object.keys(result));
+                                    $('#inverter').val(Object.keys(result).toString());
                                 } else {
                                     setError();
                                 }
@@ -199,7 +199,7 @@
                                 var data = JSON.parse(res);
                                 if (data.error === 0) {
                                     var result = data.message;
-                                    $('#sensorCard').val(Object.keys(result));
+                                    $('#sensorCard').val(Object.keys(result).toString());
                                 } else {
                                     setError();
                                 }
@@ -212,7 +212,7 @@
                                 var data = JSON.parse(res);
                                 if (data.error === 0) {
                                     var result = data.message;
-                                    $('#stringControl').val(Object.keys(result));
+                                    $('#stringControl').val(Object.keys(result).toString());
                                     $('#poll').prop('disabled', false);
                                     $('#pollarchive').prop('disabled', false);
                                     $('#checkIcon').attr("src", "img/ok.png");
