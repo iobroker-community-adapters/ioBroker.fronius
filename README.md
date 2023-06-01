@@ -36,86 +36,87 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### 2.0.0-alpha.2 (2023-06-01)
 
-- (nkleber78) Usage of ping utility has been removed (#169)
-- (nkleber78) Reading of mpp values has been added (#78)
-- (nkleber78) Request module has been replaced by axios
-- (mcm1957) Dependencies and toolset have been updated. This is an intermediate test release.
+**WORK IN PROGRESS**
+
+-   (nkleber78) Usage of ping utility has been removed (#169)
+-   (nkleber78) Reading of mpp values has been added (#78)
+-   (nkleber78) Request module has been replaced by axios
+-   (mcm1957) Dependencies and toolset have been updated. This is an intermediate test release.
 
 ### 1.2.0 (2021-12-18)
 
-- (nkleber78) Fixed changes related to GEN24 API update for latest FW incl. object creation for storage objects
+-   (nkleber78) Fixed changes related to GEN24 API update for latest FW incl. object creation for storage objects
 
 ### 1.1.6 (2021-03-xx)
 
-- (nkleber78) Fixed issue #97, Added some new predefined objects
-- (nkleber78) Added Inverter Temperature readout (#86)
+-   (nkleber78) Fixed issue #97, Added some new predefined objects
+-   (nkleber78) Added Inverter Temperature readout (#86)
 
 ### 1.1.3 (2021-03-15)
 
-- (nkleber78) Split main.js into multiple files for better maintenance
-- (nkleber78) Prevent creating info objects which are not supported by the inverters
-- (schweigel) Added archive request values
-- (schweigel) Added archive polling intervall
-- (schweigel) Added devicetype string
+-   (nkleber78) Split main.js into multiple files for better maintenance
+-   (nkleber78) Prevent creating info objects which are not supported by the inverters
+-   (schweigel) Added archive request values
+-   (schweigel) Added archive polling intervall
+-   (schweigel) Added devicetype string
 
 ### 1.1.1 (2020-11-30)
 
-- (schweigel) Added missing units
-- (schweigel) Added inverterinfo
+-   (schweigel) Added missing units
+-   (schweigel) Added inverterinfo
 
 ### 1.1.0 (2020-11-24)
 
-- (nkleber78) Implementation change for support of SYMO GEN24
-- (nkleber78) Fix issue with adapters connected state
+-   (nkleber78) Implementation change for support of SYMO GEN24
+-   (nkleber78) Fix issue with adapters connected state
 
 ### 1.0.5 (2019-01-18)
 
-- (ldittmar) compact mode compatibility added
-- (ldittmar) add chinese support
+-   (ldittmar) compact mode compatibility added
+-   (ldittmar) add chinese support
 
 ### 1.0.4
 
-- (ldittmar) Fix assignment to constant variable error
+-   (ldittmar) Fix assignment to constant variable error
 
 ### 1.0.3
 
-- (ldittmar) Ready for Admin 3
+-   (ldittmar) Ready for Admin 3
 
 ### 1.0.2
 
-- (tobintax) Bugfix - Inverter Query regarding PAC adjusted.
+-   (tobintax) Bugfix - Inverter Query regarding PAC adjusted.
 
 ### 1.0.1
 
-- (tobintax) Added more values from Smartmeter
-- (tobintax) Added more Powerflow Values
-- (tobintax) Removed Value "EnergyReal_WAC_Minus_Relative" . This Value had no result and is undocumented in the fronius api documentation.
+-   (tobintax) Added more values from Smartmeter
+-   (tobintax) Added more Powerflow Values
+-   (tobintax) Removed Value "EnergyReal_WAC_Minus_Relative" . This Value had no result and is undocumented in the fronius api documentation.
 
 ### 1.0.0
 
-- (ldittmar) Fixed little errors
+-   (ldittmar) Fixed little errors
 
 ### 0.0.5
 
-- (ldittmar) Read storage data and error/status codes
+-   (ldittmar) Read storage data and error/status codes
 
 ### 0.0.4
 
-- (ldittmar) Read more data
+-   (ldittmar) Read more data
 
 ### 0.0.3
 
-- (ldittmar) Improved installation routine
+-   (ldittmar) Improved installation routine
 
 ### 0.0.2
 
-- (ldittmar) First data is read
+-   (ldittmar) First data is read
 
 ### 0.0.1
 
-- (ldittmar) initial commit
+-   (ldittmar) initial commit
 
 ## License
 
