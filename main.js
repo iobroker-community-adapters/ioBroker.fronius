@@ -265,6 +265,7 @@ function checkIP(ipToCheck, callback) {
             adapter.log.error('IP is not a Fronius inverter');
             callback({ error: 1, message: {} });
         });
+    });
 }
 
 //Check Fronius devices v1
