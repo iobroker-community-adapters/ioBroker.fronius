@@ -31,19 +31,21 @@ For more details and for information how to disable the error reporting see [Sen
 This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.
 
 ## Changelog
+
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### 2.0.0-alpha.1 (2023-05-31)
 
-- (mcm1957) This is an intermediate test release only.
+### **WORK IN PROGRESS**
 
-### 2.0.0-alpha.0 (2023-05-31)
-
+- (nkleber78) Usage of ping utility has been removed (#169)
+- (nkleber78) Reading of mpp values has been added (#78)
+- (nkleber78) Request module has been replaced by axios
 - (mcm1957) Dependencies and toolset have been updated. This is an intermediate test release.
 
 ### 1.2.0 (2021-12-18)
+
 - (nkleber78) Fixed changes related to GEN24 API update for latest FW incl. object creation for storage objects
 
 ### 1.1.6 (2021-03-xx)
