@@ -161,7 +161,63 @@
     "loglevel": "info",
     "type": "energy",
     "connectionType": "local",
-    "dataSource": "poll"
+    "dataSource": "poll",
+    "messages": [
+      {
+        "condition": {
+          "operand": "and",
+          "rules": [
+            "oldVersion<2.0.0",
+            "newVersion>=2.0.0"
+          ]
+        },
+        "title": {
+          "en": "Important notice!",
+          "de": "Wichtiger Hinweis!",
+          "ru": "Важное замечание!",
+          "pt": "Notícia importante!",
+          "nl": "Belangrijke mededeling!",
+          "fr": "Avis important!",
+          "it": "Avviso IMPORTANTE!",
+          "es": "Noticia importante!",
+          "pl": "Ważna uwaga!",
+          "zh-cn": "重要通知!",
+          "uk": "Важливе повідомлення!"
+        },
+        "text": {
+            "en": "This release major changes to existing code. Behavior and states names could have changed. Do not install this release without a working backup.",
+            "de": "Diese Veröffentlichung enthält wesentliche Änderungen des bestehenden Codes. Das Verhalten und Zustandsbezeichnungen haben sich teilweise geändert. Installieren Sie diese Release nicht ohne ein geprüftes Backup.",
+            "ru": "Этот выпуск основных изменений в существующем коде. Поведение и имена государств могут измениться. Не устанавливайте этот релиз без рабочего резервного копирования.",
+            "pt": "Isso libera grandes mudanças no código existente. Comportamento e estados nomes poderiam ter mudado. Não instale esta versão sem um backup de trabalho.",
+            "nl": "Deze vrijlating verandert in bestaande code. Gedrag en staatsnamen kunnen veranderd zijn. Stel deze vrijlating niet in zonder een werkende back-up.",
+            "fr": "Ceci libère des modifications majeures au code existant. Le comportement et les noms des états auraient pu changer. Ne pas installer cette version sans une sauvegarde de travail.",
+            "it": "Questo rilascio principali modifiche al codice esistente. I nomi dei comportamenti e degli stati potrebbero essere cambiati. Non installare questa versione senza un backup funzionante.",
+            "es": "Esta liberación de cambios importantes en el código existente. El comportamiento y los nombres de los estados podrían haber cambiado. No instale esta versión sin una copia de seguridad de trabajo.",
+            "pl": "Wykorzystuje to znaczną zmianę istniejącego kodu. Zmiany i imiona mogły się zmieniać. Nie zainstaluje tego wydania bez pracy.",
+            "uk": "Цей реліз основних змін до існуючого коду. Чи можуть бути змінені назви та держави. Не встановлюйте цей реліз без робочої резервної копії.",
+            "zh-cn": "这导致现行守则的重大变化。 可以改变代言和国名。 如果没有工作支持,不要设置这种释放。."
+        },
+        "link": "https://github.com/iobroker-community-adapters/ioBroker.fronius#changelog",
+        "level": "warn",
+        "linkText": {
+          "en": "Changelog",
+          "de": "Änderungsprotokoll",
+          "ru": "Список изменений",
+          "pt": "Registro de alterações",
+          "nl": "Wijzigingslog",
+          "fr": "Journal des modifications",
+          "it": "Registro delle modifiche",
+          "es": "registro de cambios",
+          "pl": "Dziennik zmian",
+          "zh-cn": "变更日志",
+          "uk": "Журнал змін"
+        },
+        "buttons": [
+          "agree",
+          "cancel"
+        ]
+      }
+    ]
   },
   "native": {
     "ip": "",
