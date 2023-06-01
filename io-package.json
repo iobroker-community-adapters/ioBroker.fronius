@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fronius",
-    "version": "2.0.0-alpha.1",
+    "version": "2.0.0-alpha.2",
     "news": {
+      "2.0.0-alpha.2": {
+        "en": "Usage of ping utility has been removed (#169)\nReading of mpp values has been added (#78)\nRequest module has been replaced by axios\nDependencies and toolset have been updated. This is an intermediate test release.",
+        "de": "Verwendung des Ping Dienstprogramms wurde entfernt #(169)\nDas Lesen von mpp-Werten wurde hinzugefügt #(78)\nrequest-modul wurde durch axios ersetzt\nAbhängigkeiten und Toolset wurden aktualisiert. Dies ist eine Zwischenversion für Testzwecke.",
+        "ru": "Использование пинговой утилиты было удалено #(169)\nЧтение значений mpp было добавлено #(78)\nМодуль запроса был заменен axios\nОбновлены зависимости и инструменты. Это промежуточный тестовый релиз.",
+        "pt": "O uso do utilitário ping foi removido #(169)\nA leitura de valores mpp foi adicionada #(78)\nMódulo de solicitação foi substituído por axios\nAs dependências e o conjunto de ferramentas foram atualizados. Este é um teste intermediário.",
+        "nl": "Het gebruik van ping nuttigheid is verwijderd\nLezen van mpp waarden is toegevoegd\nVerzoeksmodule is vervangen door Axios\nAfhankelijkheid en gereedschap zijn geüpdateerd. Dit is een tussentijdse testuitgave.",
+        "fr": "L'utilisation de l'utilitaire ping a été supprimé #(169)\nLa lecture des valeurs mpp a été ajoutée #(78)\nLe module de demande a été remplacé par axios\nLes dépendances et les outils ont été mis à jour. Il s'agit d'un essai intermédiaire.",
+        "it": "L'uso di utilità di ping è stato rimosso #(169)\nLa lettura dei valori mpp è stata aggiunta #(78)\nModulo di richiesta è stato sostituito da assios\nDipendenze e strumenti sono stati aggiornati. Si tratta di un rilascio intermedio di prova.",
+        "es": "El uso de la utilidad de ping ha sido eliminado #(169)\nLa lectura de los valores mpp se ha añadido #(78)\nEl módulo de solicitud ha sido reemplazado por axios\nSe han actualizado dependencias e instrumentos. Este es un lanzamiento de prueba intermedio.",
+        "pl": "Użycie pingu zostało usunięte #(169)\nCzytanie wartości mpp zostało dodawane #(78)\nModuł rekusyjny został zastąpiony przez axios\nZależności i narzędzia zostały zaktualizowane. Jest to pośrednia wersja testowa.",
+        "uk": "Використання ping утиліти було видалено #(169)\nЧитання значень Мпп додано #(78)\nМодуль запиту замінив аксіос\nОновлено залежності та інструменти. Це проміжний тестовий реліз.",
+        "zh-cn": "电缆的使用已拆除了第(169)号行动。\n添加了供给价值的阅读(78)\n请求单元由轴线取代。\n已更新了附属和工具。 这是一次中间试验。."
+      },
       "2.0.0-alpha.1": {
         "en": "This is an intermediate test release only.",
         "de": "Dies ist nur eine Zwischenablösung.",
@@ -78,45 +91,6 @@
         "pl": "Dodano informacje o inwerterze, brakujące informacje o logowaniu i brakujące jednostki",
         "zh-cn": "添加了反相器信息，缺少的loggerinfo和缺少的单位",
         "uk": "Додано інформацію про інвертор, відсутню інформацію про журнал і відсутні одиниці"
-      },
-      "1.1.0": {
-        "en": "Implementation change for support of SYMO GEN24",
-        "de": "Implementierungsänderung zur Unterstützung von SYMO GEN24",
-        "ru": "Изменение реализации для поддержки SYMO GEN24",
-        "pt": "Mudança de implementação para suporte de SYMO GEN24",
-        "nl": "Implementatiewijziging voor ondersteuning van SYMO GEN24",
-        "fr": "Changement d'implémentation pour le support de SYMO GEN24",
-        "it": "Modifica dell'implementazione per il supporto di SYMO GEN24",
-        "es": "Cambio de implementación para el soporte de SYMO GEN24",
-        "pl": "Zmiana wdrożeniowa dla obsługi SYMO GEN24",
-        "zh-cn": "支持SYMO GEN24的实现更改",
-        "uk": "Зміна реалізації для підтримки SYMO GEN24"
-      },
-      "1.0.5": {
-        "en": "compact mode compatibility added",
-        "de": "Kompaktmodus-Kompatibilität hinzugefügt",
-        "ru": "добавлена ​​совместимость с компактным режимом",
-        "pt": "compatibilidade de modo compacto adicionada",
-        "nl": "compatibiliteit met compacte modus toegevoegd",
-        "fr": "Compatibilité en mode compact ajoutée",
-        "it": "aggiunta la compatibilità in modalità compatta",
-        "es": "compatibilidad de modo compacto agregado",
-        "pl": "Dodano kompatybilność w trybie kompaktowym",
-        "zh-cn": "增加了紧凑模式兼容性",
-        "uk": "додано сумісність із компактним режимом"
-      },
-      "1.0.4": {
-        "en": "Fix assignment to constant variable error",
-        "de": "Zuordnung zu konstantem Variablenfehler korrigieren",
-        "ru": "Исправить присвоение постоянной переменной",
-        "pt": "Corrigir atribuição a erro variável constante",
-        "nl": "Fix toewijzing aan constante variabele fout",
-        "fr": "Correction de l'affectation à l'erreur de variable constante",
-        "it": "Correzione dell'assegnazione all'errore di variabile costante",
-        "es": "Corregir asignación a error variable constante",
-        "pl": "Napraw przypisanie do stałego błędu zmiennej",
-        "zh-cn": "修复对常量变量错误的分配",
-        "uk": "Виправлено помилку призначення постійної змінної"
       }
     },
     "title": "Fronius inverter",
@@ -147,7 +121,11 @@
       "uk": "Це адаптер ioBroker для фотоелектричного інвертора Fronius із Fronius Datalogger Web, починаючи з версії 2.0.4-1, Fronius Datamanager, починаючи з версії 3.0.3-1, і Symo Gen24."
     },
     "license": "MIT",
-    "authors": ["ldittmar <iobroker@lmdsoft.de>", "nkleber78", "schweigel"],
+    "authors": [
+      "ldittmar <iobroker@lmdsoft.de>",
+      "nkleber78",
+      "schweigel"
+    ],
     "compact": true,
     "platform": "Javascript/Node.js",
     "mode": "daemon",
@@ -156,7 +134,13 @@
     "enabled": true,
     "messagebox": true,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
-    "keywords": ["Fronius", "inverter", "Wechselrichter", "hybrid", "Symo"],
+    "keywords": [
+      "Fronius",
+      "inverter",
+      "Wechselrichter",
+      "hybrid",
+      "Symo"
+    ],
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
     "loglevel": "info",
     "type": "energy",
@@ -185,17 +169,17 @@
           "uk": "Важливе повідомлення!"
         },
         "text": {
-            "en": "This release major changes to existing code. Behavior and states names could have changed. Do not install this release without a working backup.",
-            "de": "Diese Veröffentlichung enthält wesentliche Änderungen des bestehenden Codes. Das Verhalten und Zustandsbezeichnungen haben sich teilweise geändert. Installieren Sie diese Release nicht ohne ein geprüftes Backup.",
-            "ru": "Этот выпуск основных изменений в существующем коде. Поведение и имена государств могут измениться. Не устанавливайте этот релиз без рабочего резервного копирования.",
-            "pt": "Isso libera grandes mudanças no código existente. Comportamento e estados nomes poderiam ter mudado. Não instale esta versão sem um backup de trabalho.",
-            "nl": "Deze vrijlating verandert in bestaande code. Gedrag en staatsnamen kunnen veranderd zijn. Stel deze vrijlating niet in zonder een werkende back-up.",
-            "fr": "Ceci libère des modifications majeures au code existant. Le comportement et les noms des états auraient pu changer. Ne pas installer cette version sans une sauvegarde de travail.",
-            "it": "Questo rilascio principali modifiche al codice esistente. I nomi dei comportamenti e degli stati potrebbero essere cambiati. Non installare questa versione senza un backup funzionante.",
-            "es": "Esta liberación de cambios importantes en el código existente. El comportamiento y los nombres de los estados podrían haber cambiado. No instale esta versión sin una copia de seguridad de trabajo.",
-            "pl": "Wykorzystuje to znaczną zmianę istniejącego kodu. Zmiany i imiona mogły się zmieniać. Nie zainstaluje tego wydania bez pracy.",
-            "uk": "Цей реліз основних змін до існуючого коду. Чи можуть бути змінені назви та держави. Не встановлюйте цей реліз без робочої резервної копії.",
-            "zh-cn": "这导致现行守则的重大变化。 可以改变代言和国名。 如果没有工作支持,不要设置这种释放。."
+          "en": "This release major changes to existing code. Behavior and states names could have changed. Do not install this release without a working backup.",
+          "de": "Diese Veröffentlichung enthält wesentliche Änderungen des bestehenden Codes. Das Verhalten und Zustandsbezeichnungen haben sich teilweise geändert. Installieren Sie diese Release nicht ohne ein geprüftes Backup.",
+          "ru": "Этот выпуск основных изменений в существующем коде. Поведение и имена государств могут измениться. Не устанавливайте этот релиз без рабочего резервного копирования.",
+          "pt": "Isso libera grandes mudanças no código existente. Comportamento e estados nomes poderiam ter mudado. Não instale esta versão sem um backup de trabalho.",
+          "nl": "Deze vrijlating verandert in bestaande code. Gedrag en staatsnamen kunnen veranderd zijn. Stel deze vrijlating niet in zonder een werkende back-up.",
+          "fr": "Ceci libère des modifications majeures au code existant. Le comportement et les noms des états auraient pu changer. Ne pas installer cette version sans une sauvegarde de travail.",
+          "it": "Questo rilascio principali modifiche al codice esistente. I nomi dei comportamenti e degli stati potrebbero essere cambiati. Non installare questa versione senza un backup funzionante.",
+          "es": "Esta liberación de cambios importantes en el código existente. El comportamiento y los nombres de los estados podrían haber cambiado. No instale esta versión sin una copia de seguridad de trabajo.",
+          "pl": "Wykorzystuje to znaczną zmianę istniejącego kodu. Zmiany i imiona mogły się zmieniać. Nie zainstaluje tego wydania bez pracy.",
+          "uk": "Цей реліз основних змін до існуючого коду. Чи можуть бути змінені назви та держави. Не встановлюйте цей реліз без робочої резервної копії.",
+          "zh-cn": "这导致现行守则的重大变化。 可以改变代言和国名。 如果没有工作支持,不要设置这种释放。."
         },
         "link": "https://github.com/iobroker-community-adapters/ioBroker.fronius#changelog",
         "level": "warn",
