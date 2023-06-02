@@ -30,12 +30,43 @@ For more details and for information how to disable the error reporting see [Sen
 
 This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger Web from version 2.0.4-1 onwards, Fronius Datamanager from version 3.0.3-1 onwards and Symo Gen24.
 
+The following request are sent to the API. But the availlable datapoints strongly depends on the specific device on the Bus. Therefore if a datapoint is missing, please check first if the API delivers this information. The IP address and the DeviceId parameter must be adjusted to your own setup
+
+-   General system information
+    -   http://192.168.0.1/solar_api/v1/GetActiveDeviceInfo.cgi?DeviceClass=System
+-   Inverter
+    -   http://192.168.0.1/solar_api/v1/GetInverterInfo.cgi
+    -   http://192.168.0.1/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=3PInverterData
+    -   http://192.168.0.1/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=CommonInverterData
+    -   http://192.168.0.1/solar_api/v1/GetInverterRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=MinMaxInverterData
+    -   http://192.168.0.1/solar_api/v1/GetArchiveData.cgi?Scope=System&StartDate=02.06.2023&EndDate=02.06.2023&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2
+-   Ohmpilot
+    -   http://192.168.0.1/solar_api/v1/GetOhmPilotRealtimeData.cgi?Scope=System
+-   Storage
+    -   http://192.168.0.1/solar_api/v1/GetStorageRealtimeData.cgi?Scope=Device&DeviceId=0
+-   Meter
+    -   http://192.168.0.1/solar_api/v1/GetMeterRealtimeData.cgi?Scope=Device&DeviceId=0
+-   Sensorcard
+    -   http://192.168.0.1/solar_api/v1/GetSensorRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=NowSensorData
+    -   http://192.168.0.1/solar_api/v1/GetSensorRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=MinMaxSensorData
+-   string
+    -   http://192.168.0.1/solar_api/v1/GetStringRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=NowStringControlData
+    -   http://192.168.0.1/solar_api/v1/GetStringRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=LastErrorStringControlData
+    -   http://192.168.0.1/solar_api/v1/GetStringRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=CurrentSumStringControlData&TimePeriod=Day
+    -   http://192.168.0.1/solar_api/v1/GetStringRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=CurrentSumStringControlData&TimePeriod=Year
+    -   http://192.168.0.1/solar_api/v1/GetStringRealtimeData.cgi?Scope=Device&DeviceId=1&DataCollection=CurrentSumStringControlData&TimePeriod=Total
+-   Powerflow (Inverter/Site)
+    -   http://192.168.0.1/solar_api/v1/GetPowerFlowRealtimeData.fcgi
+-   Site
+    -   http://192.168.0.1/solar_api/v1/GetLoggerInfo.cgi
+
 ## Changelog
 
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
 ### 2.0.0-alpha.3 (2023-06-01)
 
 -   (nkleber78) Usage of ping utility has been removed (#169)
