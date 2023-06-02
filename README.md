@@ -67,7 +67,7 @@ The following request are sent to the API. But the availlable datapoints strongl
     ### **WORK IN PROGRESS**
 -->
 
-### 2.0.0-alpha.3 (2023-06-01)
+### 2.0.0-alpha.4 (2023-06-02)
 
 -   (nkleber78) Usage of ping utility has been removed (#169)
 -   (nkleber78) Reading of mpp values has been added (#78)
