@@ -34,7 +34,7 @@ var apiTest = null;
 if (testMode){
     try {
         apiTest = require(__dirname + '/test/solarApiJson.json');
-    } catch() {}
+    } catch(error) {}
 }
 
 const axios = require('axios');
