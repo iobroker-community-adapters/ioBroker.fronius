@@ -652,6 +652,7 @@ function GetArchiveData(ids) {
                                 response.data.Body.Data,
                             );
                         });
+                        adapter.setState('info.lastsyncarchive', { val: new Date().toISOString(), ack: true });
                     } else {
                         adapter.log.warn(data.Head.Status.Reason + ' archive: ' + ids);
                     }
@@ -1290,8 +1291,6 @@ function checkArchiveStatus() {
                 if (apiver === 1) {
                     GetArchiveData(adapter.config.inverter);
                 }
-
-                adapter.setState('info.lastsyncarchive', { val: new Date().toISOString(), ack: true });
             } else {
                 adapter.log.debug('Unable to read archive data from inverters solarAPI');
             }
