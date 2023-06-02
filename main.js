@@ -21,6 +21,7 @@
  *      Improved the errorhandling vor Archive data (check prior if the specific object exists)
  */
 
+// eslint-disable-next-line no-redeclare
 /* global __dirname */
 /* jshint -W097 */ // jshint strict:false
 /*jslint node: true */
@@ -30,7 +31,7 @@ const testMode = false; // defines that the testmode is activated. In this mode 
 // you have to require the utils module and call adapter function
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
 
-var apiTest = null;
+let apiTest = null;
 if (testMode) {
     apiTest = require(__dirname + '/lib/solarApiJson.json');
 }
@@ -230,15 +231,15 @@ function checkIP(ipToCheck, callback) {
                 .get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi', { timeout: 1000 })
                 .then(function (response) {
                     if (response.status == 200 && 'BaseURL' in response.data) {
-                        if (requestType != primary) {
+                        if (requestType != secondary) {
                             adapter.log.warn(
                                 'Adapter requestType ' +
                                     requestType +
                                     ' was not matching, changed to ' +
-                                    primary +
+                                    secondary +
                                     ' and trigger restart.',
                             );
-                            requestType = primary;
+                            requestType = secondary;
                             adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                                 if (obj != null) {
                                     obj.native.requestType = requestType;
@@ -246,47 +247,10 @@ function checkIP(ipToCheck, callback) {
                                 }
                             });
                         }
-                        adapter.log.debug('Passed with ' + requestType);
                         callback({ error: 0, message: response.data });
-                        return;
                     } else {
-                        adapter.log.debug('requestType ' + primary + ' is not working! Now trying with ' + secondary);
-                        axios
-                            .get(secondary + ipToCheck + '/solar_api/GetAPIVersion.cgi')
-                            .then(function (response) {
-                                if (response.status == 200 && 'BaseURL' in response.data) {
-                                    if (requestType != secondary) {
-                                        adapter.log.warn(
-                                            'Adapter requestType ' +
-                                                requestType +
-                                                ' was not matching, changed to ' +
-                                                secondary +
-                                                ' and trigger restart.',
-                                        );
-                                        requestType = secondary;
-                                        adapter.getForeignObject(
-                                            'system.adapter.' + adapter.namespace,
-                                            function (err, obj) {
-                                                if (obj != null) {
-                                                    obj.native.requestType = requestType;
-                                                    adapter.setForeignObject(
-                                                        'system.adapter.' + adapter.namespace,
-                                                        obj,
-                                                    );
-                                                }
-                                            },
-                                        );
-                                    }
-                                    callback({ error: 0, message: response.data });
-                                } else {
-                                    adapter.log.error('IP invalid');
-                                    callback({ error: 1, message: {} });
-                                }
-                            })
-                            .catch(function (error) {
-                                adapter.log.error('IP is not a Fronius inverter');
-                                callback({ error: 1, message: {} });
-                            });
+                        adapter.log.error('IP invalid');
+                        callback({ error: 1, message: {} });
                     }
                 })
                 .catch(function () {
@@ -319,7 +283,7 @@ function getActiveDeviceInfo(type, url, callback) {
                 callback({ error: 1, message: {} });
             }
         })
-        .catch(function (error) {
+        .catch(function () {
             callback({ error: 1, message: {} });
         });
 }
@@ -335,19 +299,19 @@ function checkExistingConfig() {
             if (result.error == 0) {
                 result = result.message;
                 adapter.log.debug('Current result of System deviceINFO: ' + JSON.stringify(result));
-                var inverter = Object.prototype.hasOwnProperty.call(result, 'Inverter')
+                const inverter = Object.prototype.hasOwnProperty.call(result, 'Inverter')
                     ? Object.keys(result.Inverter).toString()
                     : '';
-                var sensorCard = Object.prototype.hasOwnProperty.call(result, 'SensorCard')
+                const sensorCard = Object.prototype.hasOwnProperty.call(result, 'SensorCard')
                     ? Object.keys(result.SensorCard).toString()
                     : '';
-                var stringControl = Object.prototype.hasOwnProperty.call(result, 'StringControl')
+                const stringControl = Object.prototype.hasOwnProperty.call(result, 'StringControl')
                     ? Object.keys(result.StringControl).toString()
                     : '';
-                var meter = Object.prototype.hasOwnProperty.call(result, 'Meter')
+                const meter = Object.prototype.hasOwnProperty.call(result, 'Meter')
                     ? Object.keys(result.Meter).toString()
                     : '';
-                var storage = Object.prototype.hasOwnProperty.call(result, 'Storage')
+                const storage = Object.prototype.hasOwnProperty.call(result, 'Storage')
                     ? Object.keys(result.Storage).toString()
                     : '';
                 if (
@@ -471,13 +435,19 @@ function getInverterRealtimeData(id) {
 
                     setTimeout(
                         function (id, resp) {
-                            if (resp.hasOwnProperty('UDC') && resp.hasOwnProperty('IDC')) {
+                            if (
+                                Object.prototype.hasOwnProperty.call(resp, 'UDC') &&
+                                Object.prototype.hasOwnProperty.call(resp, 'IDC')
+                            ) {
                                 adapter.setState('inverter.' + id + '.PDC', {
                                     val: resp['IDC'].Value * resp['UDC'].Value,
                                     ack: true,
                                 });
                             }
-                            if (resp.hasOwnProperty('UDC_2') && resp.hasOwnProperty('IDC_2')) {
+                            if (
+                                Object.prototype.hasOwnProperty.call(resp, 'UDC_2') &&
+                                Object.prototype.hasOwnProperty.call(resp, 'IDC_2')
+                            ) {
                                 adapter.setState('inverter.' + id + '.PDC_2', {
                                     val: resp['IDC_2'].Value * resp['UDC_2'].Value,
                                     ack: true,
@@ -518,7 +488,7 @@ function getInverterRealtimeData(id) {
                                 } else if (statusCode === 10) {
                                     statusCodeString = 'Error';
                                 }
-                                if (!status.hasOwnProperty('InverterState')) {
+                                if (!Object.prototype.hasOwnProperty.call(status, 'InverterState')) {
                                     // only needed if not delivered from the API
                                     adapter.setState('inverter.' + id + '.DeviceStatus.InverterState', {
                                         val: statusCodeString,
@@ -558,103 +528,6 @@ function getInverterRealtimeData(id) {
                 } else {
                     adapter.log.warn(data.Head.Status.Reason + ' CommonInverterData inverter: ' + id);
                 }
-
-                fillData(adapter, resp, 'inverter.' + id + '.');
-
-                setTimeout(
-                    function (id, resp) {
-                        if (
-                            Object.prototype.hasOwnProperty.call(resp, 'UDC') &&
-                            Object.prototype.hasOwnProperty.call(resp, 'IDC')
-                        ) {
-                            adapter.setState('inverter.' + id + '.PDC', {
-                                val: resp['IDC'].Value * resp['UDC'].Value,
-                                ack: true,
-                            });
-                        }
-                        if (
-                            Object.prototype.hasOwnProperty.call(resp, 'UDC_2') &&
-                            Object.prototype.hasOwnProperty.call(resp, 'IDC_2')
-                        ) {
-                            adapter.setState('inverter.' + id + '.PDC_2', {
-                                val: resp['IDC_2'].Value * resp['UDC_2'].Value,
-                                ack: true,
-                            });
-                        }
-
-                        // make sure to reset the values if they are no longer reported by the API
-                        // Fixes issue #87 from Adapter
-                        if (!('PAC' in resp)) {
-                            resetStateToZero(resp, 'inverter.' + id, 'FAC');
-                            resetStateToZero(resp, 'inverter.' + id, 'IAC');
-                            resetStateToZero(resp, 'inverter.' + id, 'IAC_L1');
-                            resetStateToZero(resp, 'inverter.' + id, 'IAC_L2');
-                            resetStateToZero(resp, 'inverter.' + id, 'IAC_L3');
-                            resetStateToZero(resp, 'inverter.' + id, 'IDC');
-                            resetStateToZero(resp, 'inverter.' + id, 'IDC_2');
-                            resetStateToZero(resp, 'inverter.' + id, 'PAC');
-                            resetStateToZero(resp, 'inverter.' + id, 'UAC');
-                            resetStateToZero(resp, 'inverter.' + id, 'UAC_L1');
-                            resetStateToZero(resp, 'inverter.' + id, 'UAC_L2');
-                            resetStateToZero(resp, 'inverter.' + id, 'UDC');
-                            resetStateToZero(resp, 'inverter.' + id, 'UDC_2');
-                            resetStateToZero(resp, 'inverter.' + id, 'PDC');
-                            resetStateToZero(resp, 'inverter.' + id, 'PDC_2');
-                        }
-
-                        const status = resp.DeviceStatus;
-                        if (status) {
-                            let statusCode = parseInt(status.StatusCode);
-
-                            let statusCodeString = 'Startup';
-                            if (statusCode === 7) {
-                                statusCodeString = 'Running';
-                            } else if (statusCode === 8) {
-                                statusCodeString = 'Standby';
-                            } else if (statusCode === 9) {
-                                statusCodeString = 'Bootloading';
-                            } else if (statusCode === 10) {
-                                statusCodeString = 'Error';
-                            }
-                            if (!Object.prototype.hasOwnProperty.call(status, 'InverterState')) {
-                                // only needed if not delivered from the API
-                                adapter.setState('inverter.' + id + '.DeviceStatus.InverterState', {
-                                    val: statusCodeString,
-                                    ack: true,
-                                });
-                            }
-
-                            statusCode = parseInt(status.ErrorCode);
-
-                            if (statusCode >= 700) {
-                                statusCodeString = devStrings.getStringErrorCode700(statusCode);
-                            } else if (statusCode >= 600) {
-                                statusCodeString = devStrings.getStringErrorCode600(statusCode);
-                            } else if (statusCode >= 500) {
-                                statusCodeString = devStrings.getStringErrorCode500(statusCode);
-                            } else if (statusCode >= 400) {
-                                statusCodeString = devStrings.getStringErrorCode400(statusCode);
-                            } else if (statusCode >= 300) {
-                                statusCodeString = devStrings.getStringErrorCode300(statusCode);
-                            } else if (statusCode >= 100) {
-                                statusCodeString = devStrings.getStringErrorCode100(statusCode);
-                            } else if (statusCode > 0) {
-                                statusCodeString = 'Unknown error with id ' + statusCode.toString();
-                            } else {
-                                statusCodeString = 'No error';
-                            }
-                            adapter.setState('inverter.' + id + '.DeviceStatus.InverterErrorState', {
-                                val: statusCodeString,
-                                ack: true,
-                            });
-                        }
-                    },
-                    isObjectsCreated ? 1 : 3000,
-                    id,
-                    resp,
-                );
-            } else {
-                adapter.log.warn(data.Head.Status.Reason + ' CommonInverterData inverter: ' + id);
             }
         })
         .catch(function (error) {
@@ -694,8 +567,8 @@ function GetArchiveData(ids) {
         ids = '1'; // ensure correct working for symoGEN24 if no ID is set
     }
 
-    var today = new Date();
-    var datum = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+    const today = new Date();
+    const datum = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
     axios
         .get(
             requestType +
@@ -714,7 +587,7 @@ function GetArchiveData(ids) {
                     if ('Body' in data && 'Data' in data.Body) {
                         ids.split(',').forEach(function (id) {
                             // loop over all ids just to process the data. All data is read with 1 request
-                            var inverter = data.Body.Data['inverter/' + id];
+                            const inverter = data.Body.Data['inverter/' + id];
                             if (
                                 typeof inverter === 'undefined' ||
                                 inverter === null ||
@@ -1462,14 +1335,14 @@ function GetArchiveValue(adapter, data, prefix, id, key) {
         !Object.prototype.hasOwnProperty.call(data['inverter/' + id], 'Data')
     )
         return;
-    var invData = data['inverter/' + id].Data;
+    const invData = data['inverter/' + id].Data;
     if (
         Object.prototype.hasOwnProperty.call(invData, key) &&
         Object.prototype.hasOwnProperty.call(invData[key], 'Values')
     ) {
         // key exists
-        var keys = Object.keys(invData[key].Values);
-        var val = invData[key].Values[keys[keys.length - 1]];
+        const keys = Object.keys(invData[key].Values);
+        let val = invData[key].Values[keys[keys.length - 1]];
         if (typeof val == 'number') {
             val = Math.round((val + Number.EPSILON) * 100) / 100;
         }
@@ -1485,7 +1358,7 @@ function fillDataObject(adapt, apiObject, prefix = '') {
         // make sure the path ends with a . if set
         prefix = prefix + '.';
     }
-    var val = null;
+    let val = null;
     if (
         Object.prototype.hasOwnProperty.call(apiObject, 'Value') &&
         Object.prototype.hasOwnProperty.call(apiObject, 'Unit')
@@ -1502,7 +1375,7 @@ function fillDataObject(adapt, apiObject, prefix = '') {
         delete apiObject.Value;
         delete apiObject.Unit;
     }
-    for (var key in apiObject) {
+    for (const key in apiObject) {
         if (apiObject[key.toString()] === null) {
             adapt.log.silly('API Objekt ' + key.toString() + ' is null, no object filled!');
         } else if (typeof apiObject[key.toString()] == 'object') {
@@ -1549,7 +1422,7 @@ function fillData(adapter, apiObject, prefix = '') {
 }
 
 function main() {
-    // The adapters config (in the instance object everything under the attribute 'native') is accessible via
+    // The adapters config (in the instance object everything under the attribute "native") is accessible via
     // adapter.config:
 
     ip = adapter.config.ip;
