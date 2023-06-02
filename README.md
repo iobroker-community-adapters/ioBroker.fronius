@@ -37,7 +37,7 @@ This is an ioBroker adapter for your Fronius PV inverter with Fronius Datalogger
     ### **WORK IN PROGRESS**
 -->
 
-    ### **WORK IN PROGRESS**
+### **WORK IN PROGRESS**
 
 -   (nkleber78) Usage of ping utility has been removed (#169)
 -   (nkleber78) Reading of mpp values has been added (#78)
