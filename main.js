@@ -29,7 +29,13 @@ const testMode = false; // defines that the testmode is activated. In this mode 
 
 // you have to require the utils module and call adapter function
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
-const apiTest = require(__dirname + '/test/solarApiJson.json') || {default:'object'}
+
+var apiTest = null;
+if (testMode){
+    try {
+        apiTest = require(__dirname + '/test/solarApiJson.json');
+    } catch() {}
+}
 
 const axios = require('axios');
 const he = require('he');
