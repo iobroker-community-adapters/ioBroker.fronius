@@ -142,14 +142,7 @@ function resetStateToZero(API_response, basePath, state) {
     } else {
         adapter.getState(basePath + '.' + state, (err, stat) => {
             if (stat) {
-                adapter.log.silly(
-                    'State ' +
-                        basePath +
-                        '.' +
-                        state +
-                        ' is found in objects but not on API: ' +
-                        JSON.stringify(API_response),
-                );
+                adapter.log.silly('State ' + basePath + '.' + state + ' is found in objects but not on API: ' + JSON.stringify(API_response));
                 if (stat.val != 0) {
                     adapter.setState(basePath + '.' + state, 0, true);
                 }
@@ -173,13 +166,7 @@ function checkIP(ipToCheck, callback) {
             adapter.log.debug('Response on GetAPIVersion for IP ' + ipToCheck + ' = ' + JSON.stringify(response.data));
             if (response.status == 200 && 'BaseURL' in response.data) {
                 if (requestType != primary) {
-                    adapter.log.warn(
-                        'Adapter requestType ' +
-                            requestType +
-                            ' was not matching, changed to ' +
-                            primary +
-                            ' and trigger restart.',
-                    );
+                    adapter.log.warn('Adapter requestType ' + requestType + ' was not matching, changed to ' + primary + ' and trigger restart.');
                     requestType = primary;
                     adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                         if (obj != null) {
@@ -198,13 +185,7 @@ function checkIP(ipToCheck, callback) {
                     .then(function (response) {
                         if (response.status == 200 && 'BaseURL' in response.data) {
                             if (requestType != secondary) {
-                                adapter.log.warn(
-                                    'Adapter requestType ' +
-                                        requestType +
-                                        ' was not matching, changed to ' +
-                                        secondary +
-                                        ' and trigger restart.',
-                                );
+                                adapter.log.warn('Adapter requestType ' + requestType + ' was not matching, changed to ' + secondary + ' and trigger restart.');
                                 requestType = secondary;
                                 adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                                     if (obj != null) {
@@ -232,13 +213,7 @@ function checkIP(ipToCheck, callback) {
                 .then(function (response) {
                     if (response.status == 200 && 'BaseURL' in response.data) {
                         if (requestType != secondary) {
-                            adapter.log.warn(
-                                'Adapter requestType ' +
-                                    requestType +
-                                    ' was not matching, changed to ' +
-                                    secondary +
-                                    ' and trigger restart.',
-                            );
+                            adapter.log.warn('Adapter requestType ' + requestType + ' was not matching, changed to ' + secondary + ' and trigger restart.');
                             requestType = secondary;
                             adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                                 if (obj != null) {
@@ -299,33 +274,15 @@ function checkExistingConfig() {
             if (result.error == 0) {
                 result = result.message;
                 adapter.log.debug('Current result of System deviceINFO: ' + JSON.stringify(result));
-                const inverter = Object.prototype.hasOwnProperty.call(result, 'Inverter')
-                    ? Object.keys(result.Inverter).toString()
-                    : '';
-                const sensorCard = Object.prototype.hasOwnProperty.call(result, 'SensorCard')
-                    ? Object.keys(result.SensorCard).toString()
-                    : '';
-                const stringControl = Object.prototype.hasOwnProperty.call(result, 'StringControl')
-                    ? Object.keys(result.StringControl).toString()
-                    : '';
-                const meter = Object.prototype.hasOwnProperty.call(result, 'Meter')
-                    ? Object.keys(result.Meter).toString()
-                    : '';
-                const storage = Object.prototype.hasOwnProperty.call(result, 'Storage')
-                    ? Object.keys(result.Storage).toString()
-                    : '';
-                if (
-                    adapter.config.inverter == inverter &&
-                    adapter.config.sensorCard == sensorCard &&
-                    adapter.config.stringControl == stringControl &&
-                    adapter.config.meter == meter &&
-                    adapter.config.storage == storage
-                ) {
+                const inverter = Object.prototype.hasOwnProperty.call(result, 'Inverter') ? Object.keys(result.Inverter).toString() : '';
+                const sensorCard = Object.prototype.hasOwnProperty.call(result, 'SensorCard') ? Object.keys(result.SensorCard).toString() : '';
+                const stringControl = Object.prototype.hasOwnProperty.call(result, 'StringControl') ? Object.keys(result.StringControl).toString() : '';
+                const meter = Object.prototype.hasOwnProperty.call(result, 'Meter') ? Object.keys(result.Meter).toString() : '';
+                const storage = Object.prototype.hasOwnProperty.call(result, 'Storage') ? Object.keys(result.Storage).toString() : '';
+                if (adapter.config.inverter == inverter && adapter.config.sensorCard == sensorCard && adapter.config.stringControl == stringControl && adapter.config.meter == meter && adapter.config.storage == storage) {
                     adapter.log.debug('The current system configuration is up to date');
                 } else {
-                    adapter.log.info(
-                        'The current system configuration is not up to date. Settings are updated and adapter restarted!',
-                    );
+                    adapter.log.info('The current system configuration is not up to date. Settings are updated and adapter restarted!');
                     adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                         if (obj != null) {
                             adapter.log.silly(JSON.stringify(obj));
@@ -389,14 +346,7 @@ function getInverterRealtimeData(id) {
         id = 1; // ensure that it is correct working for symoGEN24
     }
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=3PInverterData',
-        )
+        .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData')
         .then(function (response) {
             if (response.status == 200) {
                 if ('Body' in response.data) {
@@ -414,14 +364,7 @@ function getInverterRealtimeData(id) {
         });
 
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=CommonInverterData',
-        )
+        .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData')
         .then(function (response) {
             if (response.status == 200) {
                 const data = response.data;
@@ -435,19 +378,13 @@ function getInverterRealtimeData(id) {
 
                     setTimeout(
                         function (id, resp) {
-                            if (
-                                Object.prototype.hasOwnProperty.call(resp, 'UDC') &&
-                                Object.prototype.hasOwnProperty.call(resp, 'IDC')
-                            ) {
+                            if (Object.prototype.hasOwnProperty.call(resp, 'UDC') && Object.prototype.hasOwnProperty.call(resp, 'IDC')) {
                                 adapter.setState('inverter.' + id + '.PDC', {
                                     val: resp['IDC'].Value * resp['UDC'].Value,
                                     ack: true,
                                 });
                             }
-                            if (
-                                Object.prototype.hasOwnProperty.call(resp, 'UDC_2') &&
-                                Object.prototype.hasOwnProperty.call(resp, 'IDC_2')
-                            ) {
+                            if (Object.prototype.hasOwnProperty.call(resp, 'UDC_2') && Object.prototype.hasOwnProperty.call(resp, 'IDC_2')) {
                                 adapter.setState('inverter.' + id + '.PDC_2', {
                                     val: resp['IDC_2'].Value * resp['UDC_2'].Value,
                                     ack: true,
@@ -535,14 +472,7 @@ function getInverterRealtimeData(id) {
         });
 
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=MinMaxInverterData',
-        )
+        .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData')
         .then(function (response) {
             if (response.status == 200) {
                 if ('Body' in response.data) {
@@ -570,16 +500,7 @@ function GetArchiveData(ids) {
     const today = new Date();
     const datum = today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetArchiveData.cgi?Scope=System&StartDate=' +
-                datum +
-                '&EndDate=' +
-                datum +
-                '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2',
-        )
+        .get(requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2')
         .then(function (response) {
             if (response.status == 200) {
                 try {
@@ -588,11 +509,7 @@ function GetArchiveData(ids) {
                         ids.split(',').forEach(function (id) {
                             // loop over all ids just to process the data. All data is read with 1 request
                             const inverter = data.Body.Data['inverter/' + id];
-                            if (
-                                typeof inverter === 'undefined' ||
-                                inverter === null ||
-                                !Object.prototype.hasOwnProperty.call(inverter, 'Data')
-                            ) {
+                            if (typeof inverter === 'undefined' || inverter === null || !Object.prototype.hasOwnProperty.call(inverter, 'Data')) {
                                 // if inverter object does not exists or does not have data property just exit
                                 return;
                             }
@@ -603,47 +520,15 @@ function GetArchiveData(ids) {
 
                             setTimeout(
                                 function (id, rsp) {
-                                    const c1 = GetArchiveValue(
-                                        adapter,
-                                        rsp,
-                                        'inverter.' + id + '.',
-                                        id,
-                                        'Current_DC_String_1',
-                                    );
-                                    const c2 = GetArchiveValue(
-                                        adapter,
-                                        rsp,
-                                        'inverter.' + id + '.',
-                                        id,
-                                        'Current_DC_String_2',
-                                    );
-                                    const v1 = GetArchiveValue(
-                                        adapter,
-                                        rsp,
-                                        'inverter.' + id + '.',
-                                        id,
-                                        'Voltage_DC_String_1',
-                                    );
-                                    const v2 = GetArchiveValue(
-                                        adapter,
-                                        rsp,
-                                        'inverter.' + id + '.',
-                                        id,
-                                        'Voltage_DC_String_2',
-                                    );
+                                    const c1 = GetArchiveValue(adapter, rsp, 'inverter.' + id + '.', id, 'Current_DC_String_1');
+                                    const c2 = GetArchiveValue(adapter, rsp, 'inverter.' + id + '.', id, 'Current_DC_String_2');
+                                    const v1 = GetArchiveValue(adapter, rsp, 'inverter.' + id + '.', id, 'Voltage_DC_String_1');
+                                    const v2 = GetArchiveValue(adapter, rsp, 'inverter.' + id + '.', id, 'Voltage_DC_String_2');
                                     if (c1 != null && v1 != null) {
-                                        adapter.setState(
-                                            'inverter.' + id + '.Power_DC_String_1',
-                                            Math.round((c1 * v1 + Number.EPSILON) * 100) / 100,
-                                            true,
-                                        );
+                                        adapter.setState('inverter.' + id + '.Power_DC_String_1', Math.round((c1 * v1 + Number.EPSILON) * 100) / 100, true);
                                     }
                                     if (c2 != null && v2 != null) {
-                                        adapter.setState(
-                                            'inverter.' + id + '.Power_DC_String_2',
-                                            Math.round((c2 * v2 + Number.EPSILON) * 100) / 100,
-                                            true,
-                                        );
+                                        adapter.setState('inverter.' + id + '.Power_DC_String_2', Math.round((c2 * v2 + Number.EPSILON) * 100) / 100, true);
                                     }
                                     GetArchiveValue(adapter, rsp, 'inverter.' + id + '.', id, 'Temperature_Powerstage');
                                 },
@@ -811,14 +696,7 @@ function getSensorRealtimeDataNow(id) {
         }
     }
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=NowSensorData',
-        )
+        .get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
         .then(function (response) {
             if (response.status == 200 && response.data.Head.Status.Code == 0) {
                 try {
@@ -853,14 +731,7 @@ function getSensorRealtimeDataMinMax(id) {
         }
     }
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=MinMaxSensorData',
-        )
+        .get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
         .then(function (response) {
             if (response.status == 200 && response.data.Head.Status.Code == 0) {
                 try {
@@ -910,14 +781,7 @@ function getStringRealtimeData(id) {
         }
     }
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=NowStringControlData',
-        )
+        .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData')
         .then(function (response) {
             if (response.status == 200) {
                 try {
@@ -939,14 +803,7 @@ function getStringRealtimeData(id) {
         });
 
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=LastErrorStringControlData',
-        )
+        .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData')
         .then(function (response) {
             if (response.status == 200) {
                 try {
@@ -959,27 +816,16 @@ function getStringRealtimeData(id) {
                         adapter.log.warn(response.data.Head.Status.Reason + ' LastErrorStringControlData: ' + id);
                     }
                 } catch (e) {
-                    adapter.log.warn(
-                        'GetStringRealtimeData for LastErrorStringControlData raised following error: ' + e,
-                    );
+                    adapter.log.warn('GetStringRealtimeData for LastErrorStringControlData raised following error: ' + e);
                 }
             }
         })
         .catch(function (error) {
-            adapter.log.debug(
-                'GetStringRealtimeData for LastErrorStringControlData has thrown following error: ' + error,
-            );
+            adapter.log.debug('GetStringRealtimeData for LastErrorStringControlData has thrown following error: ' + error);
         });
 
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=CurrentSumStringControlData&TimePeriod=Day',
-        )
+        .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day')
         .then(function (response) {
             if (response.status == 200) {
                 try {
@@ -989,34 +835,19 @@ function getStringRealtimeData(id) {
                         }
                         fillData(adapter, response.data.Body.Data, 'string.' + id);
                     } else {
-                        adapter.log.warn(
-                            response.data.Head.Status.Reason + ' CurrentSumStringControlData&TimePeriod=Day: ' + id,
-                        );
+                        adapter.log.warn(response.data.Head.Status.Reason + ' CurrentSumStringControlData&TimePeriod=Day: ' + id);
                     }
                 } catch (e) {
-                    adapter.log.warn(
-                        'GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Day raised following error: ' +
-                            e,
-                    );
+                    adapter.log.warn('GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Day raised following error: ' + e);
                 }
             }
         })
         .catch(function (error) {
-            adapter.log.debug(
-                'GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Day has thrown following error: ' +
-                    error,
-            );
+            adapter.log.debug('GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Day has thrown following error: ' + error);
         });
 
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=CurrentSumStringControlData&TimePeriod=Year',
-        )
+        .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year')
         .then(function (response) {
             if (response.status == 200) {
                 try {
@@ -1026,34 +857,19 @@ function getStringRealtimeData(id) {
                         }
                         fillData(adapter, response.data.Body.Data, 'string.' + id);
                     } else {
-                        adapter.log.warn(
-                            response.data.Head.Status.Reason + ' CurrentSumStringControlData&TimePeriod=Year: ' + id,
-                        );
+                        adapter.log.warn(response.data.Head.Status.Reason + ' CurrentSumStringControlData&TimePeriod=Year: ' + id);
                     }
                 } catch (e) {
-                    adapter.log.warn(
-                        'GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Year raised following error: ' +
-                            e,
-                    );
+                    adapter.log.warn('GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Year raised following error: ' + e);
                 }
             }
         })
         .catch(function (error) {
-            adapter.log.debug(
-                'GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Year has thrown following error: ' +
-                    error,
-            );
+            adapter.log.debug('GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Year has thrown following error: ' + error);
         });
 
     axios
-        .get(
-            requestType +
-                ip +
-                baseurl +
-                'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' +
-                id +
-                '&DataCollection=CurrentSumStringControlData&TimePeriod=Total',
-        )
+        .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total')
         .then(function (response) {
             if (response.status == 200) {
                 try {
@@ -1063,23 +879,15 @@ function getStringRealtimeData(id) {
                         }
                         fillData(adapter, response.data.Body.Data, 'string.' + id);
                     } else {
-                        adapter.log.warn(
-                            response.data.Head.Status.Reason + ' CurrentSumStringControlData&TimePeriod=Total: ' + id,
-                        );
+                        adapter.log.warn(response.data.Head.Status.Reason + ' CurrentSumStringControlData&TimePeriod=Total: ' + id);
                     }
                 } catch (e) {
-                    adapter.log.warn(
-                        'GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total raised following error: ' +
-                            e,
-                    );
+                    adapter.log.warn('GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total raised following error: ' + e);
                 }
             }
         })
         .catch(function (error) {
-            adapter.log.debug(
-                'GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total has thrown following error: ' +
-                    error,
-            );
+            adapter.log.debug('GetStringRealtimeData for CurrentSumStringControlData&TimePeriod=Total has thrown following error: ' + error);
         });
 }
 
@@ -1198,13 +1006,7 @@ function checkStatus() {
             } catch (e) {
                 adapter.log.debug('Exception thrown in check API: ' + e);
                 if (response.data != null) {
-                    adapter.log.debug(
-                        'API Response for ' +
-                            requestType +
-                            ip +
-                            '/solar_api/GetAPIVersion.cgi:' +
-                            JSON.stringify(response.data),
-                    );
+                    adapter.log.debug('API Response for ' + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
                 }
                 setConnected(false);
                 return;
@@ -1276,13 +1078,7 @@ function checkArchiveStatus() {
             } catch (e) {
                 adapter.log.debug('Exception thrown in archive check API: ' + e);
                 if (response.data != null) {
-                    adapter.log.debug(
-                        'API Response for ' +
-                            requestType +
-                            ip +
-                            '/solar_api/GetAPIVersion.cgi:' +
-                            JSON.stringify(response.data),
-                    );
+                    adapter.log.debug('API Response for ' + requestType + ip + '/solar_api/GetAPIVersion.cgi:' + JSON.stringify(response.data));
                 }
                 return;
             }
@@ -1329,16 +1125,9 @@ function getLoggerInfo() {
 }
 
 function GetArchiveValue(adapter, data, prefix, id, key) {
-    if (
-        !Object.prototype.hasOwnProperty.call(data, 'inverter/' + id) ||
-        !Object.prototype.hasOwnProperty.call(data['inverter/' + id], 'Data')
-    )
-        return;
+    if (!Object.prototype.hasOwnProperty.call(data, 'inverter/' + id) || !Object.prototype.hasOwnProperty.call(data['inverter/' + id], 'Data')) return;
     const invData = data['inverter/' + id].Data;
-    if (
-        Object.prototype.hasOwnProperty.call(invData, key) &&
-        Object.prototype.hasOwnProperty.call(invData[key], 'Values')
-    ) {
+    if (Object.prototype.hasOwnProperty.call(invData, key) && Object.prototype.hasOwnProperty.call(invData[key], 'Values')) {
         // key exists
         const keys = Object.keys(invData[key].Values);
         let val = invData[key].Values[keys[keys.length - 1]];
@@ -1358,10 +1147,7 @@ function fillDataObject(adapt, apiObject, prefix = '') {
         prefix = prefix + '.';
     }
     let val = null;
-    if (
-        Object.prototype.hasOwnProperty.call(apiObject, 'Value') &&
-        Object.prototype.hasOwnProperty.call(apiObject, 'Unit')
-    ) {
+    if (Object.prototype.hasOwnProperty.call(apiObject, 'Value') && Object.prototype.hasOwnProperty.call(apiObject, 'Unit')) {
         // value + unit on first level -> special handling
         val = apiObject.Value;
         if (typeof val == 'string') {
@@ -1433,9 +1219,7 @@ function main() {
 
     if (ip && baseurl) {
         checkIP(ip, function (res) {
-            adapter.log.silly(
-                'checkIP is executed with result error=' + res.error + ', message=' + JSON.stringify(res.message),
-            );
+            adapter.log.silly('checkIP is executed with result error=' + res.error + ', message=' + JSON.stringify(res.message));
             getLoggerInfo();
             checkStatus();
             checkArchiveStatus();
