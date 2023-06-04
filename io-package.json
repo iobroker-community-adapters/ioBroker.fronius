@@ -3,32 +3,6 @@
         "name": "fronius",
         "version": "2.0.0-alpha.4",
         "news": {
-            "2.0.0-alpha.4": {
-                "en": "Usage of ping utility has been removed (#169)\nReading of mpp values has been added (#78)\nRequest module has been replaced by axios\nDependencies and toolset have been updated. This is an intermediate test release.",
-                "de": "Verwendung des Ping Dienstprogramms wurde entfernt #(169)\nDas Lesen von mpp-Werten wurde hinzugefügt. #(78)\nRequest-Modul wurde durch axios ersetzt\nAbhängigkeiten und Toolset wurden aktualisiert. Dies ist eine Zwischenablösung.",
-                "ru": "Использование пинговой утилиты было удалено #(169)\nЧтение значений mpp было добавлено #(78)\nМодуль запроса был заменен axios\nОбновлены зависимости и инструменты. Это промежуточный тестовый релиз.",
-                "pt": "O uso do utilitário ping foi removido #(169)\nA leitura de valores mpp foi adicionada #(78)\nMódulo de solicitação foi substituído por axios\nAs dependências e o conjunto de ferramentas foram atualizados. Este é um teste intermediário.",
-                "nl": "Het gebruik van ping nuttigheid is verwijderd\nLezen van mpp waarden is toegevoegd\nVerzoeksmodule is vervangen door Axios\nAfhankelijkheid en gereedschap zijn geüpdateerd. Dit is een tussentijdse testuitgave.",
-                "fr": "L'utilisation de l'utilitaire ping a été supprimé #(169)\nLa lecture des valeurs mpp a été ajoutée #(78)\nLe module de demande a été remplacé par axios\nLes dépendances et les outils ont été mis à jour. Il s'agit d'un essai intermédiaire.",
-                "it": "L'uso di utilità di ping è stato rimosso #(169)\nLa lettura dei valori mpp è stata aggiunta #(78)\nModulo di richiesta è stato sostituito da assios\nDipendenze e strumenti sono stati aggiornati. Si tratta di un rilascio intermedio di prova.",
-                "es": "El uso de la utilidad de ping ha sido eliminado #(169)\nLa lectura de los valores mpp se ha añadido #(78)\nEl módulo de solicitud ha sido reemplazado por axios\nSe han actualizado dependencias e instrumentos. Este es un lanzamiento de prueba intermedio.",
-                "pl": "Użycie pingu zostało usunięte #(169)\nCzytanie wartości mpp zostało dodawane #(78)\nModuł rekusyjny został zastąpiony przez axios\nZależności i narzędzia zostały zaktualizowane. Jest to pośrednia wersja testowa.",
-                "uk": "Використання ping утиліти було видалено #(169)\nЧитання значень Мпп додано #(78)\nМодуль запиту замінив аксіос\nОновлено залежності та інструменти. Це проміжний тестовий реліз.",
-                "zh-cn": "电缆的使用已拆除了第(169)号行动。\n添加了供给价值的阅读(78)\n请求单元由轴线取代。\n已更新了附属和工具。 这是一次中间试验。."
-            },
-            "2.0.0-alpha.0": {
-                "en": "Dependencies and toolset have been updated. This is an intermediate test release.",
-                "de": "Abhängigkeiten und Toolset wurden aktualisiert. Dies ist eine Zwischenversion.",
-                "ru": "Обновлены зависимости и инструменты. Это промежуточный тестовый релиз.",
-                "pt": "As dependências e o conjunto de ferramentas foram atualizados. Este é um teste intermediário.",
-                "nl": "Afhankelijkheid en gereedschap zijn geüpdateerd. Dit is een tussentijdse testuitgave.",
-                "fr": "Les dépendances et les outils ont été mis à jour. Il s'agit d'un essai intermédiaire.",
-                "it": "Dipendenze e strumenti sono stati aggiornati. Si tratta di un rilascio intermedio di prova.",
-                "es": "Se han actualizado dependencias e instrumentos. Este es un lanzamiento de prueba intermedio.",
-                "pl": "Zależności i narzędzia zostały zaktualizowane. Jest to pośrednia wersja testowa.",
-                "uk": "Оновлено залежності та інструменти. Це проміжний тестовий реліз.",
-                "zh-cn": "已更新了附属和工具。 这是一次中间试验。."
-            },
             "1.2.0": {
                 "en": "Adapted storage objects to support GEN24 and improved object creation for storage objects",
                 "de": "",
@@ -117,7 +91,7 @@
                     "uk": "Важливе повідомлення!"
                 },
                 "text": {
-                    "en": "This release major changes to existing code. Behavior and states names could have changed. Do not install this release without a working backup.",
+                    "en": "This release contains major changes to existing code. Behavior and state names could have changed. Do not install this release without a working backup.",
                     "de": "Diese Veröffentlichung enthält wesentliche Änderungen des bestehenden Codes. Das Verhalten und Zustandsbezeichnungen haben sich teilweise geändert. Installieren Sie diese Release nicht ohne ein geprüftes Backup.",
                     "ru": "Этот выпуск основных изменений в существующем коде. Поведение и имена государств могут измениться. Не устанавливайте этот релиз без рабочего резервного копирования.",
                     "pt": "Isso libera grandes mudanças no código existente. Comportamento e estados nomes poderiam ter mudado. Não instale esta versão sem um backup de trabalho.",
