@@ -102,8 +102,7 @@ The following request are sent to the API. But the availlable datapoints strongl
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 2.0.0 (2023-06-04)
 
 -   (nkleber78) Several errors resulting in missing data have been fixed. (#152, #242, #175)
 -   (nkleber78) Several errors due to missing objects have been solved. (#206, #129, #76)
