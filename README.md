@@ -103,7 +103,7 @@ The following request are sent to the API. But the availlable datapoints strongl
     ### **WORK IN PROGRESS**
 -->
 
-    ### **WORK IN PROGRESS**
+### **WORK IN PROGRESS**
 
 -   (nkleber78) Several errors resulting in missing data have been fixed (#152, #242, #175)
 -   (nkleber78) Several errors due to missing objects have been solved (#206, #129, #76)
