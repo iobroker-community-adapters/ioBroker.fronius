@@ -105,12 +105,12 @@ The following request are sent to the API. But the availlable datapoints strongl
 
 ### **WORK IN PROGRESS**
 
--   (nkleber78) Several errors resulting in missing data have been fixed (#152, #242, #175)
--   (nkleber78) Several errors due to missing objects have been solved (#206, #129, #76)
--   (nkleber78) Usage of ping utility has been removed (#169)
--   (nkleber78) Reading of mpp values has been added (#78)
--   (nkleber78) Request module has been replaced by axios
--   (mcm1957) Dependencies and toolset have been updated. This is an intermediate test release.
+-   (nkleber78) Several errors resulting in missing data have been fixed. (#152, #242, #175)
+-   (nkleber78) Several errors due to missing objects have been solved. (#206, #129, #76)
+-   (nkleber78) The usage of the ping utility has been removed. (#169)
+-   (nkleber78) Reading of mpp values has been added. (#78)
+-   (nkleber78) 'Request' module has been replaced by 'axios'.
+-   (mcm1957) Dependencies and toolset have been updated.
 
 ### 1.2.0 (2021-12-18)
 
