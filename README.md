@@ -36,7 +36,14 @@ For installation no special setup is needed. Just install the Adapter and start 
 
 ## Request additional parameters
 
-If you like to have an additional parameter or API call, then please provide in a ticket the call you have executed, a file with the JSON response to that call so this can be added to the System and also to the test environment.
+If you like to have an additional parameter or API call, then please provide in a ticket the call you have executed, a file with the JSON response to that call so this can be added to the System and also to the test environment. In any case please provide the system information from this call http://192.168.0.1/solar_api/v1/GetActiveDeviceInfo.cgi?DeviceClass=System so that the system setup is clear.
+
+## Report issues
+If you find any issue, please report it on [Github](https://github.com/iobroker-community-adapters/ioBroker.fronius/issues) with the following information
+- Adapter Version installed
+- Detailled log (Log level Debug or Silly) of the current behaviour
+- Detailled description about the issue
+- If usefull the system information from http://192.168.0.1/solar_api/v1/GetActiveDeviceInfo.cgi?DeviceClass=System (Adjustment of the IP-Adress is needed)
 
 ## Executed API calls
 
