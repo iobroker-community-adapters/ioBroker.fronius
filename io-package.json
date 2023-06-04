@@ -158,7 +158,9 @@
         "meter": "",
         "storage": "",
         "poll": "30",
-        "requestType": "http://"
+        "pollarchive": "150",
+        "requestType": "https://",
+        "testMode": false
     },
     "objects": [],
     "instanceObjects": [

@@ -26,15 +26,10 @@
 /* jshint -W097 */ // jshint strict:false
 /*jslint node: true */
 'use strict';
-const testMode = false; // defines that the testmode is activated. In this mode only objects are created and filled from the solarApiJson.js
-
+let testMode = false; // defines that the testMode is activated. Only in this mode the objects are created and filled from the solarApiJson.json file
+let apiTest = null; // object to hold the testMode API data
 // you have to require the utils module and call adapter function
 const utils = require('@iobroker/adapter-core'); // Get common adapter utils
-
-let apiTest = null;
-if (testMode) {
-    apiTest = require(__dirname + '/lib/solarApiJson.json');
-}
 
 const axios = require('axios');
 const he = require('he');
@@ -151,7 +146,7 @@ function resetStateToZero(API_response, basePath, state) {
     }
 }
 
-//Check if IP is a Fronius inverter
+//Check if IP is a Fronius inverter and read the system information
 function checkIP(ipToCheck, callback) {
     const primary = 'https://';
     const secondary = 'http://';
@@ -313,29 +308,29 @@ function getInverterRealtimeData(id) {
     if (testMode) {
         try {
             let data = apiTest.testInverterRealtimeData3Phase;
-            adapter.log.warn('getInverterRealtimeData 3Phase -> inverter.0:  ' + JSON.stringify(data));
-            devObjects.createInverterObjects(adapter, 0, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'inverter.0');
+            adapter.log.warn('testInverterRealtimeData3Phase -> inverter.testMode.Standard:  ' + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter, 'testMode.Standard', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'inverter.testMode.Standard');
 
             data = apiTest.testInverterRealtimeDataCommon;
-            adapter.log.warn('getInverterRealtimeData Common -> inverter.0:  ' + JSON.stringify(data));
-            devObjects.createInverterObjects(adapter, 0, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'inverter.0');
+            adapter.log.warn('testInverterRealtimeDataCommon -> inverter.testMode.Standard:  ' + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter, 'testMode.Standard', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'inverter.testMode.Standard');
 
             data = apiTest.testInverterRealtimeData3PhaseGen24;
-            adapter.log.warn('getInverterRealtimeData 3Phase Gen24 -> inverter.1:  ' + JSON.stringify(data));
-            devObjects.createInverterObjects(adapter, 1, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'inverter.1');
+            adapter.log.warn('testInverterRealtimeData3PhaseGen24 -> inverter.testMode.GEN24:  ' + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter, 'testMode.GEN24', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'inverter.testMode.GEN24');
 
             data = apiTest.testInverterRealtimeDataCommonGen24;
-            adapter.log.warn('getInverterRealtimeData Common Gen24 -> inverter.1:  ' + JSON.stringify(data));
-            devObjects.createInverterObjects(adapter, 1, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'inverter.1');
+            adapter.log.warn('testInverterRealtimeDataCommonGen24 -> inverter.testMode.GEN24:  ' + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter, 'testMode.GEN24', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'inverter.testMode.GEN24');
 
             data = apiTest.testInverterRealtimeDataCumGen24;
-            adapter.log.warn('getInverterRealtimeData Cummulative Gen24 -> inverter.1:  ' + JSON.stringify(data));
-            devObjects.createInverterObjects(adapter, 1, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'inverter.1');
+            adapter.log.warn('testInverterRealtimeDataCumGen24 -> inverter.testMode.GEN24:  ' + JSON.stringify(data));
+            devObjects.createInverterObjects(adapter, 'testMode.GEN24', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'inverter.testMode.GEN24');
             return;
         } catch (ex) {
             adapter.log.error('Error on getInverterRealtimeDataTest: ' + ex);
@@ -554,9 +549,9 @@ function getOhmPilotRealtimeData() {
     if (testMode) {
         try {
             const data = apiTest.testOhmpilotRealtimeDataSystem;
-            adapter.log.warn('Ohmpilot: ' + JSON.stringify(data));
-            devObjects.createOhmPilotObjects(adapter, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'ohmpilot');
+            adapter.log.warn('testOhmpilotRealtimeDataSystem -> ohmpilot.testMode: ' + JSON.stringify(data));
+            devObjects.createOhmPilotObjects(adapter, 'testMode', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'ohmpilot.testMode');
             return;
         } catch (ex) {
             adapter.log.error('Error on getOhmPilotRealtimeDataTest: ' + ex);
@@ -575,7 +570,7 @@ function getOhmPilotRealtimeData() {
                         }
 
                         if (!isObjectsCreated) {
-                            devObjects.createOhmPilotObjects(adapter, response.data.Body.Data);
+                            devObjects.createOhmPilotObjects(adapter, '', response.data.Body.Data);
                         }
                         fillData(adapter, response.data.Body.Data, 'ohmpilot');
                     } else {
@@ -595,22 +590,22 @@ function getStorageRealtimeData(id) {
     if (testMode) {
         try {
             let data = apiTest.testStorageRealtimeDataSolarBattery;
-            adapter.log.warn('getStorageRealtimeDataTest Solar Battery -> storage.0:' + JSON.stringify(data));
-            devObjects.createStorageObjects(adapter, 0, data.Body.Data['0']);
-            fillData(adapter, data.Body.Data['0'].Controller, 'storage.' + '0');
-            fillData(adapter, data.Body.Data['0'].Modules, 'storage.' + '0' + '.module');
+            adapter.log.warn('testStorageRealtimeDataSolarBattery -> storage.testMode.SolarBattery.0:' + JSON.stringify(data));
+            devObjects.createStorageObjects(adapter, 'testMode.SolarBattery.0', data.Body.Data['0']);
+            fillData(adapter, data.Body.Data['0'].Controller, 'storage.testMode.SolarBattery.0');
+            fillData(adapter, data.Body.Data['0'].Modules, 'storage.testMode.SolarBattery.0.module');
 
             data = apiTest.testStorageRealtimeDataLgChem;
-            adapter.log.warn('getStorageRealtimeDataTest LG CHEM -> storage.1:' + JSON.stringify(data));
-            devObjects.createStorageObjects(adapter, 1, data.Body.Data);
-            fillData(adapter, data.Body.Data.Controller, 'storage.' + '1');
-            fillData(adapter, data.Body.Data.Modules, 'storage.' + '1' + '.module');
+            adapter.log.warn('testStorageRealtimeDataLgChem -> storage.testMode.LGChem.0:' + JSON.stringify(data));
+            devObjects.createStorageObjects(adapter, 'testMode.LGChem.0', data.Body.Data);
+            fillData(adapter, data.Body.Data.Controller, 'storage.testMode.LGChem.0');
+            fillData(adapter, data.Body.Data.Modules, 'storage.testMode.LGChem.0.module');
 
             data = apiTest.testStorageRealtimeDataBydBbox;
-            adapter.log.warn('getStorageRealtimeDataTest BYD B-Box -> storage.2:' + JSON.stringify(data));
-            devObjects.createStorageObjects(adapter, 2, data.Body.Data['0']);
-            fillData(adapter, data.Body.Data['0'].Controller, 'storage.' + '2');
-            fillData(adapter, data.Body.Data['0'].Modules, 'storage.' + '2' + '.module');
+            adapter.log.warn('testStorageRealtimeDataBydBbox -> storage.testMode.BYD_B-Box.0:' + JSON.stringify(data));
+            devObjects.createStorageObjects(adapter, 'testMode.BYD_B-Box.0', data.Body.Data['0']);
+            fillData(adapter, data.Body.Data['0'].Controller, 'storage.testMode.BYD_B-Box.0');
+            fillData(adapter, data.Body.Data['0'].Modules, 'storage.testMode.BYD_B-Box.0.module');
             return;
         } catch (ex) {
             adapter.log.error('Error on getStorageRealtimeDataTest: ' + ex);
@@ -650,9 +645,9 @@ function getMeterRealtimeData(id) {
     if (testMode) {
         try {
             const data = apiTest.testMeterRealtimeDataDevice;
-            adapter.log.warn('getMeterRealtimeDataTest:' + JSON.stringify(data));
-            devObjects.createMeterObjects(adapter, 0, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'meter.' + '0');
+            adapter.log.warn('testMeterRealtimeDataDevice -> meter.testMode.0:' + JSON.stringify(data));
+            devObjects.createMeterObjects(adapter, 'testMode.0', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'meter.testMode.0');
             return;
         } catch (ex) {
             adapter.log.error('Error on getMeterRealtimeDataTest: ' + ex);
@@ -687,9 +682,9 @@ function getSensorRealtimeDataNow(id) {
     if (testMode) {
         try {
             const data = apiTest.testSensorRealtimeDataNow;
-            adapter.log.warn('getSensorRealtimeDataNowTest:' + JSON.stringify(data));
-            devObjects.createSensorNowObjects(adapter, 1, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'sensorcard.1');
+            adapter.log.warn('testSensorRealtimeDataNow -> sensorcard.testMode.0:' + JSON.stringify(data));
+            devObjects.createSensorNowObjects(adapter, 'testMode.0', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'sensorcard.testMode.0');
             return;
         } catch (ex) {
             adapter.log.error('Error on getSensorRealtimeDataNowTest: ' + ex);
@@ -722,9 +717,9 @@ function getSensorRealtimeDataMinMax(id) {
     if (testMode) {
         try {
             const data = apiTest.testSensorRealtimeDataMinMax;
-            adapter.log.warn('getSensorRealtimeDataMinMaxTest:' + JSON.stringify(data));
-            devObjects.createSensorMinMaxObjects(adapter, 1, data.Body.Data);
-            fillData(adapter, data.Body.Data, 'sensorcard.1');
+            adapter.log.warn('testSensorRealtimeDataMinMax -> sensorcard.testMode.0:' + JSON.stringify(data));
+            devObjects.createSensorMinMaxObjects(adapter, 'testMode.0', data.Body.Data);
+            fillData(adapter, data.Body.Data, 'sensorcard.testMode.0');
             return;
         } catch (ex) {
             adapter.log.error('Error on getSensorRealtimeDataMinMaxTest: ' + ex);
@@ -757,24 +752,24 @@ function getStringRealtimeData(id) {
     if (testMode) {
         try {
             let data = apiTest.testStringRealtimeDataNow;
-            adapter.log.warn('getStringRealtimeDataTest Now -> string.1:' + JSON.stringify(data));
-            devObjects.createStringRealtimeObjects(adapter, 1, data.Body.Data['1']);
-            fillData(adapter, data.Body.Data['1'], 'string.' + '1');
+            adapter.log.warn('testStringRealtimeDataNow -> string.testMode.0:' + JSON.stringify(data));
+            devObjects.createStringRealtimeObjects(adapter, 'testMode.0', data.Body.Data['1']);
+            fillData(adapter, data.Body.Data['1'], 'string.testMode.0');
 
             data = apiTest.testStringRealtimeDataNowGen24;
-            adapter.log.warn('getStringRealtimeDataTest Now Gen24 -> string.2:' + JSON.stringify(data));
-            devObjects.createStringRealtimeObjects(adapter, 2, data.Body.Data['1']);
-            fillData(adapter, data.Body.Data['1'], 'string.' + '2');
+            adapter.log.warn('testStringRealtimeDataNowGen24 -> string.testMode.GEN24:' + JSON.stringify(data));
+            devObjects.createStringRealtimeObjects(adapter, 'testMode.GEN24', data.Body.Data['1']);
+            fillData(adapter, data.Body.Data['1'], 'string.testMode.GEN24');
 
             data = apiTest.testStringRealtimeDataNow;
-            adapter.log.warn('getStringRealtimeDataTest Last error -> string.3:' + JSON.stringify(data));
-            devObjects.createStringRealtimeObjects(adapter, 3, data.Body.Data.Channels['1']);
-            fillData(adapter, data.Body.Data.Channels['1'], 'string.' + '3');
+            adapter.log.warn('testStringRealtimeDataNow.Channels -> string.testMode.0:' + JSON.stringify(data));
+            devObjects.createStringRealtimeObjects(adapter, 'testMode.0', data.Body.Data.Channels['1']);
+            fillData(adapter, data.Body.Data.Channels['1'], 'string.testMode.0');
 
             data = apiTest.testStringRealtimeDataCurrentSumDay;
-            adapter.log.warn('getStringRealtimeDataTest Current sum day -> string.4:' + JSON.stringify(data));
-            devObjects.createStringRealtimeObjects(adapter, 4, data.Body.Data['1']);
-            fillData(adapter, data.Body.Data['1'], 'string.' + '4');
+            adapter.log.warn('testStringRealtimeDataCurrentSumDay -> string.testMode.0:' + JSON.stringify(data));
+            devObjects.createStringRealtimeObjects(adapter, 'string.testMode.0', data.Body.Data['1']);
+            fillData(adapter, data.Body.Data['1'], 'string.testMode.0');
             return;
         } catch (ex) {
             adapter.log.error('Error on getStringRealtimeDataTest: ' + ex);
@@ -895,22 +890,22 @@ function getPowerFlowRealtimeData() {
     if (testMode) {
         try {
             let data = apiTest.testPowerflowRealtimeData;
-            adapter.log.warn('getPowerFlowRealtimeDataTest -> Standard:' + JSON.stringify(data));
-            devObjects.createPowerFlowObjects(adapter, data.Body.Data, 'standard.');
-            fillData(adapter, data.Body.Data.Inverters, 'inverter.standard');
-            fillData(adapter, data.Body.Data.Site, 'site.standard');
+            adapter.log.warn('testPowerflowRealtimeData -> inverter/site.testMode.Standard:' + JSON.stringify(data));
+            devObjects.createPowerFlowObjects(adapter, data.Body.Data, 'testMode.Standard.');
+            fillData(adapter, data.Body.Data.Inverters, 'inverter.testMode.Standard');
+            fillData(adapter, data.Body.Data.Site, 'site.testMode.Standard');
 
             data = apiTest.testPowerflowRealtimeDataHybrid;
-            adapter.log.warn('getPowerFlowRealtimeDataTest -> Hybrid:' + JSON.stringify(data));
-            devObjects.createPowerFlowObjects(adapter, data.Body.Data, 'hybrid.');
-            fillData(adapter, data.Body.Data.Inverters, 'inverter.hybrid');
-            fillData(adapter, data.Body.Data.Site, 'site.hybrid');
+            adapter.log.warn('testPowerflowRealtimeDataHybrid -> inverter/site.testMode.Hybrid:' + JSON.stringify(data));
+            devObjects.createPowerFlowObjects(adapter, data.Body.Data, 'testMode.Hybrid.');
+            fillData(adapter, data.Body.Data.Inverters, 'inverter.testMode.Hybrid');
+            fillData(adapter, data.Body.Data.Site, 'site.testMode.Hybrid');
 
             data = apiTest.testPowerflowRealtimeDataGen24;
-            adapter.log.warn('getPowerFlowRealtimeDataTest -> GEN24:' + JSON.stringify(data));
-            devObjects.createPowerFlowObjects(adapter, data.Body.Data, 'gen24.');
-            fillData(adapter, data.Body.Data.Inverters, 'inverter.gen24');
-            fillData(adapter, data.Body.Data.Site, 'site.gen24');
+            adapter.log.warn('testPowerflowRealtimeDataGen24 -> inverter/site.testMode.GEN24:' + JSON.stringify(data));
+            devObjects.createPowerFlowObjects(adapter, data.Body.Data, 'testMode.GEN24');
+            fillData(adapter, data.Body.Data.Inverters, 'inverter.testMode.GEN24');
+            fillData(adapter, data.Body.Data.Site, 'site.testMode.GEN24');
             return;
         } catch (ex) {
             adapter.log.error('Error on getPowerFlowRealtimeDataTest: ' + ex);
@@ -945,14 +940,14 @@ function getInverterInfo() {
     if (testMode) {
         try {
             let data = apiTest.testInverterInfo;
-            adapter.log.warn('getInverterInfoTest -> Standard:' + JSON.stringify(data));
-            devObjects.createInverterInfoObjects(adapter, data.Body.Data, 'standard.');
-            fillData(adapter, data.Body.Data, 'inverter.standard');
+            adapter.log.warn('testInverterInfo -> inverter.testMode.Standard:' + JSON.stringify(data));
+            devObjects.createInverterInfoObjects(adapter, data.Body.Data, 'testMode.Standard');
+            fillData(adapter, data.Body.Data, 'inverter.testMode.Standard');
 
             data = apiTest.testInverterInfoGen24;
-            adapter.log.warn('getInverterInfoTest -> GEN24:' + JSON.stringify(data));
-            devObjects.createInverterInfoObjects(adapter, data.Body.Data, 'gen24.');
-            fillData(adapter, data.Body.Data, 'inverter.gen24');
+            adapter.log.warn('testInverterInfoGen24 -> inverter.testMode.GEN24:' + JSON.stringify(data));
+            devObjects.createInverterInfoObjects(adapter, data.Body.Data, 'testMode.GEN24');
+            fillData(adapter, data.Body.Data, 'inverter.testMode.GEN24');
             return;
         } catch (ex) {
             adapter.log.error('Error on getInverterInfoTest: ' + ex);
@@ -1216,6 +1211,12 @@ function main() {
     requestType = adapter.config.requestType;
     downCount = 2; // do the objects creation 2 times after restarting the Adapter
     downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
+    testMode = adapter.config.testMode; // load testmode switch from the config
+
+    if (testMode && apiTest === null) {
+        // load data for testmode
+        apiTest = require(__dirname + '/lib/solarApiJson.json');
+    }
 
     if (ip && baseurl) {
         checkIP(ip, function (res) {
