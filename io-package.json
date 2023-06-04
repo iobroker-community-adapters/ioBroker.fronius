@@ -158,7 +158,9 @@
         "meter": "",
         "storage": "",
         "poll": "30",
-        "requestType": "http://"
+        "pollarchive": "150",
+        "requestType": "https://",
+        "testMode": false
     },
     "objects": [],
     "instanceObjects": [
@@ -180,6 +182,19 @@
                 "read": true,
                 "write": false,
                 "desc": "Last successful synchronization"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastsyncarchive",
+            "type": "state",
+            "common": {
+                "name": "Last successful sync of archive data",
+                "type": "string",
+                "role": "value.datetime",
+                "read": true,
+                "write": false,
+                "desc": "Last successful synchronization of archive data"
             },
             "native": {}
         },
