@@ -105,7 +105,7 @@ The following request are sent to the API. But the availlable datapoints strongl
 
 ### **WORK IN PROGRESS**
 
--   (mcm1957) Reactivate deploy mechanism at github.
+-   (mcm1957) Deploy mechanism at github has been reactivated.
 
 ### 2.0.0 (2023-06-04)
 
