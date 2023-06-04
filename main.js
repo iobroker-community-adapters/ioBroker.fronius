@@ -1220,7 +1220,12 @@ function main() {
 
     if (ip && baseurl) {
         checkIP(ip, function (res) {
-            adapter.log.silly('checkIP is executed with result error=' + res.error + ', message=' + JSON.stringify(res.message));
+            adapter.log.silly('checkIP is executed with result=' + res.error + ', message=' + JSON.stringify(res.message));
+            if (!testMode) {
+                checkExistingConfig(); // make sure the config of the adapter is updated automatically on every start of the adapter
+                downCount = 2; // do the objects creation 2 times after restarting the Adapter
+                downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
+            }
             getLoggerInfo();
             checkStatus();
             checkArchiveStatus();
