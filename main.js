@@ -375,13 +375,13 @@ function getInverterRealtimeData(id) {
                         function (id, resp) {
                             if (Object.prototype.hasOwnProperty.call(resp, 'UDC') && Object.prototype.hasOwnProperty.call(resp, 'IDC')) {
                                 adapter.setState('inverter.' + id + '.PDC', {
-                                    val: resp['IDC'].Value * resp['UDC'].Value,
+                                    val: Math.round((resp['IDC'].Value * resp['UDC'].Value + Number.EPSILON) * 100) / 100,
                                     ack: true,
                                 });
                             }
                             if (Object.prototype.hasOwnProperty.call(resp, 'UDC_2') && Object.prototype.hasOwnProperty.call(resp, 'IDC_2')) {
                                 adapter.setState('inverter.' + id + '.PDC_2', {
-                                    val: resp['IDC_2'].Value * resp['UDC_2'].Value,
+                                    val: Math.round((resp['IDC_2'].Value * resp['UDC_2'].Value + Number.EPSILON) * 100) / 100,
                                     ack: true,
                                 });
                             }

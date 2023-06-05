@@ -20,5 +20,6 @@
     ],
     "[javascript]": {
         "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-    }
+    },
+    "yaml.extension.recommendations": true
 }
