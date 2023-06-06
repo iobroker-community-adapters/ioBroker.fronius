@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fronius",
-        "version": "2.0.0",
+        "version": "2.0.1",
         "news": {
+            "2.0.1": {
+                "en": "Deploy mechanism at github has been reactivated.",
+                "de": "Der Verteilungsmechanismus bei github wurde wieder aktiviert.",
+                "ru": "Отключен механизм развертки в github.",
+                "pt": "Mecanismo de implantação no github foi reativado.",
+                "nl": "Het mechanisme bij Github is gereactiveerd.",
+                "fr": "Le mécanisme de déploiement à github a été réactivé.",
+                "it": "Il meccanismo di distribuzione a github è stato riattivato.",
+                "es": "Se ha reactivado el mecanismo de despliegue en github.",
+                "pl": "Mechanizm deploya w github został reaktywowany.",
+                "uk": "Відреаговано механізм розгортання на github.",
+                "zh-cn": "在廷布重新部署了机制。."
+            },
             "2.0.0": {
                 "en": "Several errors resulting in missing data have been fixed. (#152, #242, #175)\nSeveral errors due to missing objects have been solved. (#206, #129, #76)\nThe usage of the ping utility has been removed. (#169)\nReading of mpp values has been added.(#78)\n'Request' module has been replaced by 'axios'.\nDependencies and toolset have been updated.",
                 "de": "Mehrere Fehler, die zu fehlenden Daten führen, wurden behoben. #(152, #242, #175)\nMehrere Fehler aufgrund fehlender Objekte wurden behoben. #(206, #129, #76)\nDie Verwendung des Ping-Dienstprogramms wurde entfernt. #(169)\nDas Lesen von mpp-Werten wurde hinzugefügt. #(78)\nDas 'request'-Modul wurde durch 'axios' ersetzt.\nAbhängigkeiten und Toolset wurden aktualisiert.",

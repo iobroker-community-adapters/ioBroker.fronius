@@ -74,16 +74,13 @@ jobs:
       contents: write
 
     steps:
-       - run: echo "executing"
-       
-#    steps:
-#      - uses: ioBroker/testing-action-deploy@v1
-#        with:
-#          node-version: '18.x'
-#          # Uncomment the following line if your adapter cannot be installed using 'npm ci'
-#          # install-command: 'npm install'
-#          npm-token: ${{ secrets.NPM_TOKEN }}
-#          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ioBroker/testing-action-deploy@v1
+        with:
+          node-version: '18.x'
+          # Uncomment the following line if your adapter cannot be installed using 'npm ci'
+          # install-command: 'npm install'
+          npm-token: ${{ secrets.NPM_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
           # When using Sentry for error reporting, Sentry can be informed about new releases
           # To enable create a API-Token in Sentry (User settings, API keys)
