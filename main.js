@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /**
  *
  *      ioBroker Fronius inverters Adapter
@@ -158,10 +159,10 @@ function checkIP(ipToCheck, callback) {
     axios
         .get(primary + ipToCheck + '/solar_api/GetAPIVersion.cgi', { timeout: 1000 })
         .then(function (response) {
-            adapter.log.debug('Response on GetAPIVersion for IP ' + ipToCheck + ' = ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + primary + ipToCheck + '/solar_api/GetAPIVersion.cgi: ' + JSON.stringify(response.data));
             if (response.status == 200 && 'BaseURL' in response.data) {
                 if (requestType != primary) {
-                    adapter.log.warn('Adapter requestType ' + requestType + ' was not matching, changed to ' + primary + ' and trigger restart.');
+                    adapter.log.debug('Adapter requestType ' + requestType + ' was not matching, changed to ' + primary + ' and trigger restart.');
                     requestType = primary;
                     adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                         if (obj != null) {
@@ -180,7 +181,7 @@ function checkIP(ipToCheck, callback) {
                     .then(function (response) {
                         if (response.status == 200 && 'BaseURL' in response.data) {
                             if (requestType != secondary) {
-                                adapter.log.warn('Adapter requestType ' + requestType + ' was not matching, changed to ' + secondary + ' and trigger restart.');
+                                adapter.log.debug('Adapter requestType ' + requestType + ' was not matching, changed to ' + secondary + ' and trigger restart.');
                                 requestType = secondary;
                                 adapter.getForeignObject('system.adapter.' + adapter.namespace, function (err, obj) {
                                     if (obj != null) {
@@ -245,6 +246,7 @@ function getActiveDeviceInfo(type, url, callback) {
     axios
         .get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type)
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type + ': ' + JSON.stringify(response.data));
             const deviceData = response.data;
             if (response.status == 200 && 'Body' in deviceData) {
                 callback({ error: 0, message: deviceData.Body.Data });
@@ -298,6 +300,7 @@ function checkExistingConfig() {
                 isObjectsCreated = false;
             }
         });
+        getLoggerInfo(); // only read in large time intervals as this info does not change
     } catch (ex) {
         adapter.log.error('Error on checkExistingConfig: ' + ex);
     }
@@ -343,6 +346,7 @@ function getInverterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 if ('Body' in response.data) {
                     if (!isObjectsCreated) {
@@ -361,6 +365,7 @@ function getInverterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 const data = response.data;
                 if ('Body' in data) {
@@ -400,6 +405,7 @@ function getInverterRealtimeData(id) {
                                 resetStateToZero(resp, 'inverter.' + id, 'UAC');
                                 resetStateToZero(resp, 'inverter.' + id, 'UAC_L1');
                                 resetStateToZero(resp, 'inverter.' + id, 'UAC_L2');
+                                resetStateToZero(resp, 'inverter.' + id, 'UAC_L3');
                                 resetStateToZero(resp, 'inverter.' + id, 'UDC');
                                 resetStateToZero(resp, 'inverter.' + id, 'UDC_2');
                                 resetStateToZero(resp, 'inverter.' + id, 'PDC');
@@ -469,6 +475,7 @@ function getInverterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 if ('Body' in response.data) {
                     if (!isObjectsCreated) {
@@ -497,6 +504,7 @@ function GetArchiveData(ids) {
     axios
         .get(requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -560,6 +568,7 @@ function getOhmPilotRealtimeData() {
     axios
         .get(requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -614,6 +623,7 @@ function getStorageRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id)
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -656,6 +666,7 @@ function getMeterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id)
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -693,6 +704,7 @@ function getSensorRealtimeDataNow(id) {
     axios
         .get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData: ' + JSON.stringify(response.data));
             if (response.status == 200 && response.data.Head.Status.Code == 0) {
                 try {
                     if ('Body' in response.data) {
@@ -728,6 +740,7 @@ function getSensorRealtimeDataMinMax(id) {
     axios
         .get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData: ' + JSON.stringify(response.data));
             if (response.status == 200 && response.data.Head.Status.Code == 0) {
                 try {
                     if ('Body' in response.data) {
@@ -778,6 +791,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -800,6 +814,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -822,6 +837,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -844,6 +860,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -866,6 +883,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -914,6 +932,7 @@ function getPowerFlowRealtimeData() {
     axios
         .get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -956,6 +975,7 @@ function getInverterInfo() {
     axios
         .get(requestType + ip + baseurl + 'GetInverterInfo.cgi')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterInfo.cgi: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -984,13 +1004,6 @@ function setConnected(_isConnected) {
 }
 
 function checkStatus() {
-    if (isObjectsCreated == false && isConnected) {
-        adapter.log.debug('Object creation will be done for ' + downCount + ' times');
-        if (--downCount < 0) {
-            isObjectsCreated = true;
-        }
-    }
-
     // now try if we can really read data from the API. If not do not further process
     axios
         .get(requestType + ip + '/solar_api/GetAPIVersion.cgi')
@@ -1010,6 +1023,12 @@ function checkStatus() {
             if (response.status == 200 && 'BaseURL' in testData) {
                 // it seems everything is working, therefore proceed with readout
                 setConnected(true);
+                if (isObjectsCreated == false && isConnected) {
+                    adapter.log.debug('Object creation will be done for ' + downCount + ' times');
+                    if (--downCount < 0) {
+                        isObjectsCreated = true;
+                    }
+                }
                 try {
                     adapter.config.inverter.split(',').forEach(function (entry) {
                         getInverterRealtimeData(entry);
@@ -1043,6 +1062,7 @@ function checkStatus() {
                         getInverterInfo();
                         getOhmPilotRealtimeData();
                     }
+
                     adapter.setState('info.lastsync', { val: new Date().toISOString(), ack: true });
                 } catch (ex) {
                     adapter.log.error('Error on reading and processing the data from API: ' + ex);
@@ -1099,6 +1119,7 @@ function getLoggerInfo() {
     axios
         .get(requestType + ip + baseurl + 'GetLoggerInfo.cgi')
         .then(function (response) {
+            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetLoggerInfo.cgi: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -1224,34 +1245,35 @@ function main() {
     if (ip && baseurl) {
         checkIP(ip, function (res) {
             adapter.log.silly('checkIP is executed with result=' + res.error + ', message=' + JSON.stringify(res.message));
-            if (!testMode) {
-                checkExistingConfig(); // make sure the config of the adapter is updated automatically on every start of the adapter
-                downCount = 2; // do the objects creation 2 times after restarting the Adapter
-                downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
-            }
-            getLoggerInfo();
-            checkStatus();
-            checkArchiveStatus();
-
-            let secs = adapter.config.poll;
-            if (isNaN(secs) || secs < 1) {
-                secs = 10;
-            }
-
-            // run cyclic requests for values
-            setInterval(checkStatus, secs * 1000);
-
-            let archivesecs = adapter.config.pollarchive;
-            if (isNaN(archivesecs) || archivesecs < 1) {
-                archivesecs = 150;
-            }
-
-            // run cyclic requests for archive values
-            setInterval(checkArchiveStatus, archivesecs * 1000);
-
-            // check every hour if something has changed on the bus (number of devices)
-            setInterval(checkExistingConfig, 3600 * 1000);
         });
+        if (!testMode) {
+            checkExistingConfig(); // make sure the config of the adapter is updated automatically on every start of the adapter
+            downCount = 2; // do the objects creation 2 times after restarting the Adapter
+            downCountArchive = 2; // do the objects creation for archive data 2 times after restarting the Adapter
+        }
+        getLoggerInfo();
+        checkStatus();
+        checkArchiveStatus();
+
+        let secs = adapter.config.poll;
+        if (isNaN(secs) || secs < 1) {
+            secs = 10;
+        }
+
+        // run cyclic requests for values
+        setInterval(checkStatus, secs * 1000);
+
+        let archivesecs = adapter.config.pollarchive;
+        if (isNaN(archivesecs) || archivesecs < 1) {
+            archivesecs = 150;
+        }
+
+        // run cyclic requests for archive values
+        setInterval(checkArchiveStatus, archivesecs * 1000);
+
+        // check every hour if something has changed on the bus (number of devices)
+        setInterval(checkExistingConfig, 3600 * 1000);
+        
     } else {
         adapter.log.error('Please configure the Fronius adapter');
     }
