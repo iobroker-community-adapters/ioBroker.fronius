@@ -246,7 +246,7 @@ function getActiveDeviceInfo(type, url, callback) {
     axios
         .get(requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type)
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type + ': ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + url + 'GetActiveDeviceInfo.cgi?DeviceClass=' + type + ': ' + JSON.stringify(response.data));
             const deviceData = response.data;
             if (response.status == 200 && 'Body' in deviceData) {
                 callback({ error: 0, message: deviceData.Body.Data });
@@ -346,7 +346,7 @@ function getInverterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=3PInverterData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 if ('Body' in response.data) {
                     if (!isObjectsCreated) {
@@ -365,7 +365,7 @@ function getInverterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CommonInverterData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 const data = response.data;
                 if ('Body' in data) {
@@ -475,7 +475,7 @@ function getInverterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetInverterRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxInverterData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 if ('Body' in response.data) {
                     if (!isObjectsCreated) {
@@ -504,7 +504,7 @@ function GetArchiveData(ids) {
     axios
         .get(requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetArchiveData.cgi?Scope=System&StartDate=' + datum + '&EndDate=' + datum + '&Channel=Current_DC_String_1&Channel=Current_DC_String_2&Channel=Temperature_Powerstage&Channel=Voltage_DC_String_1&Channel=Voltage_DC_String_2: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -568,7 +568,7 @@ function getOhmPilotRealtimeData() {
     axios
         .get(requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetOhmPilotRealtimeData.cgi?Scope=System: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -623,7 +623,7 @@ function getStorageRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id)
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -666,7 +666,7 @@ function getMeterRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id)
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetMeterRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -704,7 +704,7 @@ function getSensorRealtimeDataNow(id) {
     axios
         .get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowSensorData: ' + JSON.stringify(response.data));
             if (response.status == 200 && response.data.Head.Status.Code == 0) {
                 try {
                     if ('Body' in response.data) {
@@ -740,7 +740,7 @@ function getSensorRealtimeDataMinMax(id) {
     axios
         .get(requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetSensorRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=MinMaxSensorData: ' + JSON.stringify(response.data));
             if (response.status == 200 && response.data.Head.Status.Code == 0) {
                 try {
                     if ('Body' in response.data) {
@@ -791,7 +791,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=NowStringControlData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -814,7 +814,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=LastErrorStringControlData: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -837,7 +837,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Day: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -860,7 +860,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Year: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -883,7 +883,7 @@ function getStringRealtimeData(id) {
     axios
         .get(requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStringRealtimeData.cgi?Scope=Device&DeviceId=' + id + '&DataCollection=CurrentSumStringControlData&TimePeriod=Total: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -932,7 +932,7 @@ function getPowerFlowRealtimeData() {
     axios
         .get(requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetPowerFlowRealtimeData.fcgi: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -975,7 +975,7 @@ function getInverterInfo() {
     axios
         .get(requestType + ip + baseurl + 'GetInverterInfo.cgi')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetInverterInfo.cgi: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetInverterInfo.cgi: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     if ('Body' in response.data) {
@@ -1119,7 +1119,7 @@ function getLoggerInfo() {
     axios
         .get(requestType + ip + baseurl + 'GetLoggerInfo.cgi')
         .then(function (response) {
-            adapter.log.debug('Response to '+ requestType + ip + baseurl + 'GetLoggerInfo.cgi: ' + JSON.stringify(response.data));
+            adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetLoggerInfo.cgi: ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
                     const data = response.data;
@@ -1273,7 +1273,7 @@ function main() {
 
         // check every hour if something has changed on the bus (number of devices)
         setInterval(checkExistingConfig, 3600 * 1000);
-        
+
     } else {
         adapter.log.error('Please configure the Fronius adapter');
     }
