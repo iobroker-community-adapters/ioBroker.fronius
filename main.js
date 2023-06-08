@@ -537,7 +537,7 @@ function GetArchiveData(ids) {
                         adapter.log.warn(data.Head.Status.Reason + ' archive: ' + ids);
                     }
                 } catch (e) {
-                    adapter.log.warn('GetArchiveData: ' + e);
+                    adapter.log.error('Error on reading and processing GetArchiveData: ' + e);
                 }
             }
         })
@@ -1010,40 +1010,43 @@ function checkStatus() {
             if (response.status == 200 && 'BaseURL' in testData) {
                 // it seems everything is working, therefore proceed with readout
                 setConnected(true);
-                adapter.config.inverter.split(',').forEach(function (entry) {
-                    getInverterRealtimeData(entry);
-                });
-
-                if (adapter.config.sensorCard) {
-                    adapter.config.sensorCard.split(',').forEach(function (entry) {
-                        getSensorRealtimeDataNow(entry);
-                        getSensorRealtimeDataMinMax(entry);
+                try {
+                    adapter.config.inverter.split(',').forEach(function (entry) {
+                        getInverterRealtimeData(entry);
                     });
-                }
 
-                if (adapter.config.stringControl) {
-                    adapter.config.stringControl.split(',').forEach(function (entry) {
-                        getStringRealtimeData(entry);
-                    });
-                }
-
-                if (apiver === 1) {
-                    if (adapter.config.meter) {
-                        adapter.config.meter.split(',').forEach(function (entry) {
-                            getMeterRealtimeData(entry);
+                    if (adapter.config.sensorCard) {
+                        adapter.config.sensorCard.split(',').forEach(function (entry) {
+                            getSensorRealtimeDataNow(entry);
+                            getSensorRealtimeDataMinMax(entry);
                         });
                     }
-                    if (adapter.config.storage) {
-                        adapter.config.storage.split(',').forEach(function (entry) {
-                            getStorageRealtimeData(entry);
+
+                    if (adapter.config.stringControl) {
+                        adapter.config.stringControl.split(',').forEach(function (entry) {
+                            getStringRealtimeData(entry);
                         });
                     }
-                    getPowerFlowRealtimeData();
-                    getInverterInfo();
-                    getOhmPilotRealtimeData();
-                }
 
-                adapter.setState('info.lastsync', { val: new Date().toISOString(), ack: true });
+                    if (apiver === 1) {
+                        if (adapter.config.meter) {
+                            adapter.config.meter.split(',').forEach(function (entry) {
+                                getMeterRealtimeData(entry);
+                            });
+                        }
+                        if (adapter.config.storage) {
+                            adapter.config.storage.split(',').forEach(function (entry) {
+                                getStorageRealtimeData(entry);
+                            });
+                        }
+                        getPowerFlowRealtimeData();
+                        getInverterInfo();
+                        getOhmPilotRealtimeData();
+                    }
+                    adapter.setState('info.lastsync', { val: new Date().toISOString(), ack: true });
+                } catch (ex) {
+                    adapter.log.error('Error on reading and processing the data from API: ' + ex);
+                }
             } else {
                 adapter.log.debug('Unable to read data from inverters solarAPI');
                 setConnected(false);
