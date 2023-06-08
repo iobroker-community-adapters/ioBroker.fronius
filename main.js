@@ -1186,7 +1186,14 @@ function fillDataObject(adapt, apiObject, prefix = '') {
     for (const key in apiObject) {
         if (apiObject[key.toString()] === null) {
             adapt.log.debug('API Objekt ' + key.toString() + ' is null, object ' + prefix + key.toString() + ' will be set to 0!');
-            resetStateToZero(apiObject, prefix, key.toString()); // do not set directly without the check if the object is created. Therefore use the function to set to 0
+            adapt.getState(prefix + key.toString(), (err, stat) => {
+                if (stat) {
+                    adapt.log.silly('State ' + prefix + key.toString() + ' is found in objects but not on API: ' + JSON.stringify(apiObject));
+                    if (stat.val != 0) {
+                        adapt.setState(prefix + key.toString(), 0, true);
+                    }
+                }
+            });
         } else if (typeof apiObject[key.toString()] == 'object') {
             // this is a nested object to fill!
             if (Object.prototype.hasOwnProperty.call(apiObject[key.toString()], 'Value')) {
