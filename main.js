@@ -136,11 +136,15 @@ function resetStateToZero(API_response, basePath, state) {
     if (state in API_response) {
         return;
     } else {
-        adapter.getState(basePath + '.' + state, (err, stat) => {
+        if (basePath != '' && basePath.endsWith('.') == false) {
+            // make sure the path ends with a . if set
+            basePath = basePath + '.';
+        }
+        adapter.getState(basePath + state, (err, stat) => {
             if (stat) {
-                adapter.log.silly('State ' + basePath + '.' + state + ' is found in objects but not on API: ' + JSON.stringify(API_response));
+                adapter.log.silly('State ' + basePath + state + ' is found in objects but not on API: ' + JSON.stringify(API_response));
                 if (stat.val != 0) {
-                    adapter.setState(basePath + '.' + state, 0, true);
+                    adapter.setState(basePath + state, 0, true);
                 }
             }
         });
@@ -1181,7 +1185,8 @@ function fillDataObject(adapt, apiObject, prefix = '') {
     }
     for (const key in apiObject) {
         if (apiObject[key.toString()] === null) {
-            adapt.log.silly('API Objekt ' + key.toString() + ' is null, no object filled!');
+            adapt.log.debug('API Objekt ' + key.toString() + ' is null, object ' + prefix + key.toString() + ' will be set to 0!');
+            resetStateToZero(apiObject, prefix, key.toString()); // do not set directly without the check if the object is created. Therefore use the function to set to 0
         } else if (typeof apiObject[key.toString()] == 'object') {
             // this is a nested object to fill!
             if (Object.prototype.hasOwnProperty.call(apiObject[key.toString()], 'Value')) {
