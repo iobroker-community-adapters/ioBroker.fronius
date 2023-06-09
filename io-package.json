@@ -29,20 +29,8 @@
                 "uk": "Виправлено кілька помилок, що виникли у відсутності даних. #(152, #242, #175)\nВирішено кілька помилок через відсутні об'єкти. #(206, #129, #76)\nВидалено використання ping утиліти. #(169)\nДодано читання значень МПП. #(78)\nМодуль запиту було замінено на аксіос.\nОновлено залежності та інструменти.",
                 "zh-cn": "造成失踪数据的一些错误已经确定。\n失踪物体造成的若干错误已经解决。\n取消了使用电器的做法。 行动(169)\n添加了管道价值。 行动(78)\n请求单元由轴线取代。.\n已更新了附属和工具。."
             },
-            "1.2.0": {
-                "en": "Adapted storage objects to support GEN24 and improved object creation for storage objects",
-                "de": "",
-                "ru": "",
-                "pt": "",
-                "nl": "",
-                "fr": "",
-                "it": "",
-                "es": "",
-                "pl": "",
-                "zh-cn": ""
-            },
-            "1.1.6": {
-                "en": "Fixed issue #97, Add inverter  temperature readout, DC power calculation for GEN4 added, Improved object creation",
+            "1.1.3": {
+                "en": "Latest version of V1 implementation",
                 "de": "",
                 "ru": "",
                 "pt": "",
