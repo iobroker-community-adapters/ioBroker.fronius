@@ -41,6 +41,9 @@
     "type": "git",
     "url": "https://github.com/iobroker-community-adapters/ioBroker.fronius"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.8",
     "axios": "^1.4.0",
