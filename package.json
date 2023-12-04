@@ -50,7 +50,7 @@
     "he": "^1.2.0"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^3.6.0",
+    "@alcalzone/release-script": "^3.7.0",
     "@alcalzone/release-script-plugin-iobroker": "^3.6.0",
     "@alcalzone/release-script-plugin-license": "^3.5.9",
     "@alcalzone/release-script-plugin-manual-review": "^3.5.9",
