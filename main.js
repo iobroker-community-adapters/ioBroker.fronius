@@ -630,18 +630,24 @@ function getStorageRealtimeData(id) {
             adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
-                    const data = response.data;
+                    var data = response.data;
                     if ('Body' in data) {
-                        if (data.Body.Data === null) {
+                        // check if object is existing and not empty
+                        if (data.Body.Data === null || Object.entries(data.Body.Data).length === 0) {
                             adapter.log.debug('Storage object is not supported: ' + JSON.stringify(data));
                             return;
                         }
+                        data = data.Body.Data;
 
                         if (!isObjectsCreated) {
-                            devObjects.createStorageObjects(adapter, id, response.data.Body.Data);
+                            devObjects.createStorageObjects(adapter, id, data);
                         }
-                        fillData(adapter, response.data.Body.Data.Controller, 'storage.' + id);
-                        fillData(adapter, response.data.Body.Data.Modules, 'storage.' + id + '.module');
+                        if (Object.prototype.hasOwnProperty.call(data, 'Controller')) {
+                            fillData(adapter, data.Controller, 'storage.' + id);
+                        }
+                        if (Object.prototype.hasOwnProperty.call(data, 'Modules')) {
+                            fillData(adapter, data.Modules, 'storage.' + id + '.module');
+                        }
                     } else {
                         adapter.log.warn(data.Head.Status.Reason + ' storage: ' + id);
                     }
@@ -1165,6 +1171,11 @@ function GetArchiveValue(adapter, data, prefix, id, key) {
 
 // this function should not be called directly, better is to call through fillData function as this includes a timeout handling
 function fillDataObject(adapt, apiObject, prefix = '') {
+    // check if the given object is existing and not empty
+    if (apiObject === null || Object.entries(apiObject).length === 0) {
+        adapter.log.debug('fillDataObject: Object is empty!');
+        return;
+    }
     if (prefix != '' && prefix.endsWith('.') == false) {
         // make sure the path ends with a . if set
         prefix = prefix + '.';
@@ -1226,6 +1237,11 @@ function fillDataObject(adapt, apiObject, prefix = '') {
 
 // function to be called to fill the data
 function fillData(adapter, apiObject, prefix = '') {
+    // check if object is existing and not empty
+    if (apiObject === null || Object.entries(apiObject).length === 0) {
+        adapter.log.debug('fillData: Object is null or empty!');
+        return;
+    }
     setTimeout(
         function (adapt, data, pref) {
             fillDataObject(adapt, data, pref);
