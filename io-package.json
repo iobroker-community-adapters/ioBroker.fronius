@@ -55,7 +55,6 @@
         "zh-cn": ""
       }
     },
-    "title": "Fronius inverter",
     "titleLang": {
       "en": "Fronius inverter",
       "de": "Fronius Wechselrichter",
@@ -162,6 +161,16 @@
           "agree",
           "cancel"
         ]
+      }
+    ],
+    "dependencies": [
+      {
+        "js-controller": ">=5.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
       }
     ]
   },
