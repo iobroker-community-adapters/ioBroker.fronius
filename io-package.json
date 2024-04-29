@@ -81,7 +81,10 @@
       "zh-cn": "这是适用于Fronius PV逆变器的ioBroker适配器，具有版本2.0.4-1起的Fronius Datalogger Web，版本3.0.3-1起的Fronius Datamanager和Symo Gen24。",
       "uk": "Це адаптер ioBroker для фотоелектричного інвертора Fronius із Fronius Datalogger Web, починаючи з версії 2.0.4-1, Fronius Datamanager, починаючи з версії 3.0.3-1, і Symo Gen24."
     },
-    "license": "MIT",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "authors": [
       "ldittmar <iobroker@lmdsoft.de>",
       "nkleber78",
@@ -104,6 +107,7 @@
     ],
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.fronius/blob/master/README.md",
     "loglevel": "info",
+    "tier": 2,
     "type": "energy",
     "connectionType": "local",
     "dataSource": "poll",
@@ -165,12 +169,12 @@
     ],
     "dependencies": [
       {
-        "js-controller": ">=5.0.0"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
       {
-        "admin": ">=5.1.13"
+        "admin": ">=6.13.16"
       }
     ]
   },
