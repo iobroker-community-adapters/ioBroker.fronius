@@ -630,7 +630,7 @@ function getStorageRealtimeData(id) {
             adapter.log.debug('Response to ' + requestType + ip + baseurl + 'GetStorageRealtimeData.cgi?Scope=Device&DeviceId=' + id + ': ' + JSON.stringify(response.data));
             if (response.status == 200) {
                 try {
-                    var data = response.data;
+                    let data = response.data;
                     if ('Body' in data) {
                         // check if object is existing and not empty
                         if (data.Body.Data === null || Object.entries(data.Body.Data).length === 0) {
