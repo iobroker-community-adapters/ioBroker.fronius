@@ -104,6 +104,11 @@ The following request are sent to the API. But the availlable datapoints strongl
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (nkleber78) Better handling of empty objects [#374]
+* (mcm1957) Some issues reported by adapter checker have been fixed.
+* (mcm1957) Dependencies have been updated.
+
 ### 2.1.0 (2024-04-29)
 * (mcm1957) Adapter requires node.js >= 18 and js-controller >= 5 now
 * (mcm1957) Dependencies have been updated
