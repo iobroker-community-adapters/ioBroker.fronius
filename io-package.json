@@ -57,15 +57,16 @@
       },
       "1.1.3": {
         "en": "Latest version of V1 implementation",
-        "de": "",
-        "ru": "",
-        "pt": "",
-        "nl": "",
-        "fr": "",
-        "it": "",
-        "es": "",
-        "pl": "",
-        "zh-cn": ""
+        "de": "Neueste Version der V1-Implementierung",
+        "ru": "Последняя версия реализации V1",
+        "pt": "Versão mais recente da implementação V1",
+        "nl": "Nieuwste versie van V1-implementatie",
+        "fr": "Dernière version de l'implémentation V1",
+        "it": "Ultima versione dell'implementazione V1",
+        "es": "Última versión de la implementación V1",
+        "pl": "Najnowsza wersja implementacji V1",
+        "zh-cn": "最新版本V1实现",
+        "uk": "Остання версія реалізації V1"
       }
     },
     "titleLang": {
