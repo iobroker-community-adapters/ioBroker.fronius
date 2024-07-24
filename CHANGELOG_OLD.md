@@ -1,4 +1,12 @@
 # Older changes
+## 1.1.3 (2021-03-15)
+
+-   (nkleber78) Split main.js into multiple files for better maintenance
+-   (nkleber78) Prevent creating info objects which are not supported by the inverters
+-   (schweigel) Added archive request values
+-   (schweigel) Added archive polling intervall
+-   (schweigel) Added devicetype string
+
 ## 1.1.1 (2020-11-30)
 
 -   (schweigel) Added missing units

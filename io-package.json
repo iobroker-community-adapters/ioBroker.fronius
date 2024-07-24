@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fronius",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "news": {
+      "2.1.1": {
+        "en": "Better handling of empty objects [#374]\nSome issues reported by adapter checker have been fixed.\nDependencies have been updated.",
+        "de": "Bessere Handhabung von leeren Objekten [#374]\nEinige von Adapter-Checker gemeldete Probleme wurden behoben.\nAbhängigkeiten wurden aktualisiert.",
+        "ru": "Лучшее обращение с пустыми объектами [#374]\nНекоторые проблемы, о которых сообщает адаптер шашки, были исправлены.\nЗависимость была обновлена.",
+        "pt": "Melhor manuseio de objetos vazios [#374]\nAlguns problemas relatados pelo verificador do adaptador foram corrigidos.\nAs dependências foram atualizadas.",
+        "nl": "Beter omgaan met lege voorwerpen [#374]\nSommige problemen gemeld door de adapter checker zijn opgelost.\nAfhankelijkheden zijn bijgewerkt.",
+        "fr": "Meilleure gestion des objets vides [#374]\nCertains problèmes signalés par le vérificateur d'adaptateurs ont été corrigés.\nLes dépendances ont été actualisées.",
+        "it": "Migliore gestione degli oggetti vuoti [#374]\nAlcuni problemi segnalati dall'adattatore checker sono stati fissati.\nLe dipendenze sono state aggiornate.",
+        "es": "Mejor manejo de objetos vacíos [#374]\nSe han fijado algunas cuestiones comunicadas por el control de adaptador.\nSe han actualizado las dependencias.",
+        "pl": "Lepsza obsługa pustych przedmiotów [# 374]\nNiektóre problemy zgłoszone przez sprawdzacz adaptera zostały naprawione.\nZaktualizowano zależność.",
+        "uk": "Краще обслуговування порожніх предметів [#374]\nЗафіксовано деякі питання, які повідомляються перевірником адаптера.\nОновлено залежність.",
+        "zh-cn": "更好的处理空对象 [# 374]\n适配器检查器报告的一些问题已经解决.\n附属关系已经更新."
+      },
       "2.1.0": {
         "en": "Adapter requires node.js >= 18 and js-controller >= 5 now\nDependencies have been updated",
         "de": "Adapter benötigt node.js >= 18 und js-controller >= 5 jetzt\nAbhängigkeiten wurden aktualisiert",
