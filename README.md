@@ -109,7 +109,8 @@ The following request are sent to the API. But the availlable datapoints strongl
 - (iobroker-bot) Adapter requires node.js >= 20 now.
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now
-- (copilot) Adapter requires admin >= 7.6.17 now
+- (mcm1957) Dependencies have been updated.
+
 
 ### 2.1.1 (2024-07-24)
 * (nkleber78) Better handling of empty objects [#374]
