@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fronius",
-    "version": "2.1.1",
+    "version": "2.2.0",
     "news": {
+      "2.2.0": {
+        "en": "Adapter requires node.js >= 20 now.\nAdapter requires admin >= 7.7.22 now\nAdapter requires js-controller >= 6.0.11 now\nDependencies have been updated.",
+        "de": "Adapter benötigt jetzt node.js >= 20.\nAdapter benötigt admin >= 7.7.22 jetzt\nAdapter benötigt jetzt js-controller >= 6.0.11\nAbhängigkeiten wurden aktualisiert.",
+        "ru": "Адаптер требует node.js >= 20 сейчас.\nАдаптер требует администратора >= 7.7.22\nАдаптер требует js-контроллер >= 6.0.11\nЗависимости были обновлены.",
+        "pt": "O adaptador requer gnod.js >= 20 agora.\nAdaptador requer admin >= 7.7.22 agora\nAdaptador requer js-controlador >= 6.0.11 agora\nAs dependências foram atualizadas.",
+        "nl": "Voor de adapter zijn node.js < 20 nu nodig.\nAdapter vereist admin < 7.7.22 nu\nAdapter vereist js-controller > 6,0.11 nu\nAfhankelijkheden zijn bijgewerkt.",
+        "fr": "Adaptateur nécessite node.js >= 20 maintenant.\nAdaptateur nécessite admin >= 7.7.22 maintenant\nAdaptateur nécessite js-controller >= 6.0.11 maintenant\nLes dépendances ont été actualisées.",
+        "it": "Adattatore richiede node.js >= 20 ora.\nAdattatore richiede admin >= 7.7.22 ora\nAdattatore richiede js-controller >= 6.0.11 ora\nLe dipendenze sono state aggiornate.",
+        "es": "Adaptador requiere node.js >= 20 ahora.\nEl adaptador requiere admin= 7.7.22 ahora\nAdaptador requiere js-controller >= 6.0.11\nSe han actualizado las dependencias.",
+        "pl": "Adapter wymaga node.js > = 20 teraz.\nAdapter wymaga admin > = 7.7.22\nAdapter wymaga sterownika js- > = 6.0.11\nZaktualizowano zależność.",
+        "uk": "Адаптер вимагає node.js >= 20 тепер.\nАдаптер вимагає адмін >= 7.7.22 тепер\nАдаптер вимагає js-controller >=6.0.11 тепер\nОновлено залежність.",
+        "zh-cn": "适配器需要节点.js >= 20 现在.\n适任者需要管理员 \\ 7.7.22 现在\n适配器需要js控制器 现在6.0.11\n附属关系已经更新."
+      },
       "2.1.1": {
         "en": "Better handling of empty objects [#374]\nSome issues reported by adapter checker have been fixed.\nDependencies have been updated.",
         "de": "Bessere Handhabung von leeren Objekten [#374]\nEinige von Adapter-Checker gemeldete Probleme wurden behoben.\nAbhängigkeiten wurden aktualisiert.",
