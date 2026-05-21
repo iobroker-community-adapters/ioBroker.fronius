@@ -6,5 +6,8 @@
     "Polling interval in seconds": "Інтервал опитування в секундах",
     "Query interval": "Інтервал запиту",
     "Query interval archive": "Архів інтервалів запитів",
-    "on save adapter restarts with new config immediately": "під час збереження адаптер негайно перезавантажується з новою конфігурацією"
+    "on save adapter restarts with new config immediately": "під час збереження адаптер негайно перезавантажується з новою конфігурацією",
+    "API version": "Версія API",
+    "Base URL": "Базовий URL",
+    "Filled automatically by Check IP": "Заповнюється автоматично при перевірці IP"
 }

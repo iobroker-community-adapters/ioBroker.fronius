@@ -6,5 +6,8 @@
     "Polling interval in seconds": "Polling-interval in seconden",
     "Query interval": "navraaginterval",
     "Query interval archive": "Query-intervalarchief",
-    "on save adapter restarts with new config immediately": "Wanneer u instellingen opslaat, worden de adapters onmiddellijk opnieuw gestart."
+    "on save adapter restarts with new config immediately": "Wanneer u instellingen opslaat, worden de adapters onmiddellijk opnieuw gestart.",
+    "API version": "API-versie",
+    "Base URL": "Basis-URL",
+    "Filled automatically by Check IP": "Automatisch ingevuld door IP controleren"
 }

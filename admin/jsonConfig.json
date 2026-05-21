@@ -31,7 +31,8 @@
         },
         "apiversion": {
             "type": "text",
-            "label": "apiversion",
+            "label": "API version",
+            "help": "Filled automatically by Check IP",
             "readOnly": true,
             "xs": 12,
             "sm": 6,
@@ -41,7 +42,8 @@
         },
         "baseurl": {
             "type": "text",
-            "label": "baseurl",
+            "label": "Base URL",
+            "help": "Filled automatically by Check IP",
             "readOnly": true,
             "xs": 12,
             "sm": 12,

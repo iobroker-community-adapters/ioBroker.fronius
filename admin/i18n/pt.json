@@ -6,5 +6,8 @@
     "Polling interval in seconds": "Intervalo de sondagem em segundos",
     "Query interval": "intervalo de pesquisa",
     "Query interval archive": "Arquivo de intervalo de consulta",
-    "on save adapter restarts with new config immediately": "Ao salvar as configurações dos adaptadores, será reiniciado imediatamente."
+    "on save adapter restarts with new config immediately": "Ao salvar as configurações dos adaptadores, será reiniciado imediatamente.",
+    "API version": "Versão da API",
+    "Base URL": "URL base",
+    "Filled automatically by Check IP": "Preenchido automaticamente ao verificar IP"
 }

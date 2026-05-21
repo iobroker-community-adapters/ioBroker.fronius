@@ -84,15 +84,15 @@ function startAdapter(options) {
             if (obj) {
                 switch (obj.command) {
                     case 'checkIP':
-                        checkIP(
-                            typeof obj.message === 'object' && obj.message ? obj.message.ip : obj.message,
-                            function (res) {
+                        {
+                            const isStructuredMessage = typeof obj.message === 'object' && obj.message !== null;
+                            checkIP(isStructuredMessage ? obj.message.ip : obj.message, function (res) {
                                 if (obj.callback) {
-                                    if (typeof obj.message === 'object' && obj.message) {
+                                    if (isStructuredMessage) {
                                         const response = { ...res };
                                         if (res.error === 0 && res.message) {
                                             response.native = {
-                                                apiversion: `${res.message.APIVersion ?? ''}`,
+                                                apiversion: res.message.APIVersion ?? '',
                                                 baseurl: res.message.BaseURL ?? '',
                                             };
                                         }
@@ -101,8 +101,8 @@ function startAdapter(options) {
                                         adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
                                     }
                                 }
-                            },
-                        );
+                            });
+                        }
                         wait = true;
                         break;
                     case 'getDeviceInfo':

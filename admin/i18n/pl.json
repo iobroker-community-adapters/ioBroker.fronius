@@ -6,5 +6,8 @@
     "Polling interval in seconds": "Interwał sondowania w sekundach",
     "Query interval": "interwał odpytywania",
     "Query interval archive": "Archiwum okresów zapytań",
-    "on save adapter restarts with new config immediately": "Po zapisaniu ustawień karty zostaną natychmiast ponownie uruchomione."
+    "on save adapter restarts with new config immediately": "Po zapisaniu ustawień karty zostaną natychmiast ponownie uruchomione.",
+    "API version": "Wersja API",
+    "Base URL": "Podstawowy URL",
+    "Filled automatically by Check IP": "Wypełniane automatycznie przez Sprawdź IP"
 }
