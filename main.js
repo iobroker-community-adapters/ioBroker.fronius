@@ -84,11 +84,25 @@ function startAdapter(options) {
             if (obj) {
                 switch (obj.command) {
                     case 'checkIP':
-                        checkIP(obj.message, function (res) {
-                            if (obj.callback) {
-                                adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
-                            }
-                        });
+                        checkIP(
+                            typeof obj.message === 'object' && obj.message ? obj.message.ip : obj.message,
+                            function (res) {
+                                if (obj.callback) {
+                                    if (typeof obj.message === 'object' && obj.message) {
+                                        const response = { ...res };
+                                        if (res.error === 0 && res.message) {
+                                            response.native = {
+                                                apiversion: `${res.message.APIVersion ?? ''}`,
+                                                baseurl: res.message.BaseURL ?? '',
+                                            };
+                                        }
+                                        adapter.sendTo(obj.from, obj.command, response, obj.callback);
+                                    } else {
+                                        adapter.sendTo(obj.from, obj.command, JSON.stringify(res), obj.callback);
+                                    }
+                                }
+                            },
+                        );
                         wait = true;
                         break;
                     case 'getDeviceInfo':
