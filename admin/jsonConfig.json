@@ -1,0 +1,88 @@
+{
+    "i18n": true,
+    "type": "panel",
+    "items": {
+        "ip": {
+            "type": "text",
+            "label": "IP address of the Fronius inverter",
+            "help": "IP(192.168.x.x) or URL(sub.domain.tld)",
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 5,
+            "xl": 4
+        },
+        "_checkIp": {
+            "newLine": true,
+            "type": "sendTo",
+            "label": "Check IP",
+            "command": "checkIP",
+            "data": {
+                "ip": "${data.ip}"
+            },
+            "useNative": true,
+            "showProcess": true,
+            "variant": "contained",
+            "xs": 12,
+            "sm": 12,
+            "md": 3,
+            "lg": 2,
+            "xl": 2
+        },
+        "apiversion": {
+            "type": "text",
+            "label": "API version",
+            "help": "Filled automatically by Check IP",
+            "readOnly": true,
+            "xs": 12,
+            "sm": 6,
+            "md": 3,
+            "lg": 2,
+            "xl": 2
+        },
+        "baseurl": {
+            "type": "text",
+            "label": "Base URL",
+            "help": "Filled automatically by Check IP",
+            "readOnly": true,
+            "xs": 12,
+            "sm": 12,
+            "md": 6,
+            "lg": 5,
+            "xl": 4
+        },
+        "poll": {
+            "newLine": true,
+            "type": "number",
+            "label": "Query interval",
+            "help": "Polling interval in seconds",
+            "min": 1,
+            "xs": 12,
+            "sm": 6,
+            "md": 3,
+            "lg": 2,
+            "xl": 2
+        },
+        "pollarchive": {
+            "type": "number",
+            "label": "Query interval archive",
+            "help": "Polling interval archive in seconds",
+            "min": 1,
+            "xs": 12,
+            "sm": 6,
+            "md": 3,
+            "lg": 2,
+            "xl": 2
+        },
+        "_restartHint": {
+            "newLine": true,
+            "type": "staticText",
+            "text": "on save adapter restarts with new config immediately",
+            "xs": 12,
+            "sm": 12,
+            "md": 12,
+            "lg": 12,
+            "xl": 12
+        }
+    }
+}

@@ -6,5 +6,8 @@
     "Polling interval in seconds": "Polling interval in seconds",
     "Query interval": "Query interval",
     "Query interval archive": "Query interval archive",
-    "on save adapter restarts with new config immediately": "on save adapter restarts with new config immediately"
+    "on save adapter restarts with new config immediately": "on save adapter restarts with new config immediately",
+    "API version": "API version",
+    "Base URL": "Base URL",
+    "Filled automatically by Check IP": "Filled automatically by Check IP"
 }
