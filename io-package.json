@@ -122,7 +122,6 @@
     "platform": "Javascript/Node.js",
     "mode": "daemon",
     "icon": "fronius.png",
-    "materialize": true,
     "enabled": true,
     "messagebox": true,
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.fronius/master/admin/fronius.png",
@@ -204,7 +203,10 @@
       {
         "admin": ">=7.7.22"
       }
-    ]
+    ],
+    "adminUI": {
+      "config": "materialize"
+    }
   },
   "native": {
     "ip": "",
